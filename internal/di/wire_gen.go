@@ -6,8 +6,10 @@
 package di
 
 import (
+	"github.com/dhis2-sre/im-database-manager/internal/client"
 	"github.com/dhis2-sre/im-database-manager/internal/handler"
 	"github.com/dhis2-sre/im-database-manager/pkg/config"
+	"github.com/dhis2-sre/im-database-manager/pkg/database"
 	"github.com/dhis2-sre/im-database-manager/pkg/storage"
 	"gorm.io/gorm"
 	"log"
@@ -18,7 +20,12 @@ import (
 func GetEnvironment() Environment {
 	configConfig := config.ProvideConfig()
 	authenticationMiddleware := handler.ProvideAuthentication(configConfig)
-	environment := ProvideEnvironment(configConfig, authenticationMiddleware)
+	clientClient := client.ProvideUser(configConfig)
+	db := provideDatabase(configConfig)
+	repository := database.ProvideRepository(db)
+	service := database.ProvideService(repository)
+	databaseHandler := database.ProvideHandler(clientClient, service)
+	environment := ProvideEnvironment(configConfig, authenticationMiddleware, databaseHandler)
 	return environment
 }
 
@@ -27,19 +34,23 @@ func GetEnvironment() Environment {
 type Environment struct {
 	Config                   config.Config
 	AuthenticationMiddleware handler.AuthenticationMiddleware
+	DatabaseHandler          database.Handler
 }
 
 func ProvideEnvironment(config2 config.Config,
 
 	authenticationMiddleware handler.AuthenticationMiddleware,
+	databaseHandler database.Handler,
 ) Environment {
-	return Environment{config2, authenticationMiddleware}
+	return Environment{config2, authenticationMiddleware,
+		databaseHandler,
+	}
 }
 
 func provideDatabase(c config.Config) *gorm.DB {
-	database, err := storage.ProvideDatabase(c)
+	database2, err := storage.ProvideDatabase(c)
 	if err != nil {
 		log.Fatalln(err)
 	}
-	return database
+	return database2
 }

@@ -2,11 +2,11 @@ package model
 
 import "gorm.io/gorm"
 
+// swagger:model Database
 type Database struct {
 	gorm.Model
-	Name       string `gorm:"index;unique"`
-	GroupId    uint
+	Name       string `gorm:"index:idx_name_and_group,unique"`
+	GroupID    uint   `gorm:"index:idx_name_and_group,unique"`
 	InstanceID uint   // instance which currently has the lock
-	Format     string // sql or pgc... Probably not necessary
 	Url        string // s3... Path?
 }

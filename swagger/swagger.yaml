@@ -1,0 +1,104 @@
+consumes:
+- application/json
+definitions:
+  Database:
+    properties:
+      CreatedAt:
+        format: date-time
+        type: string
+      DeletedAt:
+        $ref: '#/definitions/DeletedAt'
+      GroupID:
+        format: uint64
+        type: integer
+      ID:
+        format: uint64
+        type: integer
+      InstanceID:
+        format: uint64
+        type: integer
+      Name:
+        type: string
+      UpdatedAt:
+        format: date-time
+        type: string
+      Url:
+        type: string
+    type: object
+    x-go-package: github.com/dhis2-sre/im-database-manager/pkg/model
+  DeletedAt:
+    $ref: '#/definitions/NullTime'
+  Model:
+    description: |-
+      Model a basic GoLang struct which includes the following fields: ID, CreatedAt, UpdatedAt, DeletedAt
+      It may be embedded into your model or you may build your own model without it
+      type User struct {
+      gorm.Model
+      }
+    properties:
+      CreatedAt:
+        format: date-time
+        type: string
+      DeletedAt:
+        $ref: '#/definitions/DeletedAt'
+      ID:
+        format: uint64
+        type: integer
+      UpdatedAt:
+        format: date-time
+        type: string
+    type: object
+    x-go-package: gorm.io/gorm
+  NullTime:
+    description: |-
+      NullTime implements the Scanner interface so
+      it can be used as a scan destination, similar to NullString.
+    properties:
+      Time:
+        format: date-time
+        type: string
+      Valid:
+        type: boolean
+    title: NullTime represents a time.Time that may be null.
+    type: object
+    x-go-package: database/sql
+info:
+  contact:
+    email: info@dhis2.org
+    url: https://github.com/dhis2-sre/im-database-manager
+  description: Manager Service as part of the Instance Manager environment
+  license:
+    name: TODO
+  termsOfService: there are no TOS at this moment, use at your own risk we take no
+    responsibility
+  title: Instance Manager Manager Service.
+  version: 0.1.0
+paths:
+  /databases:
+    post:
+      description: Create database
+      operationId: createDatabase
+      responses:
+        "202":
+          description: Database
+          schema:
+            $ref: '#/definitions/Database'
+        "401":
+          $ref: '#/responses/Error'
+        "403":
+          $ref: '#/responses/Error'
+        "415":
+          $ref: '#/responses/Error'
+      security:
+      - oauth2: []
+produces:
+- application/json
+responses:
+  Error:
+    description: ""
+securityDefinitions:
+  oauth2:
+    flow: password
+    tokenUrl: /not-valid--endpoint-is-served-from-the-im-user-service
+    type: oauth2
+swagger: "2.0"

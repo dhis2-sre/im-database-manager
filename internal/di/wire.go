@@ -3,8 +3,10 @@
 package di
 
 import (
+	"github.com/dhis2-sre/im-database-manager/internal/client"
 	"github.com/dhis2-sre/im-database-manager/internal/handler"
 	"github.com/dhis2-sre/im-database-manager/pkg/config"
+	"github.com/dhis2-sre/im-database-manager/pkg/database"
 	"github.com/dhis2-sre/im-database-manager/pkg/storage"
 	"github.com/google/wire"
 	"gorm.io/gorm"
@@ -14,15 +16,18 @@ import (
 type Environment struct {
 	Config                   config.Config
 	AuthenticationMiddleware handler.AuthenticationMiddleware
+	DatabaseHandler          database.Handler
 }
 
 func ProvideEnvironment(
 	config config.Config,
 	authenticationMiddleware handler.AuthenticationMiddleware,
+	databaseHandler database.Handler,
 ) Environment {
 	return Environment{
 		config,
 		authenticationMiddleware,
+		databaseHandler,
 	}
 }
 
@@ -30,9 +35,13 @@ func GetEnvironment() Environment {
 	wire.Build(
 		config.ProvideConfig,
 
-		//		provideDatabase,
+		client.ProvideUser,
 
-		//		client.ProvideUser,
+		provideDatabase,
+
+		database.ProvideRepository,
+		database.ProvideService,
+		database.ProvideHandler,
 
 		handler.ProvideAuthentication,
 

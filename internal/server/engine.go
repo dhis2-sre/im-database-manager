@@ -20,11 +20,11 @@ func GetEngine(environment di.Environment) *gin.Engine {
 
 	redoc(router, basePath)
 
-	//	router.GET("/health", health.Health)
+	router.GET("/health", health.Health)
 
 	tokenAuthenticationRouter := router.Group("")
 	tokenAuthenticationRouter.Use(environment.AuthenticationMiddleware.TokenAuthentication)
-	tokenAuthenticationRouter.GET("/health", health.Health)
+	tokenAuthenticationRouter.POST("/databases", environment.DatabaseHandler.Create)
 
 	return r
 }

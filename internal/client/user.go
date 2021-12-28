@@ -1,0 +1,10 @@
+package client
+
+import (
+	"github.com/dhis2-sre/im-database-manager/pkg/config"
+	userClient "github.com/dhis2-sre/im-user/pkg/client"
+)
+
+func ProvideUser(config config.Config) userClient.Client {
+	return userClient.ProvideClient(config.UserService.Host, config.UserService.BasePath)
+}

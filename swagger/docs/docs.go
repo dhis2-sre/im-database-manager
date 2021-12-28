@@ -7,7 +7,7 @@ type Error struct {
 	Message string
 }
 
-// swagger:parameters findDatabaseById lockDatabaseById unlockDatabaseById
+// swagger:parameters findDatabaseById lockDatabaseById unlockDatabaseById uploadDatabase
 type IdParam struct {
 	// in: path
 	// required: true

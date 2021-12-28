@@ -21,9 +21,10 @@ func GetEnvironment() Environment {
 	configConfig := config.ProvideConfig()
 	authenticationMiddleware := handler.ProvideAuthentication(configConfig)
 	clientClient := client.ProvideUser(configConfig)
+	s3Client := storage.ProvideS3Client()
 	db := provideDatabase(configConfig)
 	repository := database.ProvideRepository(db)
-	service := database.ProvideService(repository)
+	service := database.ProvideService(configConfig, s3Client, repository)
 	databaseHandler := database.ProvideHandler(clientClient, service)
 	environment := ProvideEnvironment(configConfig, authenticationMiddleware, databaseHandler)
 	return environment

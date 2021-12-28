@@ -162,6 +162,28 @@ paths:
           $ref: '#/responses/Error'
       security:
       - oauth2: []
+  /databases/{id}/upload:
+    post:
+      description: Upload database
+      operationId: uploadDatabase
+      parameters:
+      - format: uint64
+        in: path
+        name: id
+        required: true
+        type: integer
+        x-go-name: ID
+      responses:
+        "201":
+          description: ""
+        "401":
+          $ref: '#/responses/Error'
+        "403":
+          $ref: '#/responses/Error'
+        "415":
+          $ref: '#/responses/Error'
+      security:
+      - oauth2: []
 produces:
 - application/json
 responses:

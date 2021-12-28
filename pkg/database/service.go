@@ -1,8 +1,13 @@
 package database
 
 import (
+	"bytes"
+	"fmt"
 	"github.com/dhis2-sre/im-database-manager/internal/apperror"
+	"github.com/dhis2-sre/im-database-manager/pkg/config"
 	"github.com/dhis2-sre/im-database-manager/pkg/model"
+	"github.com/dhis2-sre/im-database-manager/pkg/storage"
+	"mime/multipart"
 	"strconv"
 	"strings"
 )
@@ -12,13 +17,16 @@ type Service interface {
 	FindById(id uint) (*model.Database, error)
 	Lock(id uint, instanceId uint) (*model.Database, error)
 	Unlock(id uint) error
+	Upload(d *model.Database, file *multipart.FileHeader) (*model.Database, error)
 }
 
-func ProvideService(repository Repository) Service {
-	return &service{repository}
+func ProvideService(c config.Config, s3Client storage.S3Client, repository Repository) Service {
+	return &service{c, s3Client, repository}
 }
 
 type service struct {
+	c          config.Config
+	s3Client   storage.S3Client
 	repository Repository
 }
 
@@ -61,4 +69,27 @@ func (s service) Unlock(id uint) error {
 		}
 	}
 	return err
+}
+
+func (s service) Upload(d *model.Database, file *multipart.FileHeader) (*model.Database, error) {
+	openFile, err := file.Open()
+	if err != nil {
+		return nil, err
+	}
+
+	buffer := new(bytes.Buffer)
+	_, err = buffer.ReadFrom(openFile)
+	if err != nil {
+		return nil, err
+	}
+
+	// TODO: Look up group name
+	key := fmt.Sprintf("%d/%s", d.GroupID, d.Name)
+	err = s.s3Client.Upload(s.c.Bucket, key, buffer)
+	if err != nil {
+		return nil, err
+	}
+
+	d.Url = fmt.Sprintf("s3://%s/%s", s.c.Bucket, key)
+	return d, nil
 }

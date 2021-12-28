@@ -38,6 +38,7 @@ func ProvideConfig() Config {
 				MinimumRefreshInterval: requireEnvAsInt("JWKS_MINIMUM_REFRESH_INTERVAL"),
 			},
 		},
+		Bucket: requireEnv("S3_BUCKET"),
 	}
 }
 
@@ -47,6 +48,7 @@ type Config struct {
 	Postgresql     postgresql
 	RabbitMqURL    rabbitmq
 	Authentication Authentication
+	Bucket         string
 }
 
 type service struct {

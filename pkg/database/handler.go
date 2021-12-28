@@ -6,6 +6,7 @@ import (
 	"github.com/dhis2-sre/im-database-manager/pkg/model"
 	userClient "github.com/dhis2-sre/im-user/pkg/client"
 	"github.com/gin-gonic/gin"
+	"mime/multipart"
 	"net/http"
 	"strconv"
 )
@@ -42,7 +43,6 @@ type CreateDatabaseRequest struct {
 //   415: Error
 func (h Handler) Create(c *gin.Context) {
 	var request CreateDatabaseRequest
-
 	if err := handler.DataBinder(c, &request); err != nil {
 		_ = c.Error(err)
 		return
@@ -151,7 +151,6 @@ func (h Handler) Lock(c *gin.Context) {
 	}
 
 	var request LockDatabaseRequest
-
 	if err := handler.DataBinder(c, &request); err != nil {
 		_ = c.Error(err)
 		return
@@ -199,4 +198,59 @@ func (h Handler) Unlock(c *gin.Context) {
 	}
 
 	c.Status(http.StatusAccepted)
+}
+
+type UploadDatabaseRequest struct {
+	Database *multipart.FileHeader `form:"database" binding:"required"`
+}
+
+// Upload database
+// swagger:route POST /databases/{id}/upload uploadDatabase
+//
+// Upload database
+//
+// Security:
+//  oauth2:
+//
+// responses:
+//   201:
+//   401: Error
+//   403: Error
+//   415: Error
+func (h Handler) Upload(c *gin.Context) {
+	idParam := c.Param("id")
+	id, err := strconv.Atoi(idParam)
+	if err != nil {
+		badRequest := apperror.NewBadRequest("error parsing id")
+		_ = c.Error(badRequest)
+		return
+	}
+
+	var request UploadDatabaseRequest
+	if err := handler.DataBinder(c, &request); err != nil {
+		_ = c.Error(err)
+		return
+	}
+
+	d, err := h.databaseService.FindById(uint(id))
+	if err != nil {
+		_ = c.Error(err)
+		return
+	}
+
+	// TODO: Authorize
+
+	if request.Database == nil {
+		badRequest := apperror.NewBadRequest("file not found")
+		_ = c.Error(badRequest)
+		return
+	}
+
+	save, err := h.databaseService.Upload(d, request.Database)
+	if err != nil {
+		_ = c.Error(err)
+		return
+	}
+
+	c.JSON(http.StatusCreated, save)
 }

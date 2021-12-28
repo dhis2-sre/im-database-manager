@@ -38,6 +38,7 @@ func GetEnvironment() Environment {
 		client.ProvideUser,
 
 		provideDatabase,
+		storage.ProvideS3Client,
 
 		database.ProvideRepository,
 		database.ProvideService,

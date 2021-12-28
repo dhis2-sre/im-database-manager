@@ -139,6 +139,7 @@ type LockDatabaseRequest struct {
 //   200: Database
 //   401: Error
 //   403: Error
+//   409: Error
 //   415: Error
 func (h Handler) Lock(c *gin.Context) {
 	idParam := c.Param("id")

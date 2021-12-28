@@ -116,6 +116,27 @@ paths:
       security:
       - oauth2: []
   /databases/{id}/lock:
+    delete:
+      description: Unlock database by id
+      operationId: unlockDatabaseById
+      parameters:
+      - format: uint64
+        in: path
+        name: id
+        required: true
+        type: integer
+        x-go-name: ID
+      responses:
+        "202":
+          description: ""
+        "401":
+          $ref: '#/responses/Error'
+        "403":
+          $ref: '#/responses/Error'
+        "415":
+          $ref: '#/responses/Error'
+      security:
+      - oauth2: []
     post:
       description: Lock database by id
       operationId: lockDatabaseById

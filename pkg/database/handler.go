@@ -166,3 +166,36 @@ func (h Handler) Lock(c *gin.Context) {
 
 	c.JSON(http.StatusCreated, d)
 }
+
+// Unlock database
+// swagger:route DELETE /databases/{id}/lock unlockDatabaseById
+//
+// Unlock database by id
+//
+// Security:
+//  oauth2:
+//
+// responses:
+//   202:
+//   401: Error
+//   403: Error
+//   415: Error
+func (h Handler) Unlock(c *gin.Context) {
+	idParam := c.Param("id")
+	id, err := strconv.Atoi(idParam)
+	if err != nil {
+		badRequest := apperror.NewBadRequest("error parsing id")
+		_ = c.Error(badRequest)
+		return
+	}
+
+	// TODO: Authorize
+
+	err = h.databaseService.Unlock(uint(id))
+	if err != nil {
+		_ = c.Error(err)
+		return
+	}
+
+	c.Status(http.StatusAccepted)
+}

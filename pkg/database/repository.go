@@ -10,6 +10,7 @@ type Repository interface {
 	Create(d *model.Database) error
 	FindById(id uint) (*model.Database, error)
 	Lock(id uint, instanceId uint) (*model.Database, error)
+	Unlock(id uint) error
 }
 
 func ProvideRepository(DB *gorm.DB) Repository {
@@ -52,4 +53,18 @@ func (r repository) Lock(id uint, instanceId uint) (*model.Database, error) {
 	})
 
 	return d, errTx
+}
+
+func (r repository) Unlock(id uint) error {
+	err := r.db.Model(&model.Database{
+		Model: gorm.Model{
+			ID: id,
+		},
+	}).Update("instance_id", 0).Error
+
+	if err != nil {
+		return err
+	}
+
+	return nil
 }

@@ -8,6 +8,7 @@ import (
 type Repository interface {
 	Create(d *model.Database) error
 	FindById(id uint) (*model.Database, error)
+	Lock(id uint, instanceId uint) (*model.Database, error)
 }
 
 func ProvideRepository(DB *gorm.DB) Repository {
@@ -26,4 +27,24 @@ func (r repository) FindById(id uint) (*model.Database, error) {
 	var d *model.Database
 	err := r.db.First(&d, id).Error
 	return d, err
+}
+
+func (r repository) Lock(id uint, instanceId uint) (*model.Database, error) {
+	var d *model.Database
+
+	errTx := r.db.Transaction(func(tx *gorm.DB) error {
+		err := tx.First(&d, id).Error
+		if err != nil {
+			return err
+		}
+
+		err = tx.Model(&d).Update("instance_id", instanceId).Error
+		if err != nil {
+			return err
+		}
+
+		return nil
+	})
+
+	return d, errTx
 }

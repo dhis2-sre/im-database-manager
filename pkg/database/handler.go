@@ -121,3 +121,48 @@ func (h Handler) FindById(c *gin.Context) {
 
 	c.JSON(http.StatusOK, d)
 }
+
+// LockDatabaseRequest ...
+type LockDatabaseRequest struct {
+	InstanceId uint `json:"instanceId" binding:"required"`
+}
+
+// Lock database
+// swagger:route POST /databases/{id}/lock lockDatabaseById
+//
+// Lock database by id
+//
+// Security:
+//  oauth2:
+//
+// responses:
+//   200: Database
+//   401: Error
+//   403: Error
+//   415: Error
+func (h Handler) Lock(c *gin.Context) {
+	idParam := c.Param("id")
+	id, err := strconv.Atoi(idParam)
+	if err != nil {
+		badRequest := apperror.NewBadRequest("error parsing id")
+		_ = c.Error(badRequest)
+		return
+	}
+
+	var request LockDatabaseRequest
+
+	if err := handler.DataBinder(c, &request); err != nil {
+		_ = c.Error(err)
+		return
+	}
+
+	// TODO: Authorize
+
+	d, err := h.databaseService.Lock(uint(id), request.InstanceId)
+	if err != nil {
+		_ = c.Error(err)
+		return
+	}
+
+	c.JSON(http.StatusCreated, d)
+}

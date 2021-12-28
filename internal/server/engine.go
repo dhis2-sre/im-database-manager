@@ -26,6 +26,7 @@ func GetEngine(environment di.Environment) *gin.Engine {
 	tokenAuthenticationRouter.Use(environment.AuthenticationMiddleware.TokenAuthentication)
 	tokenAuthenticationRouter.POST("/databases", environment.DatabaseHandler.Create)
 	tokenAuthenticationRouter.GET("/databases/:id", environment.DatabaseHandler.FindById)
+	tokenAuthenticationRouter.POST("/databases/:id/lock", environment.DatabaseHandler.Lock)
 
 	return r
 }

@@ -92,7 +92,7 @@ func (h Handler) Create(c *gin.Context) {
 // FindById database
 // swagger:route GET /databases/{id} findDatabaseById
 //
-// FindById database by id
+// Find database by id
 //
 // Security:
 //  oauth2:

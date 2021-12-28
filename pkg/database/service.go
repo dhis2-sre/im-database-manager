@@ -25,9 +25,11 @@ func (s service) Create(d *model.Database) error {
 
 func (s service) FindById(id uint) (*model.Database, error) {
 	d, err := s.repository.FindById(id)
-	if err.Error() == "record not found" {
-		idStr := strconv.FormatUint(uint64(id), 10)
-		err = apperror.NewNotFound("database not found", idStr)
+	if err != nil {
+		if err.Error() == "record not found" {
+			idStr := strconv.FormatUint(uint64(id), 10)
+			err = apperror.NewNotFound("database not found", idStr)
+		}
 	}
 	return d, err
 }

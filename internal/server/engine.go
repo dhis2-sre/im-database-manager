@@ -25,6 +25,7 @@ func GetEngine(environment di.Environment) *gin.Engine {
 	tokenAuthenticationRouter := router.Group("")
 	tokenAuthenticationRouter.Use(environment.AuthenticationMiddleware.TokenAuthentication)
 	tokenAuthenticationRouter.POST("/databases", environment.DatabaseHandler.Create)
+	tokenAuthenticationRouter.GET("/databases/:id", environment.DatabaseHandler.FindById)
 
 	return r
 }

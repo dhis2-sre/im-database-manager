@@ -1,11 +1,13 @@
 package database
 
 import (
+	"github.com/dhis2-sre/im-database-manager/internal/apperror"
 	"github.com/dhis2-sre/im-database-manager/internal/handler"
 	"github.com/dhis2-sre/im-database-manager/pkg/model"
 	userClient "github.com/dhis2-sre/im-user/pkg/client"
 	"github.com/gin-gonic/gin"
 	"net/http"
+	"strconv"
 )
 
 func ProvideHandler(userClient userClient.Client, databaseService Service) Handler {
@@ -46,6 +48,7 @@ func (h Handler) Create(c *gin.Context) {
 		return
 	}
 
+	// TODO: Authorize
 	/*
 		user, err := handler.GetUserFromContext(c)
 		if err != nil {
@@ -84,4 +87,37 @@ func (h Handler) Create(c *gin.Context) {
 	}
 
 	c.JSON(http.StatusCreated, d)
+}
+
+// FindById database
+// swagger:route GET /databases/{id} findDatabaseById
+//
+// FindById database by id
+//
+// Security:
+//  oauth2:
+//
+// responses:
+//   200: Database
+//   401: Error
+//   403: Error
+//   415: Error
+func (h Handler) FindById(c *gin.Context) {
+	idParam := c.Param("id")
+	id, err := strconv.Atoi(idParam)
+	if err != nil {
+		badRequest := apperror.NewBadRequest("error parsing id")
+		_ = c.Error(badRequest)
+		return
+	}
+
+	// TODO: Authorize
+
+	d, err := h.databaseService.FindById(uint(id))
+	if err != nil {
+		_ = c.Error(err)
+		return
+	}
+
+	c.JSON(http.StatusOK, d)
 }

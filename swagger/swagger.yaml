@@ -91,6 +91,30 @@ paths:
           $ref: '#/responses/Error'
       security:
       - oauth2: []
+  /databases/{id}:
+    get:
+      description: FindById database by id
+      operationId: findDatabaseById
+      parameters:
+      - format: uint64
+        in: path
+        name: id
+        required: true
+        type: integer
+        x-go-name: ID
+      responses:
+        "200":
+          description: Database
+          schema:
+            $ref: '#/definitions/Database'
+        "401":
+          $ref: '#/responses/Error'
+        "403":
+          $ref: '#/responses/Error'
+        "415":
+          $ref: '#/responses/Error'
+      security:
+      - oauth2: []
 produces:
 - application/json
 responses:

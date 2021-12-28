@@ -213,7 +213,7 @@ type UploadDatabaseRequest struct {
 //  oauth2:
 //
 // responses:
-//   201:
+//   201: Database
 //   401: Error
 //   403: Error
 //   415: Error

@@ -175,7 +175,9 @@ paths:
         x-go-name: ID
       responses:
         "201":
-          description: ""
+          description: Database
+          schema:
+            $ref: '#/definitions/Database'
         "401":
           $ref: '#/responses/Error'
         "403":

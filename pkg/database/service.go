@@ -4,6 +4,7 @@ import (
 	"github.com/dhis2-sre/im-database-manager/internal/apperror"
 	"github.com/dhis2-sre/im-database-manager/pkg/model"
 	"strconv"
+	"strings"
 )
 
 type Service interface {
@@ -41,6 +42,10 @@ func (s service) Lock(id uint, instanceId uint) (*model.Database, error) {
 		if err.Error() == "record not found" {
 			idStr := strconv.FormatUint(uint64(id), 10)
 			err = apperror.NewNotFound("database not found", idStr)
+		}
+
+		if strings.HasPrefix(err.Error(), "already locked by: ") {
+			err = apperror.NewConflict(err.Error())
 		}
 	}
 	return d, err

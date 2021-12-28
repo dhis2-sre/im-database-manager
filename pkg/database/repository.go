@@ -1,6 +1,7 @@
 package database
 
 import (
+	"fmt"
 	"github.com/dhis2-sre/im-database-manager/pkg/model"
 	"gorm.io/gorm"
 )
@@ -36,6 +37,10 @@ func (r repository) Lock(id uint, instanceId uint) (*model.Database, error) {
 		err := tx.First(&d, id).Error
 		if err != nil {
 			return err
+		}
+
+		if d.InstanceID != 0 {
+			return fmt.Errorf("already locked by: %d", d.InstanceID)
 		}
 
 		err = tx.Model(&d).Update("instance_id", instanceId).Error

@@ -13,5 +13,6 @@ RUN apk --no-cache -U upgrade \
     && apk add --no-cache postgresql-client
 WORKDIR /app
 COPY --from=build /app/im-database-manager .
+COPY --from=build /src/swagger/swagger.yaml ./swagger/
 USER guest
 CMD ["/app/im-database-manager"]

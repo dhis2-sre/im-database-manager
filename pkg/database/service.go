@@ -21,6 +21,7 @@ type Service interface {
 	Upload(d *model.Database, file *multipart.FileHeader) (*model.Database, error)
 	Delete(id uint) error
 	List(groups []*models.Group) ([]*model.Database, error)
+	Update(d *model.Database) error
 }
 
 func ProvideService(c config.Config, s3Client storage.S3Client, repository Repository) Service {
@@ -126,4 +127,8 @@ func (s service) List(groups []*models.Group) ([]*model.Database, error) {
 		return nil, err
 	}
 	return instances, nil
+}
+
+func (s service) Update(d *model.Database) error {
+	return s.repository.Update(d)
 }

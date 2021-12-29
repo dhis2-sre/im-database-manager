@@ -358,3 +358,56 @@ func (h Handler) filterByGroupId(databases []*model.Database, test func(instance
 	}
 	return
 }
+
+type updateDatabaseRequest struct {
+	Name    string `json:"name" binding:"required"`
+	GroupId uint   `json:"groupId" binding:"required"`
+}
+
+// Update database
+// swagger:route PUT /databases/{id} updateDatabaseById
+//
+// Update database by id
+//
+// Security:
+//  oauth2:
+//
+// responses:
+//   200:
+//   401: Error
+//   403: Error
+//   415: Error
+func (h Handler) Update(c *gin.Context) {
+	idParam := c.Param("id")
+	id, err := strconv.Atoi(idParam)
+	if err != nil {
+		badRequest := apperror.NewBadRequest("error parsing id")
+		_ = c.Error(badRequest)
+		return
+	}
+
+	// TODO: Authorize
+
+	var request createDatabaseRequest
+	if err := handler.DataBinder(c, &request); err != nil {
+		_ = c.Error(err)
+		return
+	}
+
+	d, err := h.databaseService.FindById(uint(id))
+	if err != nil {
+		_ = c.Error(err)
+		return
+	}
+
+	d.Name = request.Name
+	d.GroupID = request.GroupId
+
+	err = h.databaseService.Update(d)
+	if err != nil {
+		_ = c.Error(err)
+		return
+	}
+
+	c.JSON(http.StatusOK, d)
+}

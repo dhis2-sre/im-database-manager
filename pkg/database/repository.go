@@ -14,6 +14,7 @@ type Repository interface {
 	Unlock(id uint) error
 	Delete(id uint) error
 	FindByGroupIds(ids []uint) ([]*model.Database, error)
+	Update(d *model.Database) error
 }
 
 func ProvideRepository(DB *gorm.DB) Repository {
@@ -89,4 +90,8 @@ func (r repository) FindByGroupIds(ids []uint) ([]*model.Database, error) {
 		Find(&databases).Error
 
 	return databases, err
+}
+
+func (r repository) Update(d *model.Database) error {
+	return r.db.Save(d).Error
 }

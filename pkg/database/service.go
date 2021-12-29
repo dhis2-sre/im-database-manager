@@ -18,6 +18,7 @@ type Service interface {
 	Lock(id uint, instanceId uint) (*model.Database, error)
 	Unlock(id uint) error
 	Upload(d *model.Database, file *multipart.FileHeader) (*model.Database, error)
+	Delete(id uint) error
 }
 
 func ProvideService(c config.Config, s3Client storage.S3Client, repository Repository) Service {
@@ -84,6 +85,7 @@ func (s service) Upload(d *model.Database, file *multipart.FileHeader) (*model.D
 	}
 
 	// TODO: Look up group name
+	// TODO: Add file extension
 	key := fmt.Sprintf("%d/%s", d.GroupID, d.Name)
 	err = s.s3Client.Upload(s.c.Bucket, key, buffer)
 	if err != nil {
@@ -92,4 +94,21 @@ func (s service) Upload(d *model.Database, file *multipart.FileHeader) (*model.D
 
 	d.Url = fmt.Sprintf("s3://%s/%s", s.c.Bucket, key)
 	return d, nil
+}
+
+func (s service) Delete(id uint) error {
+	d, err := s.repository.FindById(id)
+	if err != nil {
+		return err
+	}
+
+	// TODO: Look up group name
+	// TODO: Add file extension
+	key := fmt.Sprintf("%d/%s", d.GroupID, d.Name)
+	err = s.s3Client.Delete(s.c.Bucket, key)
+	if err != nil {
+		return err
+	}
+
+	return s.repository.Delete(id)
 }

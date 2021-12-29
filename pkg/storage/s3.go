@@ -3,6 +3,7 @@ package storage
 import (
 	"bytes"
 	"context"
+	"github.com/aws/aws-sdk-go-v2/aws"
 	s3config "github.com/aws/aws-sdk-go-v2/config"
 	"github.com/aws/aws-sdk-go-v2/feature/s3/manager"
 	"github.com/aws/aws-sdk-go-v2/service/s3"
@@ -10,6 +11,7 @@ import (
 
 type S3Client interface {
 	Upload(bucket string, key string, body *bytes.Buffer) error
+	Delete(bucket string, key string) error
 }
 
 func ProvideS3Client() S3Client {
@@ -30,9 +32,23 @@ func (s s3Client) Upload(bucket string, key string, body *bytes.Buffer) error {
 	b := bytes.NewReader(body.Bytes())
 
 	_, err = uploader.Upload(context.TODO(), &s3.PutObjectInput{
-		Bucket: &bucket,
-		Key:    &key,
+		Bucket: aws.String(bucket),
+		Key:    aws.String(key),
 		Body:   b,
+	})
+
+	return err
+}
+
+func (s s3Client) Delete(bucket string, key string) error {
+	awsS3Client, err := s.getS3Client()
+	if err != nil {
+		return err
+	}
+
+	_, err = awsS3Client.DeleteObject(context.TODO(), &s3.DeleteObjectInput{
+		Bucket: aws.String(bucket),
+		Key:    aws.String(key),
 	})
 
 	return err

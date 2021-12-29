@@ -11,6 +11,7 @@ type Repository interface {
 	FindById(id uint) (*model.Database, error)
 	Lock(id uint, instanceId uint) (*model.Database, error)
 	Unlock(id uint) error
+	Delete(id uint) error
 }
 
 func ProvideRepository(DB *gorm.DB) Repository {
@@ -67,4 +68,8 @@ func (r repository) Unlock(id uint) error {
 	}
 
 	return nil
+}
+
+func (r repository) Delete(id uint) error {
+	return r.db.Unscoped().Delete(&model.Database{}, id).Error
 }

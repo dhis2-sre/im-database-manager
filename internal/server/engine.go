@@ -27,6 +27,7 @@ func GetEngine(environment di.Environment) *gin.Engine {
 	tokenAuthenticationRouter.POST("/databases", environment.DatabaseHandler.Create)
 	tokenAuthenticationRouter.POST("/databases/:id/upload", environment.DatabaseHandler.Upload)
 	tokenAuthenticationRouter.GET("/databases/:id", environment.DatabaseHandler.FindById)
+	tokenAuthenticationRouter.DELETE("/databases/:id", environment.DatabaseHandler.Delete)
 	tokenAuthenticationRouter.POST("/databases/:id/lock", environment.DatabaseHandler.Lock)
 	tokenAuthenticationRouter.DELETE("/databases/:id/unlock", environment.DatabaseHandler.Unlock)
 

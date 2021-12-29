@@ -29,12 +29,10 @@ func (s s3Client) Upload(bucket string, key string, body *bytes.Buffer) error {
 
 	uploader := manager.NewUploader(awsS3Client)
 
-	b := bytes.NewReader(body.Bytes())
-
 	_, err = uploader.Upload(context.TODO(), &s3.PutObjectInput{
 		Bucket: aws.String(bucket),
 		Key:    aws.String(key),
-		Body:   b,
+		Body:   bytes.NewReader(body.Bytes()),
 	})
 
 	return err

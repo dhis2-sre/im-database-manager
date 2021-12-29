@@ -37,13 +37,14 @@ func GetEngine(environment di.Environment) *gin.Engine {
 }
 
 func redoc(router *gin.RouterGroup, basePath string) {
-	router.StaticFile("/swagger.yaml", "./swagger/swagger.yaml")
+	router.StaticFile("/databases/swagger.yaml", "./swagger/swagger.yaml")
 
 	redocOpts := redocMiddleware.RedocOpts{
 		BasePath: basePath,
+		Path:     "/databases/docs",
 		SpecURL:  "./swagger.yaml",
 	}
-	router.GET("/docs", func(c *gin.Context) {
+	router.GET("/databases/docs", func(c *gin.Context) {
 		redocHandler := redocMiddleware.Redoc(redocOpts, nil)
 		redocHandler.ServeHTTP(c.Writer, c.Request)
 	})

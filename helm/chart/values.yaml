@@ -2,10 +2,38 @@
 # This is a YAML-formatted file.
 # Declare variables to be passed into your templates.
 
+containerPort: 8080
+
+basePath:
+
 replicaCount: 1
 
+database:
+  username: user
+  password: pass
+  name: name
+  host: postgresql.namespace.svc.cluster.local
+  port: 5432
+
+rabbitMq:
+  username: user
+  password: pass
+  host: im-database-manager-rabbitmq-feature.instance-manager-feature.svc.cluster.local
+  port: 5672
+
+jwks:
+  host: http://jwks.namespace.svc.cluster.local:8080/jwks.json
+  index: 0
+  minimumRefreshInterval: "960" # 15 minutes
+
+userService:
+  host: http://user-service.namespace.svc.cluster.local
+  basePath:
+
+s3Bucket: nameOfBucket
+
 image:
-  repository: nginx
+  repository: dhis2/instance-database-manager
   pullPolicy: IfNotPresent
   # Overrides the image tag whose default is the chart appVersion.
   tag: ""
@@ -38,7 +66,7 @@ securityContext: {}
 
 service:
   type: ClusterIP
-  port: 80
+  port: 8080
 
 ingress:
   enabled: false

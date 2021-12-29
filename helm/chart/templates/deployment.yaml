@@ -35,18 +35,23 @@ spec:
           imagePullPolicy: {{ .Values.image.pullPolicy }}
           ports:
             - name: http
-              containerPort: 80
+              containerPort: {{ .Values.containerPort }}
               protocol: TCP
           livenessProbe:
             httpGet:
-              path: /
+              path: {{ .Values.basePath }}/health
               port: http
           readinessProbe:
             httpGet:
-              path: /
+              path: {{ .Values.basePath }}/health
               port: http
           resources:
             {{- toYaml .Values.resources | nindent 12 }}
+          envFrom:
+            - configMapRef:
+                name: {{ include "im-database-manager.fullname" . }}
+            - secretRef:
+                name: {{ include "im-database-manager.fullname" . }}
       {{- with .Values.nodeSelector }}
       nodeSelector:
         {{- toYaml . | nindent 8 }}

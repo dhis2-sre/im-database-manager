@@ -1,0 +1,26 @@
+kind: ConfigMap
+apiVersion: v1
+metadata:
+  name: {{ include "im-database-manager.fullname" . }}
+  labels:
+    {{- include "im-database-manager.labels" . | nindent 4 }}
+data:
+  BASE_PATH: {{ .Values.basePath | default "/" }}
+
+  PORT: {{ .Values.containerPort | quote }}
+
+  JWKS_HOST: {{ .Values.jwks.host }}
+  JWKS_INDEX: {{ .Values.jwks.index | quote }}
+  JWKS_MINIMUM_REFRESH_INTERVAL: {{ .Values.jwks.minimumRefreshInterval | quote }}
+
+  USER_SERVICE_HOST: {{ .Values.userService.host }}
+  USER_SERVICE_BASE_PATH: {{ .Values.userService.basePath }}
+
+  S3_BUCKET: {{ .Values.s3Bucket }}
+
+  DATABASE_HOST: {{ .Values.database.host }}
+  DATABASE_PORT: {{ .Values.database.port | quote }}
+  DATABASE_NAME: {{ .Values.database.name }}
+
+  RABBITMQ_HOST: {{ .Values.rabbitMq.host }}
+  RABBITMQ_PORT: {{ .Values.rabbitMq.port | quote }}

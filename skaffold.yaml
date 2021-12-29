@@ -2,17 +2,17 @@ apiVersion: skaffold/v2beta25
 kind: Config
 build:
   artifacts:
-    - image: dhis2/im-database-manager-database
+    - image: dhis2/instance-database-manager
 deploy:
   statusCheckDeadlineSeconds: 120
   helm:
     releases:
-      - name: im-database-manager-database-{{ .ENVIRONMENT }}
+      - name: im-database-manager-{{ .ENVIRONMENT }}
         namespace: instance-manager-{{ .ENVIRONMENT }}
         createNamespace: true
         chartPath: helm/chart
         artifactOverrides:
-          image: dhis2/im-database-manager-database
+          image: dhis2/instance-database-manager
         imageStrategy:
           helm: { }
         useHelmSecrets: true
@@ -20,7 +20,7 @@ deploy:
           - helm/data/secrets/{{ .ENVIRONMENT }}/values.yaml
           - helm/data/values/{{ .ENVIRONMENT }}/values.yaml
 
-      - name: im-database-manager-database-postgresql-{{ .ENVIRONMENT }}
+      - name: im-database-manager-postgresql-{{ .ENVIRONMENT }}
         namespace: instance-manager-{{ .ENVIRONMENT }}
         createNamespace: true
         remoteChart: postgresql
@@ -30,7 +30,7 @@ deploy:
         valuesFiles:
           - helm/data/secrets/{{ .ENVIRONMENT }}/postgresql.yaml
 
-      - name: im-database-manager-database-rabbitmq-{{ .ENVIRONMENT }}
+      - name: im-database-manager-rabbitmq-{{ .ENVIRONMENT }}
         namespace: instance-manager-{{ .ENVIRONMENT }}
         createNamespace: true
         remoteChart: rabbitmq

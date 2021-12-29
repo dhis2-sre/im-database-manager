@@ -66,12 +66,12 @@ info:
   contact:
     email: info@dhis2.org
     url: https://github.com/dhis2-sre/im-database-manager
-  description: Manager Service as part of the Instance Manager environment
+  description: Database Manager Service as part of the Instance Manager environment
   license:
     name: TODO
-  termsOfService: there are no TOS at this moment, use at your own risk we take no
+  termsOfService: There are no TOS at this moment, use at your own risk we take no
     responsibility
-  title: Instance Manager Manager Service.
+  title: Instance Database Manager Service.
   version: 0.1.0
 paths:
   /databases:

@@ -75,6 +75,24 @@ info:
   version: 0.1.0
 paths:
   /databases:
+    get:
+      description: List databases
+      operationId: listDatabases
+      responses:
+        "200":
+          description: Database
+          schema:
+            items:
+              $ref: '#/definitions/Database'
+            type: array
+        "401":
+          $ref: '#/responses/Error'
+        "403":
+          $ref: '#/responses/Error'
+        "415":
+          $ref: '#/responses/Error'
+      security:
+      - oauth2: []
     post:
       description: Create database
       operationId: createDatabase

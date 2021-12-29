@@ -5,6 +5,7 @@ import (
 	"github.com/dhis2-sre/im-database-manager/internal/handler"
 	"github.com/dhis2-sre/im-database-manager/pkg/model"
 	userClient "github.com/dhis2-sre/im-user/pkg/client"
+	"github.com/dhis2-sre/im-user/swagger/sdk/models"
 	"github.com/gin-gonic/gin"
 	"mime/multipart"
 	"net/http"
@@ -285,4 +286,75 @@ func (h Handler) Delete(c *gin.Context) {
 	}
 
 	c.Status(http.StatusAccepted)
+}
+
+type groupWithDatabases struct {
+	ID        uint
+	Name      string
+	Hostname  string
+	Databases []*model.Database
+}
+
+// List databases
+// swagger:route GET /databases listDatabases
+//
+// List databases
+//
+// Security:
+//  oauth2:
+//
+// responses:
+//   200: []Database
+//   401: Error
+//   403: Error
+//   415: Error
+func (h Handler) List(c *gin.Context) {
+	user, err := handler.GetUserFromContext(c)
+	if err != nil {
+		_ = c.Error(err)
+		return
+	}
+
+	token, err := handler.GetTokenFromHttpAuthHeader(c)
+	if err != nil {
+		_ = c.Error(err)
+		return
+	}
+
+	userWithGroups, err := h.userClient.FindUserById(token, user.ID)
+	if err != nil {
+		_ = c.Error(err)
+		return
+	}
+
+	groups := userWithGroups.Groups
+	d, err := h.databaseService.List(groups)
+	if err != nil {
+		_ = c.Error(err)
+		return
+	}
+
+	c.JSON(http.StatusOK, h.groupsWithInstances(groups, d))
+}
+
+func (h Handler) groupsWithInstances(groups []*models.Group, databases []*model.Database) []groupWithDatabases {
+	groupsWithDatabases := make([]groupWithDatabases, len(groups))
+	for i, group := range groups {
+		groupsWithDatabases[i].ID = uint(group.ID)
+		groupsWithDatabases[i].Name = group.Name
+		groupsWithDatabases[i].Hostname = group.Hostname
+		groupsWithDatabases[i].Databases = h.filterByGroupId(databases, func(instance *model.Database) bool {
+			return instance.GroupID == uint(group.ID)
+		})
+	}
+	return groupsWithDatabases
+}
+
+func (h Handler) filterByGroupId(databases []*model.Database, test func(instance *model.Database) bool) (ret []*model.Database) {
+	for _, database := range databases {
+		if test(database) {
+			ret = append(ret, database)
+		}
+	}
+	return
 }

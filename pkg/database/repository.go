@@ -4,6 +4,7 @@ import (
 	"fmt"
 	"github.com/dhis2-sre/im-database-manager/pkg/model"
 	"gorm.io/gorm"
+	"strconv"
 )
 
 type Repository interface {
@@ -12,6 +13,7 @@ type Repository interface {
 	Lock(id uint, instanceId uint) (*model.Database, error)
 	Unlock(id uint) error
 	Delete(id uint) error
+	FindByGroupIds(ids []uint) ([]*model.Database, error)
 }
 
 func ProvideRepository(DB *gorm.DB) Repository {
@@ -72,4 +74,19 @@ func (r repository) Unlock(id uint) error {
 
 func (r repository) Delete(id uint) error {
 	return r.db.Unscoped().Delete(&model.Database{}, id).Error
+}
+
+func (r repository) FindByGroupIds(ids []uint) ([]*model.Database, error) {
+	var databases []*model.Database
+
+	stringIds := make([]string, len(ids))
+	for i, id := range ids {
+		stringIds[i] = strconv.Itoa(int(id))
+	}
+
+	err := r.db.
+		Where("group_id IN ?", stringIds).
+		Find(&databases).Error
+
+	return databases, err
 }

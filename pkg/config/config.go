@@ -10,14 +10,10 @@ import (
 func ProvideConfig() Config {
 	return Config{
 		BasePath: requireEnv("BASE_PATH"),
-		/*
-			UserService: service{
-				Host:     requireEnv("USER_SERVICE_HOST"),
-				BasePath: requireEnv("USER_SERVICE_BASE_PATH"),
-				Username: requireEnv("USER_SERVICE_USERNAME"),
-				Password: requireEnv("USER_SERVICE_PASSWORD"),
-			},
-		*/
+		UserService: service{
+			Host:     requireEnv("USER_SERVICE_HOST"),
+			BasePath: requireEnv("USER_SERVICE_BASE_PATH"),
+		},
 		Postgresql: postgresql{
 			Host:         requireEnv("DATABASE_HOST"),
 			Port:         requireEnvAsInt("DATABASE_PORT"),

@@ -1,10 +1,10 @@
-// Package classification Instance Manager Manager Service.
+// Package classification Instance Database Manager Service.
 //
-// Manager Service as part of the Instance Manager environment
+// Database Manager Service as part of the Instance Manager environment
 //
 // Terms Of Service:
 //
-// there are no TOS at this moment, use at your own risk we take no responsibility
+// There are no TOS at this moment, use at your own risk we take no responsibility
 //
 //    Version: 0.1.0
 //    License: TODO

@@ -24,7 +24,7 @@ type Handler struct {
 	databaseService Service
 }
 
-type createDatabaseRequest struct {
+type CreateDatabaseRequest struct {
 	Name    string `json:"name" binding:"required"`
 	GroupId uint   `json:"groupId" binding:"required"`
 }
@@ -43,7 +43,7 @@ type createDatabaseRequest struct {
 //   403: Error
 //   415: Error
 func (h Handler) Create(c *gin.Context) {
-	var request createDatabaseRequest
+	var request CreateDatabaseRequest
 	if err := handler.DataBinder(c, &request); err != nil {
 		_ = c.Error(err)
 		return
@@ -123,7 +123,7 @@ func (h Handler) FindById(c *gin.Context) {
 	c.JSON(http.StatusOK, d)
 }
 
-type lockDatabaseRequest struct {
+type LockDatabaseRequest struct {
 	InstanceId uint `json:"instanceId" binding:"required"`
 }
 
@@ -150,7 +150,7 @@ func (h Handler) Lock(c *gin.Context) {
 		return
 	}
 
-	var request lockDatabaseRequest
+	var request LockDatabaseRequest
 	if err := handler.DataBinder(c, &request); err != nil {
 		_ = c.Error(err)
 		return
@@ -200,7 +200,7 @@ func (h Handler) Unlock(c *gin.Context) {
 	c.Status(http.StatusAccepted)
 }
 
-type uploadDatabaseRequest struct {
+type UploadDatabaseRequest struct {
 	Database *multipart.FileHeader `form:"database" binding:"required"`
 }
 
@@ -226,7 +226,7 @@ func (h Handler) Upload(c *gin.Context) {
 		return
 	}
 
-	var request uploadDatabaseRequest
+	var request UploadDatabaseRequest
 	if err := handler.DataBinder(c, &request); err != nil {
 		_ = c.Error(err)
 		return
@@ -359,7 +359,7 @@ func (h Handler) filterByGroupId(databases []*model.Database, test func(instance
 	return
 }
 
-type updateDatabaseRequest struct {
+type UpdateDatabaseRequest struct {
 	Name    string `json:"name" binding:"required"`
 	GroupId uint   `json:"groupId" binding:"required"`
 }
@@ -388,7 +388,7 @@ func (h Handler) Update(c *gin.Context) {
 
 	// TODO: Authorize
 
-	var request updateDatabaseRequest
+	var request UpdateDatabaseRequest
 	if err := handler.DataBinder(c, &request); err != nil {
 		_ = c.Error(err)
 		return

@@ -388,7 +388,7 @@ func (h Handler) Update(c *gin.Context) {
 
 	// TODO: Authorize
 
-	var request createDatabaseRequest
+	var request updateDatabaseRequest
 	if err := handler.DataBinder(c, &request); err != nil {
 		_ = c.Error(err)
 		return

@@ -35,7 +35,7 @@ type CreateDatabaseRequest struct {
 // Create database
 //
 // Security:
-//  oauth2:
+//   oauth2:
 //
 // responses:
 //   202: Database
@@ -74,7 +74,7 @@ func (h Handler) Create(c *gin.Context) {
 // Find database by id
 //
 // Security:
-//  oauth2:
+//   oauth2:
 //
 // responses:
 //   200: Database
@@ -116,7 +116,7 @@ type LockDatabaseRequest struct {
 // Lock database by id
 //
 // Security:
-//  oauth2:
+//   oauth2:
 //
 // responses:
 //   200: Database
@@ -167,7 +167,7 @@ func (h Handler) Lock(c *gin.Context) {
 // Unlock database by id
 //
 // Security:
-//  oauth2:
+//   oauth2:
 //
 // responses:
 //   202:
@@ -217,7 +217,7 @@ type UploadDatabaseRequest struct {
 // Upload database
 //
 // Security:
-//  oauth2:
+//   oauth2:
 //
 // responses:
 //   201: Database
@@ -273,7 +273,7 @@ func (h Handler) Upload(c *gin.Context) {
 // Delete database by id
 //
 // Security:
-//  oauth2:
+//   oauth2:
 //
 // responses:
 //   202:
@@ -324,7 +324,7 @@ type groupWithDatabases struct {
 // List databases
 //
 // Security:
-//  oauth2:
+//   oauth2:
 //
 // responses:
 //   200: []Database
@@ -393,7 +393,7 @@ type UpdateDatabaseRequest struct {
 // Update database by id
 //
 // Security:
-//  oauth2:
+//   oauth2:
 //
 // responses:
 //   200:

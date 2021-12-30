@@ -15,6 +15,7 @@ const (
 	Internal             Type = "INTERNAL"
 	UnsupportedMediaType Type = "UNSUPPORTED_MEDIA_TYPE"
 	Unauthorized         Type = "AUTHORIZATION"
+	Forbidden            Type = "FORBIDDEN"
 	NotFound             Type = "NOT_FOUND"
 	Conflict             Type = "CONFLICT"
 )
@@ -39,6 +40,8 @@ func (e *Error) HttpStatusCode() int {
 		return http.StatusUnsupportedMediaType
 	case Unauthorized:
 		return http.StatusUnauthorized
+	case Forbidden:
+		return http.StatusForbidden
 	case NotFound:
 		return http.StatusNotFound
 	case Conflict:
@@ -82,6 +85,13 @@ func NewBadRequest(message string) *Error {
 func NewUnauthorized(message string) *Error {
 	return &Error{
 		Type:    Unauthorized,
+		Message: message,
+	}
+}
+
+func NewForbidden(message string) *Error {
+	return &Error{
+		Type:    Forbidden,
 		Message: message,
 	}
 }

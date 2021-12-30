@@ -9,12 +9,10 @@ import (
 const AdministratorGroupName = "administrators"
 
 func CanAccess(user *models.User, database *model.Database) bool {
-	return isAdministrator(user) || isMemberOfById(user, database.GroupID)
+	return isAdministrator(user) || IsGroupAdministrator(user.AdminGroups, database.GroupID) || isMemberOfById(user.Groups, database.GroupID)
 }
 
-func isMemberOfById(user *models.User, groupId uint) bool {
-	groups := user.Groups
-
+func isMemberOfById(groups []*models.Group, groupId uint) bool {
 	sort.Slice(groups, func(i, j int) bool {
 		return groups[i].ID <= groups[j].ID
 	})
@@ -44,4 +42,8 @@ func contains(groupName string, groups []*models.Group) bool {
 	})
 
 	return index < len(groups) && groups[index].Name == groupName
+}
+
+func IsGroupAdministrator(groups []*models.Group, groupId uint) bool {
+	return isMemberOfById(groups, groupId)
 }

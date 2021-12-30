@@ -190,13 +190,19 @@ func (h Handler) Unlock(c *gin.Context) {
 		return
 	}
 
-	err = h.canAccess(c, d)
+	userWithGroups, err := h.getUserWithGroups(c)
 	if err != nil {
 		_ = c.Error(err)
 		return
 	}
 
-	// TODO: Find instance and confirm instance.UserID == currentUser || currentUser == admin
+	// This is a bit hacky. All other handlers are using the h.canAccess method only group admins can unlock (admins can't)
+	isGroupAdministrator := handler.IsGroupAdministrator(userWithGroups.AdminGroups, d.GroupID)
+	if !isGroupAdministrator {
+		forbidden := apperror.NewForbidden("access denied")
+		_ = c.Error(forbidden)
+		return
+	}
 
 	err = h.databaseService.Unlock(uint(id))
 	if err != nil {
@@ -438,19 +444,27 @@ func (h Handler) Update(c *gin.Context) {
 
 	c.JSON(http.StatusOK, d)
 }
-
-func (h Handler) canAccess(c *gin.Context, d *model.Database) error {
+func (h Handler) getUserWithGroups(c *gin.Context) (*models.User, error) {
 	user, err := handler.GetUserFromContext(c)
 	if err != nil {
-		return err
+		return nil, err
 	}
 
 	token, err := handler.GetTokenFromHttpAuthHeader(c)
 	if err != nil {
-		return err
+		return nil, err
 	}
 
 	userWithGroups, err := h.userClient.FindUserById(token, user.ID)
+	if err != nil {
+		return nil, err
+	}
+
+	return userWithGroups, nil
+}
+
+func (h Handler) canAccess(c *gin.Context, d *model.Database) error {
+	userWithGroups, err := h.getUserWithGroups(c)
 	if err != nil {
 		return err
 	}

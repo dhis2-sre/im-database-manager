@@ -6,8 +6,6 @@ ID=$1
 NAME=$2
 GROUP_ID=$3
 
-# Create
-echo Create
 echo "{
   \"name\": \"$NAME\",
   \"groupId\": $GROUP_ID

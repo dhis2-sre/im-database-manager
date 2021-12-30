@@ -5,8 +5,6 @@ HTTP="http --verify=no --check-status"
 NAME=$1
 GROUP_ID=$2
 
-# Create
-echo Create
 echo "{
   \"name\": \"$NAME\",
   \"groupId\": $GROUP_ID

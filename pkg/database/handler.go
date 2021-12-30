@@ -49,37 +49,15 @@ func (h Handler) Create(c *gin.Context) {
 		return
 	}
 
-	// TODO: Authorize
-	/*
-		user, err := handler.GetUserFromContext(c)
-		if err != nil {
-			_ = c.Error(err)
-			return
-		}
-
-		token, err := handler.GetTokenFromHttpAuthHeader(c)
-		if err != nil {
-			_ = c.Error(err)
-			return
-		}
-
-		userWithGroups, err := h.userClient.FindUserById(token, user.ID)
-		if err != nil {
-			_ = c.Error(err)
-			return
-		}
-
-		canWrite := handler.CanWriteInstance(userWithGroups, instance)
-		if !canWrite {
-			unauthorized := apperror.NewUnauthorized("Write access denied")
-			_ = c.Error(unauthorized)
-			return
-		}
-	*/
-
 	d := &model.Database{
 		Name:    request.Name,
 		GroupID: request.GroupId,
+	}
+
+	err := h.canAccess(c, d)
+	if err != nil {
+		_ = c.Error(err)
+		return
 	}
 
 	if err := h.databaseService.Create(d); err != nil {
@@ -113,9 +91,13 @@ func (h Handler) FindById(c *gin.Context) {
 		return
 	}
 
-	// TODO: Authorize
-
 	d, err := h.databaseService.FindById(uint(id))
+	if err != nil {
+		_ = c.Error(err)
+		return
+	}
+
+	err = h.canAccess(c, d)
 	if err != nil {
 		_ = c.Error(err)
 		return
@@ -158,9 +140,19 @@ func (h Handler) Lock(c *gin.Context) {
 		return
 	}
 
-	// TODO: Authorize
+	d, err := h.databaseService.FindById(uint(id))
+	if err != nil {
+		_ = c.Error(err)
+		return
+	}
 
-	d, err := h.databaseService.Lock(uint(id), request.InstanceId)
+	err = h.canAccess(c, d)
+	if err != nil {
+		_ = c.Error(err)
+		return
+	}
+
+	d, err = h.databaseService.Lock(uint(id), request.InstanceId)
 	if err != nil {
 		_ = c.Error(err)
 		return
@@ -192,7 +184,19 @@ func (h Handler) Unlock(c *gin.Context) {
 		return
 	}
 
-	// TODO: Authorize
+	d, err := h.databaseService.FindById(uint(id))
+	if err != nil {
+		_ = c.Error(err)
+		return
+	}
+
+	err = h.canAccess(c, d)
+	if err != nil {
+		_ = c.Error(err)
+		return
+	}
+
+	// TODO: Find instance and confirm instance.UserID == currentUser || currentUser == admin
 
 	err = h.databaseService.Unlock(uint(id))
 	if err != nil {
@@ -242,7 +246,11 @@ func (h Handler) Upload(c *gin.Context) {
 		return
 	}
 
-	// TODO: Authorize
+	err = h.canAccess(c, d)
+	if err != nil {
+		_ = c.Error(err)
+		return
+	}
 
 	if request.Database == nil {
 		badRequest := apperror.NewBadRequest("file not found")
@@ -282,7 +290,17 @@ func (h Handler) Delete(c *gin.Context) {
 		return
 	}
 
-	// TODO: Authorize
+	d, err := h.databaseService.FindById(uint(id))
+	if err != nil {
+		_ = c.Error(err)
+		return
+	}
+
+	err = h.canAccess(c, d)
+	if err != nil {
+		_ = c.Error(err)
+		return
+	}
 
 	err = h.databaseService.Delete(uint(id))
 	if err != nil {
@@ -391,8 +409,6 @@ func (h Handler) Update(c *gin.Context) {
 		return
 	}
 
-	// TODO: Authorize
-
 	var request UpdateDatabaseRequest
 	if err := handler.DataBinder(c, &request); err != nil {
 		_ = c.Error(err)
@@ -400,6 +416,12 @@ func (h Handler) Update(c *gin.Context) {
 	}
 
 	d, err := h.databaseService.FindById(uint(id))
+	if err != nil {
+		_ = c.Error(err)
+		return
+	}
+
+	err = h.canAccess(c, d)
 	if err != nil {
 		_ = c.Error(err)
 		return
@@ -415,4 +437,28 @@ func (h Handler) Update(c *gin.Context) {
 	}
 
 	c.JSON(http.StatusOK, d)
+}
+
+func (h Handler) canAccess(c *gin.Context, d *model.Database) error {
+	user, err := handler.GetUserFromContext(c)
+	if err != nil {
+		return err
+	}
+
+	token, err := handler.GetTokenFromHttpAuthHeader(c)
+	if err != nil {
+		return err
+	}
+
+	userWithGroups, err := h.userClient.FindUserById(token, user.ID)
+	if err != nil {
+		return err
+	}
+
+	can := handler.CanAccess(userWithGroups, d)
+	if !can {
+		return apperror.NewForbidden("access denied")
+	}
+
+	return nil
 }

@@ -164,6 +164,8 @@ paths:
           $ref: '#/responses/Error'
         "403":
           $ref: '#/responses/Error'
+        "404":
+          $ref: '#/responses/Error'
         "415":
           $ref: '#/responses/Error'
       security:
@@ -186,6 +188,8 @@ paths:
         "401":
           $ref: '#/responses/Error'
         "403":
+          $ref: '#/responses/Error'
+        "404":
           $ref: '#/responses/Error'
         "415":
           $ref: '#/responses/Error'
@@ -242,6 +246,8 @@ paths:
           $ref: '#/responses/Error'
         "403":
           $ref: '#/responses/Error'
+        "404":
+          $ref: '#/responses/Error'
         "415":
           $ref: '#/responses/Error'
       security:
@@ -270,6 +276,8 @@ paths:
         "401":
           $ref: '#/responses/Error'
         "403":
+          $ref: '#/responses/Error'
+        "404":
           $ref: '#/responses/Error'
         "409":
           $ref: '#/responses/Error'
@@ -301,6 +309,8 @@ paths:
         "401":
           $ref: '#/responses/Error'
         "403":
+          $ref: '#/responses/Error'
+        "404":
           $ref: '#/responses/Error'
         "415":
           $ref: '#/responses/Error'

@@ -102,6 +102,7 @@ func (h Handler) Create(c *gin.Context) {
 //   200: Database
 //   401: Error
 //   403: Error
+//   404: Error
 //   415: Error
 func (h Handler) FindById(c *gin.Context) {
 	idParam := c.Param("id")
@@ -139,6 +140,7 @@ type LockDatabaseRequest struct {
 //   200: Database
 //   401: Error
 //   403: Error
+//   404: Error
 //   409: Error
 //   415: Error
 func (h Handler) Lock(c *gin.Context) {
@@ -179,6 +181,7 @@ func (h Handler) Lock(c *gin.Context) {
 //   202:
 //   401: Error
 //   403: Error
+//   404: Error
 //   415: Error
 func (h Handler) Unlock(c *gin.Context) {
 	idParam := c.Param("id")
@@ -216,6 +219,7 @@ type UploadDatabaseRequest struct {
 //   201: Database
 //   401: Error
 //   403: Error
+//   404: Error
 //   415: Error
 func (h Handler) Upload(c *gin.Context) {
 	idParam := c.Param("id")
@@ -267,6 +271,7 @@ func (h Handler) Upload(c *gin.Context) {
 //   202:
 //   401: Error
 //   403: Error
+//   404: Error
 //   415: Error
 func (h Handler) Delete(c *gin.Context) {
 	idParam := c.Param("id")

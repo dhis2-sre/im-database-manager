@@ -2,8 +2,6 @@ image:
   repository: dhis2/im-manager
   pullPolicy: Always
 
-basePath:
-
 serviceAccount:
   annotations:
     eks.amazonaws.com/role-arn: arn:aws:iam::767224633206:role/instance-cluster-test-instance-manager-api-feature

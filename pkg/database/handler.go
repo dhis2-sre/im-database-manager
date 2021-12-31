@@ -264,7 +264,13 @@ func (h Handler) Upload(c *gin.Context) {
 		return
 	}
 
-	save, err := h.databaseService.Upload(d, request.Database)
+	file, err := request.Database.Open()
+	if err != nil {
+		_ = c.Error(err)
+		return
+	}
+
+	save, err := h.databaseService.Upload(d, file)
 	if err != nil {
 		_ = c.Error(err)
 		return

@@ -8,7 +8,7 @@ import (
 	"github.com/dhis2-sre/im-database-manager/pkg/model"
 	"github.com/dhis2-sre/im-database-manager/pkg/storage"
 	"github.com/dhis2-sre/im-user/swagger/sdk/models"
-	"mime/multipart"
+	"io"
 	"strconv"
 	"strings"
 )
@@ -18,7 +18,7 @@ type Service interface {
 	FindById(id uint) (*model.Database, error)
 	Lock(id uint, instanceId uint) (*model.Database, error)
 	Unlock(id uint) error
-	Upload(d *model.Database, file *multipart.FileHeader) (*model.Database, error)
+	Upload(d *model.Database, file io.Reader) (*model.Database, error)
 	Delete(id uint) error
 	List(groups []*models.Group) ([]*model.Database, error)
 	Update(d *model.Database) error
@@ -75,14 +75,9 @@ func (s service) Unlock(id uint) error {
 	return err
 }
 
-func (s service) Upload(d *model.Database, file *multipart.FileHeader) (*model.Database, error) {
-	openFile, err := file.Open()
-	if err != nil {
-		return nil, err
-	}
-
+func (s service) Upload(d *model.Database, file io.Reader) (*model.Database, error) {
 	buffer := new(bytes.Buffer)
-	_, err = buffer.ReadFrom(openFile)
+	_, err := buffer.ReadFrom(file)
 	if err != nil {
 		return nil, err
 	}

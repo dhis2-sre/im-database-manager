@@ -450,6 +450,7 @@ func (h Handler) Update(c *gin.Context) {
 
 	c.JSON(http.StatusOK, d)
 }
+
 func (h Handler) getUserWithGroups(c *gin.Context) (*models.User, error) {
 	user, err := handler.GetUserFromContext(c)
 	if err != nil {

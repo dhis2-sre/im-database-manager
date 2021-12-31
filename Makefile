@@ -6,7 +6,7 @@ binary:
 	go build -o im-database-manager -ldflags "-s -w" ./cmd/serve
 
 smoke-test:
-	docker compose up -d database
+	docker compose up -d database jwks
 	sleep 3
 	IMAGE_TAG=$(tag) docker compose up -d prod
 

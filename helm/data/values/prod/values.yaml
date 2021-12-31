@@ -1,0 +1,26 @@
+image:
+  repository: dhis2/im-manager
+
+serviceAccount:
+  annotations:
+    eks.amazonaws.com/role-arn: arn:aws:iam::767224633206:role/instance-cluster-test-instance-manager-api-feature
+
+userService:
+  host: im-user-prod.instance-manager-prod.svc.cluster.local:8080
+  basePath: /
+
+database:
+  host: im-database-manager-postgresql-prod.instance-manager-prod.svc.cluster.local
+  port: 5432
+  name: im-database-manager
+
+jwks:
+  host: http://im-user-prod.instance-manager-prod.svc.cluster.local:8080/jwks
+  index: 0
+  minimumRefreshInterval: 960 # 15 minutes
+
+s3Bucket: test-db-manager-bucket
+
+rabbitMq:
+  host: im-database-manager-rabbitmq-prod.instance-manager-prod.svc.cluster.local
+  port: 5672

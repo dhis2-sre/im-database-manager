@@ -246,6 +246,12 @@ func (h Handler) Upload(c *gin.Context) {
 		return
 	}
 
+	if request.Database == nil {
+		badRequest := apperror.NewBadRequest("file not found")
+		_ = c.Error(badRequest)
+		return
+	}
+
 	d, err := h.databaseService.FindById(uint(id))
 	if err != nil {
 		_ = c.Error(err)
@@ -255,12 +261,6 @@ func (h Handler) Upload(c *gin.Context) {
 	err = h.canAccess(c, d)
 	if err != nil {
 		_ = c.Error(err)
-		return
-	}
-
-	if request.Database == nil {
-		badRequest := apperror.NewBadRequest("file not found")
-		_ = c.Error(badRequest)
 		return
 	}
 

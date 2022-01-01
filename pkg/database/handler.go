@@ -197,7 +197,7 @@ func (h Handler) Unlock(c *gin.Context) {
 	}
 
 	// This is a bit hacky. All other handlers are using the h.canAccess method only group admins can unlock (admins can't)
-	isGroupAdministrator := handler.IsGroupAdministrator(userWithGroups.AdminGroups, d.GroupID)
+	isGroupAdministrator := handler.IsGroupAdministrator(d.GroupID, userWithGroups.AdminGroups)
 	if !isGroupAdministrator {
 		forbidden := apperror.NewForbidden("access denied")
 		_ = c.Error(forbidden)

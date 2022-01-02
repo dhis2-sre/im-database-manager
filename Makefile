@@ -23,7 +23,7 @@ cluster-dev:
 	skaffold dev
 
 test: clean
-	docker compose up -d database
+	docker compose up -d database jwks
 	docker compose run --no-deps test
 	$(clean-cmd)
 
@@ -48,7 +48,7 @@ swagger-check-install:
 
 swagger-clean:
 	rm -rf swagger/sdk/*
-	rm swagger/swagger.yaml
+	rm -f swagger/swagger.yaml
 
 swagger-docs: swagger-check-install
 	swagger generate spec -o swagger/swagger.yaml -x swagger/sdk --scan-models
@@ -57,7 +57,7 @@ swagger-docs: swagger-check-install
 swagger-client: swagger-check-install
 	swagger generate client -f swagger/swagger.yaml -t swagger/sdk
 
-swagger: swagger-clean swagger-docs
+swagger: swagger-clean swagger-docs swagger-client
 
 di:
 	wire gen ./internal/di

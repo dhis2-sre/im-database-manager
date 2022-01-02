@@ -2,7 +2,6 @@ package model
 
 import "gorm.io/gorm"
 
-// swagger:model Database
 type Database struct {
 	gorm.Model
 	Name       string `gorm:"index:idx_name_and_group,unique"`

@@ -78,6 +78,7 @@ func (h Handler) Create(c *gin.Context) {
 //
 // responses:
 //   200: Database
+//   400: Error
 //   401: Error
 //   403: Error
 //   404: Error
@@ -323,7 +324,8 @@ func (h Handler) Delete(c *gin.Context) {
 	c.Status(http.StatusAccepted)
 }
 
-type groupWithDatabases struct {
+// swagger:model GroupsWithDatabases
+type GroupsWithDatabases struct {
 	ID        uint
 	Name      string
 	Hostname  string
@@ -339,7 +341,7 @@ type groupWithDatabases struct {
 //   oauth2:
 //
 // responses:
-//   200: []Database
+//   200: []GroupsWithDatabases
 //   401: Error
 //   403: Error
 //   415: Error
@@ -369,11 +371,11 @@ func (h Handler) List(c *gin.Context) {
 		return
 	}
 
-	c.JSON(http.StatusOK, h.groupsWithInstances(groups, d))
+	c.JSON(http.StatusOK, h.groupsWithDatabases(groups, d))
 }
 
-func (h Handler) groupsWithInstances(groups []*models.Group, databases []*model.Database) []groupWithDatabases {
-	groupsWithDatabases := make([]groupWithDatabases, len(groups))
+func (h Handler) groupsWithDatabases(groups []*models.Group, databases []*model.Database) []GroupsWithDatabases {
+	groupsWithDatabases := make([]GroupsWithDatabases, len(groups))
 	for i, group := range groups {
 		groupsWithDatabases[i].ID = uint(group.ID)
 		groupsWithDatabases[i].Name = group.Name

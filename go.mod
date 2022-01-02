@@ -11,7 +11,11 @@ require (
 	github.com/dhis2-sre/im-user v0.4.0
 	github.com/gin-contrib/cors v1.3.1
 	github.com/gin-gonic/gin v1.7.7
+	github.com/go-openapi/errors v0.20.1 // indirect
 	github.com/go-openapi/runtime v0.21.0
+	github.com/go-openapi/strfmt v0.21.1 // indirect
+	github.com/go-openapi/swag v0.19.15 // indirect
+	github.com/go-openapi/validate v0.20.3 // indirect
 	github.com/go-playground/validator/v10 v10.9.0 // indirect
 	github.com/gofrs/uuid v4.2.0+incompatible
 	github.com/google/wire v0.5.0

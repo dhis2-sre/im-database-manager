@@ -39,6 +39,21 @@ definitions:
     x-go-package: github.com/dhis2-sre/im-database-manager/pkg/model
   DeletedAt:
     $ref: '#/definitions/NullTime'
+  GroupsWithDatabases:
+    properties:
+      Databases:
+        items:
+          $ref: '#/definitions/Database'
+        type: array
+      Hostname:
+        type: string
+      ID:
+        format: uint64
+        type: integer
+      Name:
+        type: string
+    type: object
+    x-go-package: github.com/dhis2-sre/im-database-manager/pkg/database
   LockDatabaseRequest:
     properties:
       instanceId:
@@ -110,10 +125,10 @@ paths:
       operationId: listDatabases
       responses:
         "200":
-          description: Database
+          description: GroupsWithDatabases
           schema:
             items:
-              $ref: '#/definitions/Database'
+              $ref: '#/definitions/GroupsWithDatabases'
             type: array
         "401":
           $ref: '#/responses/Error'
@@ -185,6 +200,8 @@ paths:
           description: Database
           schema:
             $ref: '#/definitions/Database'
+        "400":
+          $ref: '#/responses/Error'
         "401":
           $ref: '#/responses/Error'
         "403":

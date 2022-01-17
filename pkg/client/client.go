@@ -14,6 +14,7 @@ import (
 type Client interface {
 	Create(token string, createDatabaseRequest *models.CreateDatabaseRequest) (*models.Database, error)
 	FindById(token string, id uint) (*models.Database, error)
+	Save(token string, databaseId uint, instanceId uint) (string, error)
 }
 
 func ProvideClient(host string, basePath string) Client {
@@ -51,4 +52,21 @@ func (c cli) FindById(token string, id uint) (*models.Database, error) {
 		return nil, err
 	}
 	return db.GetPayload(), nil
+}
+
+func (c cli) Save(token string, databaseId uint, instanceId uint) (string, error) {
+	body := &models.SaveDatabaseRequest{InstanceID: uint64(instanceId)}
+	params := &operations.SaveDatabaseByIDParams{
+		Body:    body,
+		ID:      uint64(databaseId),
+		Context: context.Background(),
+	}
+	authInfo := httptransport.BearerToken(token)
+
+	response, err := c.clientService.SaveDatabaseByID(params, authInfo)
+	if err != nil {
+		return "", err
+	}
+
+	return response.Payload.RunID, nil
 }

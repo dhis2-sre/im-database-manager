@@ -1,6 +1,6 @@
 FROM golang:1.16-alpine AS build
 RUN apk -U upgrade && \
-    apk add gcc musl-dev
+    apk add gcc musl-dev git
 WORKDIR /src
 RUN go get github.com/cespare/reflex
 COPY go.mod go.sum ./

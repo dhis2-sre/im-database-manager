@@ -7,6 +7,8 @@ import (
 	"github.com/dhis2-sre/im-database-manager/pkg/config"
 	"github.com/dhis2-sre/im-database-manager/pkg/model"
 	"github.com/dhis2-sre/im-database-manager/pkg/storage"
+	jobClient "github.com/dhis2-sre/im-job/pkg/client"
+	jobModels "github.com/dhis2-sre/im-job/swagger/sdk/models"
 	"github.com/dhis2-sre/im-user/swagger/sdk/models"
 	"io"
 	"strconv"
@@ -22,15 +24,17 @@ type Service interface {
 	Delete(id uint) error
 	List(groups []*models.Group) ([]*model.Database, error)
 	Update(d *model.Database) error
+	Save(token string, id uint) (string, error)
 }
 
-func ProvideService(c config.Config, s3Client storage.S3Client, repository Repository) Service {
-	return &service{c, s3Client, repository}
+func ProvideService(c config.Config, s3Client storage.S3Client, jobClient jobClient.Client, repository Repository) Service {
+	return &service{c, s3Client, jobClient, repository}
 }
 
 type service struct {
 	c          config.Config
 	s3Client   storage.S3Client
+	jobClient  jobClient.Client
 	repository Repository
 }
 
@@ -126,4 +130,29 @@ func (s service) List(groups []*models.Group) ([]*model.Database, error) {
 
 func (s service) Update(d *model.Database) error {
 	return s.repository.Update(d)
+}
+
+func (s service) Save(token string, id uint) (string, error) {
+	d, err := s.FindById(id)
+	if err != nil {
+		return "", err
+	}
+
+	key := fmt.Sprintf("%d/%s", d.GroupID, d.Name)
+	payload := map[string]string{
+		"S3_BUCKET": s.c.Bucket,
+		"S3_KEY":    key,
+	}
+	body := &jobModels.RunJobRequest{
+		GroupID:  uint64(d.GroupID),
+		Payload:  payload,
+		TargetID: uint64(d.InstanceID),
+	}
+
+	runId, err := s.jobClient.Run(token, uint(3), body)
+	if err != nil {
+		return "", err
+	}
+
+	return runId, nil
 }

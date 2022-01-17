@@ -14,6 +14,12 @@ func ProvideConfig() Config {
 			Host:     requireEnv("USER_SERVICE_HOST"),
 			BasePath: requireEnv("USER_SERVICE_BASE_PATH"),
 		},
+		JobService: service{
+			Host:     requireEnv("JOB_SERVICE_HOST"),
+			BasePath: requireEnv("JOB_SERVICE_BASE_PATH"),
+			Username: requireEnv("JOB_SERVICE_USERNAME"),
+			Password: requireEnv("JOB_SERVICE_PASSWORD"),
+		},
 		Postgresql: postgresql{
 			Host:         requireEnv("DATABASE_HOST"),
 			Port:         requireEnvAsInt("DATABASE_PORT"),
@@ -41,6 +47,7 @@ func ProvideConfig() Config {
 type Config struct {
 	BasePath       string
 	UserService    service
+	JobService     service
 	Postgresql     postgresql
 	RabbitMqURL    rabbitmq
 	Authentication Authentication

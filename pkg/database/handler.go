@@ -1,6 +1,7 @@
 package database
 
 import (
+	"fmt"
 	"github.com/dhis2-sre/im-database-manager/internal/apperror"
 	"github.com/dhis2-sre/im-database-manager/internal/handler"
 	"github.com/dhis2-sre/im-database-manager/pkg/model"
@@ -212,6 +213,77 @@ func (h Handler) Unlock(c *gin.Context) {
 	}
 
 	c.Status(http.StatusAccepted)
+}
+
+type SaveDatabaseRequest struct {
+	InstanceId uint `json:"instanceId" binding:"required"`
+}
+
+type SaveDatabaseResponse struct {
+	RunId string `json:"runId"`
+}
+
+// Save database
+// swagger:route POST /databases/{id}/save saveDatabaseById
+//
+// Save database by id
+//
+// Security:
+//   oauth2:
+//
+// responses:
+//   202: SaveDatabaseResponse
+//   401: Error
+//   403: Error
+//   404: Error
+//   415: Error
+func (h Handler) Save(c *gin.Context) {
+	idParam := c.Param("id")
+	id, err := strconv.Atoi(idParam)
+	if err != nil {
+		badRequest := apperror.NewBadRequest("error parsing id")
+		_ = c.Error(badRequest)
+		return
+	}
+
+	var request SaveDatabaseRequest
+	if err := handler.DataBinder(c, &request); err != nil {
+		_ = c.Error(err)
+		return
+	}
+
+	token, err := handler.GetTokenFromHttpAuthHeader(c)
+	if err != nil {
+		_ = c.Error(err)
+		return
+	}
+
+	d, err := h.databaseService.FindById(uint(id))
+	if err != nil {
+		_ = c.Error(err)
+		return
+	}
+
+	err = h.canAccess(c, d)
+	if err != nil {
+		_ = c.Error(err)
+		return
+	}
+
+	if d.InstanceID != request.InstanceId && d.InstanceID != 0 {
+		message := fmt.Sprintf("database locked by instance with id %d", d.InstanceID)
+		conflict := apperror.NewConflict(message)
+		_ = c.Error(conflict)
+		return
+	}
+
+	runId, err := h.databaseService.Save(token, uint(id))
+	if err != nil {
+		_ = c.Error(err)
+		return
+	}
+
+	c.JSON(http.StatusAccepted, SaveDatabaseResponse{runId})
 }
 
 type UploadDatabaseRequest struct {

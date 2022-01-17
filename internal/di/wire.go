@@ -1,4 +1,5 @@
-//+build wireinject
+//go:build wireinject
+// +build wireinject
 
 package di
 
@@ -35,7 +36,8 @@ func GetEnvironment() Environment {
 	wire.Build(
 		config.ProvideConfig,
 
-		client.ProvideUser,
+		client.ProvideUserService,
+		client.ProvideJobService,
 
 		provideDatabase,
 		storage.ProvideS3Client,

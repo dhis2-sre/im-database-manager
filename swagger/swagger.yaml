@@ -96,6 +96,21 @@ definitions:
     title: NullTime represents a time.Time that may be null.
     type: object
     x-go-package: database/sql
+  SaveDatabaseRequest:
+    properties:
+      instanceId:
+        format: uint64
+        type: integer
+        x-go-name: InstanceId
+    type: object
+    x-go-package: github.com/dhis2-sre/im-database-manager/pkg/database
+  SaveDatabaseResponse:
+    properties:
+      runId:
+        type: string
+        x-go-name: RunId
+    type: object
+    x-go-package: github.com/dhis2-sre/im-database-manager/pkg/database
   UpdateDatabaseRequest:
     properties:
       groupId:
@@ -302,6 +317,36 @@ paths:
           $ref: '#/responses/Error'
       security:
       - oauth2: []
+  /databases/{id}/save:
+    post:
+      description: Save database by id
+      operationId: saveDatabaseById
+      parameters:
+      - format: uint64
+        in: path
+        name: id
+        required: true
+        type: integer
+        x-go-name: ID
+      - description: Save database request body parameter
+        in: body
+        name: Body
+        required: true
+        schema:
+          $ref: '#/definitions/SaveDatabaseRequest'
+      responses:
+        "202":
+          $ref: '#/responses/SaveDatabaseResponse'
+        "401":
+          $ref: '#/responses/Error'
+        "403":
+          $ref: '#/responses/Error'
+        "404":
+          $ref: '#/responses/Error'
+        "415":
+          $ref: '#/responses/Error'
+      security:
+      - oauth2: []
   /databases/{id}/upload:
     post:
       description: Upload database
@@ -338,6 +383,10 @@ produces:
 responses:
   Error:
     description: ""
+  SaveDatabaseResponse:
+    description: ""
+    schema:
+      $ref: '#/definitions/SaveDatabaseResponse'
 securityDefinitions:
   oauth2:
     flow: password

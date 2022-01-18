@@ -9,6 +9,10 @@ userService:
   host: im-user-prod.instance-manager-prod.svc.cluster.local:8080
   basePath: /
 
+jobService:
+  host: im-job-prod.instance-manager-prod.svc.cluster.local:8080
+  basePath: /
+
 database:
   host: im-database-manager-postgresql-prod.instance-manager-prod.svc.cluster.local
   port: 5432

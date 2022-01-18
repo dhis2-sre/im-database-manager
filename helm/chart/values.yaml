@@ -27,7 +27,11 @@ jwks:
   minimumRefreshInterval: "960" # 15 minutes
 
 userService:
-  host: http://user-service.namespace.svc.cluster.local
+  host: user-service.namespace.svc.cluster.local
+  basePath:
+
+jobService:
+  host: job-service.namespace.svc.cluster.local
   basePath:
 
 s3Bucket: nameOfBucket

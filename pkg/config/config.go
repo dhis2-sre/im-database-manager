@@ -17,8 +17,6 @@ func ProvideConfig() Config {
 		JobService: service{
 			Host:     requireEnv("JOB_SERVICE_HOST"),
 			BasePath: requireEnv("JOB_SERVICE_BASE_PATH"),
-			Username: requireEnv("JOB_SERVICE_USERNAME"),
-			Password: requireEnv("JOB_SERVICE_PASSWORD"),
 		},
 		Postgresql: postgresql{
 			Host:         requireEnv("DATABASE_HOST"),

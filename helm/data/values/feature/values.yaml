@@ -12,6 +12,10 @@ userService:
   host: im-user-feature.instance-manager-feature.svc.cluster.local:8080
   basePath: /skaffold
 
+jobService:
+  host: im-job-feature.instance-manager-feature.svc.cluster.local:8080
+  basePath: /skaffold
+
 database:
   host: im-database-manager-postgresql-feature.instance-manager-feature.svc.cluster.local
   port: 5432

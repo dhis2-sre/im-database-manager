@@ -16,6 +16,9 @@ data:
   USER_SERVICE_HOST: {{ .Values.userService.host }}
   USER_SERVICE_BASE_PATH: {{ .Values.userService.basePath }}
 
+  JOB_SERVICE_HOST: {{ .Values.jobService.host }}
+  JOB_SERVICE_BASE_PATH: {{ .Values.jobService.basePath }}
+
   S3_BUCKET: {{ .Values.s3Bucket }}
 
   DATABASE_HOST: {{ .Values.database.host }}

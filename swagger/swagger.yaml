@@ -96,6 +96,9 @@ definitions:
     title: NullTime represents a time.Time that may be null.
     type: object
     x-go-package: database/sql
+  Response:
+    type: object
+    x-go-package: github.com/dhis2-sre/im-database-manager/pkg/health
   SaveDatabaseRequest:
     properties:
       instanceId:
@@ -402,6 +405,13 @@ paths:
           $ref: '#/responses/Error'
         "415":
           $ref: '#/responses/Error'
+  /health:
+    get:
+      description: Service health status
+      operationId: health
+      responses:
+        "200":
+          $ref: '#/responses/Response'
 produces:
 - application/json
 responses:
@@ -409,6 +419,10 @@ responses:
     description: ""
   Error:
     description: ""
+  Response:
+    description: ""
+    schema:
+      $ref: '#/definitions/Response'
   SaveDatabaseResponse:
     description: ""
     schema:

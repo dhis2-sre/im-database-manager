@@ -44,20 +44,22 @@ func NewHealthOK() *HealthOK {
 HealthOK health o k
 */
 type HealthOK struct {
-	Payload models.Response
+	Payload *models.Response
 }
 
 func (o *HealthOK) Error() string {
 	return fmt.Sprintf("[GET /health][%d] healthOK  %+v", 200, o.Payload)
 }
-func (o *HealthOK) GetPayload() models.Response {
+func (o *HealthOK) GetPayload() *models.Response {
 	return o.Payload
 }
 
 func (o *HealthOK) readResponse(response runtime.ClientResponse, consumer runtime.Consumer, formats strfmt.Registry) error {
 
+	o.Payload = new(models.Response)
+
 	// response payload
-	if err := consumer.Consume(response.Body(), &o.Payload); err != nil && err != io.EOF {
+	if err := consumer.Consume(response.Body(), o.Payload); err != nil && err != io.EOF {
 		return err
 	}
 

@@ -6,7 +6,7 @@ import (
 )
 
 type Response struct {
-	status string
+	Status string `json:"status"`
 }
 
 // Health
@@ -17,5 +17,5 @@ type Response struct {
 // responses:
 //   200: Response
 func Health(c *gin.Context) {
-	c.JSON(http.StatusOK, Response{status: "UP"})
+	c.JSON(http.StatusOK, Response{"UP"})
 }

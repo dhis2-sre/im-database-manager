@@ -9,7 +9,7 @@ type Error struct {
 	Message string
 }
 
-//swagger:parameters findDatabaseById lockDatabaseById unlockDatabaseById uploadDatabase deleteDatabaseById updateDatabaseById saveDatabaseById
+//swagger:parameters findDatabaseById lockDatabaseById unlockDatabaseById uploadDatabase deleteDatabaseById updateDatabaseById saveDatabaseById findDatabaseUrlById
 type IdParam struct {
 	// in: path
 	// required: true
@@ -61,4 +61,10 @@ type _ struct {
 type SaveDatabaseResponse struct {
 	//in: body
 	Body database.SaveDatabaseResponse
+}
+
+// swagger:response DatabaseUrl
+type _ struct {
+	//in: body
+	_ string
 }

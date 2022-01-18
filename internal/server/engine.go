@@ -22,6 +22,8 @@ func GetEngine(environment di.Environment) *gin.Engine {
 
 	router.GET("/health", health.Health)
 
+	router.GET("/databases/:id/url", environment.DatabaseHandler.FindUrlById)
+
 	tokenAuthenticationRouter := router.Group("")
 	tokenAuthenticationRouter.Use(environment.AuthenticationMiddleware.TokenAuthentication)
 	tokenAuthenticationRouter.POST("/databases", environment.DatabaseHandler.Create)
@@ -32,7 +34,7 @@ func GetEngine(environment di.Environment) *gin.Engine {
 	tokenAuthenticationRouter.DELETE("/databases/:id", environment.DatabaseHandler.Delete)
 	tokenAuthenticationRouter.POST("/databases/:id/lock", environment.DatabaseHandler.Lock)
 	tokenAuthenticationRouter.DELETE("/databases/:id/unlock", environment.DatabaseHandler.Unlock)
-	tokenAuthenticationRouter.POST("/databases/:id/save", environment.DatabaseHandler.Save)
+	tokenAuthenticationRouter.POST("/databases/save/:instanceId", environment.DatabaseHandler.Save)
 	//	tokenAuthenticationRouter.POST("/databases/:id/saveas", health.Health)
 
 	return r

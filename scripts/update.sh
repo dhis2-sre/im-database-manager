@@ -1,10 +1,12 @@
 #!/usr/bin/env bash
 
-HTTP="http --verify=no --check-status"
+set -euo pipefail
 
 ID=$1
 NAME=$2
-GROUP_ID=$3
+GROUP_NAME=$2
+
+GROUP_ID=$($HTTP "$INSTANCE_HOST/groups-name-to-id/$GROUP_NAME" "Authorization: Bearer $ACCESS_TOKEN")
 
 echo "{
   \"name\": \"$NAME\",

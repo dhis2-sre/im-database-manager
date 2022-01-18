@@ -1,5 +1,5 @@
 #!/usr/bin/env bash
 
-HTTP="http --verify=no --check-status"
+set -euo pipefail
 
 $HTTP "$INSTANCE_HOST/databases" "Authorization: Bearer $ACCESS_TOKEN"

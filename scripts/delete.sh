@@ -1,6 +1,6 @@
 #!/usr/bin/env bash
 
-HTTP="http --verify=no --check-status"
+set -euo pipefail
 
 ID=$1
 

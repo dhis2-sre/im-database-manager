@@ -8,6 +8,7 @@ import (
 	userClient "github.com/dhis2-sre/im-user/pkg/client"
 	"github.com/dhis2-sre/im-user/swagger/sdk/models"
 	"github.com/gin-gonic/gin"
+	"io"
 	"mime/multipart"
 	"net/http"
 	"strconv"
@@ -398,6 +399,54 @@ func (h Handler) Upload(c *gin.Context) {
 	}
 
 	c.JSON(http.StatusCreated, save)
+}
+
+// Download database
+// swagger:route GET /databases/{id}/download downloadDatabase
+//
+// Download database
+//
+// Security:
+//   oauth2:
+//
+// responses:
+//   200:
+//   401: Error
+//   403: Error
+//   404: Error
+//   415: Error
+func (h Handler) Download(c *gin.Context) {
+	idParam := c.Param("id")
+	id, err := strconv.Atoi(idParam)
+	if err != nil {
+		badRequest := apperror.NewBadRequest("error parsing id")
+		_ = c.Error(badRequest)
+		return
+	}
+
+	d, err := h.databaseService.FindById(uint(id))
+	if err != nil {
+		_ = c.Error(err)
+		return
+	}
+
+	err = h.canAccess(c, d)
+	if err != nil {
+		_ = c.Error(err)
+		return
+	}
+
+	download, err := h.databaseService.Download(uint(id))
+	if err != nil {
+		_ = c.Error(err)
+		return
+	}
+
+	_, err = io.Copy(c.Writer, download)
+	if err != nil {
+		_ = c.Error(err)
+		return
+	}
 }
 
 // Delete database

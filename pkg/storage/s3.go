@@ -7,11 +7,13 @@ import (
 	s3config "github.com/aws/aws-sdk-go-v2/config"
 	"github.com/aws/aws-sdk-go-v2/feature/s3/manager"
 	"github.com/aws/aws-sdk-go-v2/service/s3"
+	"io"
 )
 
 type S3Client interface {
 	Upload(bucket string, key string, body *bytes.Buffer) error
 	Delete(bucket string, key string) error
+	Download(bucket string, key string) (io.ReadCloser, error)
 }
 
 func ProvideS3Client() S3Client {
@@ -50,6 +52,23 @@ func (s s3Client) Delete(bucket string, key string) error {
 	})
 
 	return err
+}
+
+func (s s3Client) Download(bucket string, key string) (io.ReadCloser, error) {
+	awsS3Client, err := s.getS3Client()
+	if err != nil {
+		return nil, err
+	}
+
+	object, err := awsS3Client.GetObject(context.TODO(), &s3.GetObjectInput{
+		Bucket: aws.String(bucket),
+		Key:    aws.String(key),
+	})
+	if err != nil {
+		return nil, err
+	}
+
+	return object.Body, nil
 }
 
 func (s s3Client) getS3Client() (*s3.Client, error) {

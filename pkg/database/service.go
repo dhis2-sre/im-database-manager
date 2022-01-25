@@ -11,7 +11,6 @@ import (
 	jobModels "github.com/dhis2-sre/im-job/swagger/sdk/models"
 	"github.com/dhis2-sre/im-user/swagger/sdk/models"
 	"io"
-	"log"
 	"net/url"
 	"strconv"
 	"strings"
@@ -97,6 +96,12 @@ func (s service) Upload(d *model.Database, group *models.Group, file io.Reader, 
 	}
 
 	d.Url = fmt.Sprintf("s3://%s/%s", s.c.Bucket, key)
+
+	err = s.repository.Save(d)
+	if err != nil {
+		return nil, err
+	}
+
 	return d, nil
 }
 

@@ -9,6 +9,7 @@ import (
 
 type Repository interface {
 	Create(d *model.Database) error
+	Save(d *model.Database) error
 	FindById(id uint) (*model.Database, error)
 	Lock(id uint, instanceId uint) (*model.Database, error)
 	Unlock(id uint) error
@@ -27,6 +28,10 @@ type repository struct {
 
 func (r repository) Create(d *model.Database) error {
 	return r.db.Create(&d).Error
+}
+
+func (r repository) Save(d *model.Database) error {
+	return r.db.Save(&d).Error
 }
 
 func (r repository) FindById(id uint) (*model.Database, error) {

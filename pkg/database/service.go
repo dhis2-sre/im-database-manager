@@ -126,9 +126,12 @@ func (s service) Delete(id uint) error {
 		return err
 	}
 
-	// TODO: Look up group name
-	// TODO: Add file extension
-	key := fmt.Sprintf("%d/%s", d.GroupID, d.Name)
+	u, err := url.Parse(d.Url)
+	if err != nil {
+		return err
+	}
+
+	key := u.Path[1:] // Strip leading "/"
 	err = s.s3Client.Delete(s.c.Bucket, key)
 	if err != nil {
 		return err

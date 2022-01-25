@@ -11,6 +11,8 @@ import (
 	jobModels "github.com/dhis2-sre/im-job/swagger/sdk/models"
 	"github.com/dhis2-sre/im-user/swagger/sdk/models"
 	"io"
+	"log"
+	"net/url"
 	"strconv"
 	"strings"
 )
@@ -20,7 +22,7 @@ type Service interface {
 	FindById(id uint) (*model.Database, error)
 	Lock(id uint, instanceId uint) (*model.Database, error)
 	Unlock(id uint) error
-	Upload(d *model.Database, file io.Reader) (*model.Database, error)
+	Upload(d *model.Database, group *models.Group, file io.Reader, filename string) (*model.Database, error)
 	Delete(id uint) error
 	List(groups []*models.Group) ([]*model.Database, error)
 	Update(d *model.Database) error
@@ -79,16 +81,15 @@ func (s service) Unlock(id uint) error {
 	return err
 }
 
-func (s service) Upload(d *model.Database, file io.Reader) (*model.Database, error) {
+func (s service) Upload(d *model.Database, group *models.Group, file io.Reader, filename string) (*model.Database, error) {
 	buffer := new(bytes.Buffer)
 	_, err := buffer.ReadFrom(file)
 	if err != nil {
 		return nil, err
 	}
 
-	// TODO: Look up group name
-	// TODO: Add file extension
-	key := fmt.Sprintf("%d/%s", d.GroupID, d.Name)
+	key := fmt.Sprintf("%s/%s", group.Name, filename)
+
 	err = s.s3Client.Upload(s.c.Bucket, key, buffer)
 	if err != nil {
 		return nil, err

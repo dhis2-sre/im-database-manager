@@ -379,7 +379,19 @@ func (h Handler) Upload(c *gin.Context) {
 		return
 	}
 
-	save, err := h.databaseService.Upload(d, file)
+	token, err := handler.GetTokenFromHttpAuthHeader(c)
+	if err != nil {
+		_ = c.Error(err)
+		return
+	}
+
+	group, err := h.userClient.FindGroupById(token, d.GroupID)
+	if err != nil {
+		_ = c.Error(err)
+		return
+	}
+
+	save, err := h.databaseService.Upload(d, group, file, request.Database.Filename)
 	if err != nil {
 		_ = c.Error(err)
 		return

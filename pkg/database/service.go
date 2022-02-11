@@ -88,7 +88,7 @@ func (s service) Upload(d *model.Database, group *models.Group, file io.Reader, 
 		return nil, err
 	}
 
-	key := fmt.Sprintf("%s/%s", group.Name, filename)
+	key := fmt.Sprintf("%s/%s/%s", group.Name, d.Name, filename)
 
 	err = s.s3Client.Upload(s.c.Bucket, key, buffer)
 	if err != nil {

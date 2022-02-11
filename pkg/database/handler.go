@@ -11,6 +11,7 @@ import (
 	"io"
 	"mime/multipart"
 	"net/http"
+	"path"
 	"strconv"
 )
 
@@ -442,6 +443,8 @@ func (h Handler) Download(c *gin.Context) {
 		return
 	}
 
+	_, file := path.Split(d.Url)
+	c.Header("Content-Disposition", "attachment; filename="+file)
 	_, err = io.Copy(c.Writer, download)
 	if err != nil {
 		_ = c.Error(err)

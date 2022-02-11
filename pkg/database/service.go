@@ -111,6 +111,10 @@ func (s service) Download(id uint) (io.ReadCloser, error) {
 		return nil, err
 	}
 
+	if d.Url == "" {
+		return nil, apperror.NewBadRequest(fmt.Sprintf("database with %d doesn't reference any url", id))
+	}
+
 	u, err := url.Parse(d.Url)
 	if err != nil {
 		return nil, err

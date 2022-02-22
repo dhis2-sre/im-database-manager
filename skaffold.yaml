@@ -35,7 +35,7 @@ deploy:
         createNamespace: true
         remoteChart: rabbitmq
         repo: https://charts.bitnami.com/bitnami
-        version: 16.4.0
+        version: 8.29.0
         useHelmSecrets: true
         valuesFiles:
           - helm/data/secrets/{{ .ENVIRONMENT }}/rabbitmq.yaml

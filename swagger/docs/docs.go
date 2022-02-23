@@ -9,7 +9,7 @@ type Error struct {
 	Message string
 }
 
-//swagger:parameters findDatabaseById lockDatabaseById unlockDatabaseById uploadDatabase deleteDatabaseById updateDatabaseById saveDatabaseById findDatabaseUrlById
+//swagger:parameters findDatabaseById lockDatabaseById unlockDatabaseById uploadDatabase downloadDatabase deleteDatabaseById updateDatabaseById saveDatabaseById findDatabaseUrlById
 type IdParam struct {
 	// in: path
 	// required: true

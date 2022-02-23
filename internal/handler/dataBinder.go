@@ -13,7 +13,7 @@ func DataBinder(c *gin.Context, req interface{}) error {
 	}
 
 	if err := c.ShouldBind(req); err != nil {
-		message := fmt.Sprintf("Error binding data: %+v\n", err)
+		message := fmt.Sprintf("error binding data: %+v\n", err)
 		return apperror.NewBadRequest(message)
 	}
 

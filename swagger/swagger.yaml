@@ -119,6 +119,8 @@ definitions:
     type: object
     x-go-package: github.com/dhis2-sre/im-database-manager/pkg/database
   UpdateDatabaseRequest:
+    description: 'TODO: Make all? properties optional... ensure we only update if
+      new value is present'
     properties:
       groupId:
         format: uint64
@@ -127,6 +129,9 @@ definitions:
       name:
         type: string
         x-go-name: Name
+      url:
+        type: string
+        x-go-name: Url
     type: object
     x-go-package: github.com/dhis2-sre/im-database-manager/pkg/database
 info:
@@ -256,6 +261,32 @@ paths:
         "401":
           $ref: '#/responses/Error'
         "403":
+          $ref: '#/responses/Error'
+        "415":
+          $ref: '#/responses/Error'
+      security:
+      - oauth2: []
+      - TODO:
+        - document
+  /databases/{id}/download:
+    get:
+      description: Download database
+      operationId: downloadDatabase
+      parameters:
+      - format: uint64
+        in: path
+        name: id
+        required: true
+        type: integer
+        x-go-name: ID
+      responses:
+        "200":
+          description: ""
+        "401":
+          $ref: '#/responses/Error'
+        "403":
+          $ref: '#/responses/Error'
+        "404":
           $ref: '#/responses/Error'
         "415":
           $ref: '#/responses/Error'

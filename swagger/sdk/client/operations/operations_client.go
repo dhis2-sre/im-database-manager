@@ -34,6 +34,8 @@ type ClientService interface {
 
 	DeleteDatabaseByID(params *DeleteDatabaseByIDParams, authInfo runtime.ClientAuthInfoWriter, opts ...ClientOption) (*DeleteDatabaseByIDAccepted, error)
 
+	DownloadDatabase(params *DownloadDatabaseParams, authInfo runtime.ClientAuthInfoWriter, opts ...ClientOption) (*DownloadDatabaseOK, error)
+
 	FindDatabaseByID(params *FindDatabaseByIDParams, authInfo runtime.ClientAuthInfoWriter, opts ...ClientOption) (*FindDatabaseByIDOK, error)
 
 	FindDatabaseURLByID(params *FindDatabaseURLByIDParams, opts ...ClientOption) (*FindDatabaseURLByIDOK, error)
@@ -130,6 +132,45 @@ func (a *Client) DeleteDatabaseByID(params *DeleteDatabaseByIDParams, authInfo r
 	// unexpected success response
 	// safeguard: normally, absent a default response, unknown success responses return an error above: so this is a codegen issue
 	msg := fmt.Sprintf("unexpected success response for deleteDatabaseById: API contract not enforced by server. Client expected to get an error, but got: %T", result)
+	panic(msg)
+}
+
+/*
+  DownloadDatabase Download database
+*/
+func (a *Client) DownloadDatabase(params *DownloadDatabaseParams, authInfo runtime.ClientAuthInfoWriter, opts ...ClientOption) (*DownloadDatabaseOK, error) {
+	// TODO: Validate the params before sending
+	if params == nil {
+		params = NewDownloadDatabaseParams()
+	}
+	op := &runtime.ClientOperation{
+		ID:                 "downloadDatabase",
+		Method:             "GET",
+		PathPattern:        "/databases/{id}/download",
+		ProducesMediaTypes: []string{"application/json"},
+		ConsumesMediaTypes: []string{"application/json"},
+		Schemes:            []string{"http"},
+		Params:             params,
+		Reader:             &DownloadDatabaseReader{formats: a.formats},
+		AuthInfo:           authInfo,
+		Context:            params.Context,
+		Client:             params.HTTPClient,
+	}
+	for _, opt := range opts {
+		opt(op)
+	}
+
+	result, err := a.transport.Submit(op)
+	if err != nil {
+		return nil, err
+	}
+	success, ok := result.(*DownloadDatabaseOK)
+	if ok {
+		return success, nil
+	}
+	// unexpected success response
+	// safeguard: normally, absent a default response, unknown success responses return an error above: so this is a codegen issue
+	msg := fmt.Sprintf("unexpected success response for downloadDatabase: API contract not enforced by server. Client expected to get an error, but got: %T", result)
 	panic(msg)
 }
 

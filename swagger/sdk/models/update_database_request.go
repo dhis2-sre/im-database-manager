@@ -12,7 +12,7 @@ import (
 	"github.com/go-openapi/swag"
 )
 
-// UpdateDatabaseRequest update database request
+// UpdateDatabaseRequest TODO: Make all? properties optional... ensure we only update if new value is present
 //
 // swagger:model UpdateDatabaseRequest
 type UpdateDatabaseRequest struct {
@@ -22,6 +22,9 @@ type UpdateDatabaseRequest struct {
 
 	// name
 	Name string `json:"name,omitempty"`
+
+	// Url
+	URL string `json:"url,omitempty"`
 }
 
 // Validate validates this update database request

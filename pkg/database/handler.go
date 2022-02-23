@@ -568,9 +568,11 @@ func (h Handler) filterByGroupId(databases []*model.Database, test func(instance
 	return
 }
 
+// TODO: Make all? properties optional... ensure we only update if a new value is present
 type UpdateDatabaseRequest struct {
 	Name    string `json:"name" binding:"required"`
 	GroupId uint   `json:"groupId" binding:"required"`
+	Url     string `json:"url" binding:"required"`
 }
 
 // Update database
@@ -581,6 +583,7 @@ type UpdateDatabaseRequest struct {
 // Security:
 //   oauth2:
 //
+// TODO: document return type
 // responses:
 //   200:
 //   401: Error
@@ -615,6 +618,7 @@ func (h Handler) Update(c *gin.Context) {
 
 	d.Name = request.Name
 	d.GroupID = request.GroupId
+	d.Url = request.Url
 
 	err = h.databaseService.Update(d)
 	if err != nil {

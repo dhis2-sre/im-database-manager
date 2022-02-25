@@ -31,3 +31,11 @@ s3Bucket: test-db-manager-bucket
 rabbitMq:
   host: im-database-manager-rabbitmq-feature.instance-manager-feature.svc.cluster.local
   port: 5672
+
+resources:
+  limits:
+    cpu: 100m
+    memory: 128Mi
+  requests:
+    cpu: 100m
+    memory: 64Mi

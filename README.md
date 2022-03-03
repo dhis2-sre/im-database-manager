@@ -1,5 +1,12 @@
 # Instance Database Manager
 
+## Quick start
+```sh
+export ACCESS_TOKEN && eval (./login.sh) && echo $ACCESS_TOKEN
+./create.sh "Sierra Leone" whoami
+./upload.sh 1 ~/Downloads/dhis2-db-sierra-leone.sql.gz
+```
+
 
 # Token valid by key found in jwks.json
 

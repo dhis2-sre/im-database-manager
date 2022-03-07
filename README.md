@@ -3,7 +3,8 @@
 ## Quick start
 ```sh
 export ACCESS_TOKEN && eval (./login.sh) && echo $ACCESS_TOKEN
-./create.sh "Sierra Leone" whoami
+./create.sh "Sierra Leone 2.36.0" whoami
+wget https://databases.dhis2.org/sierra-leone/2.36.0/dhis2-db-sierra-leone.sql.gz -P ~/Downloads
 ./upload.sh 1 ~/Downloads/dhis2-db-sierra-leone.sql.gz
 ```
 

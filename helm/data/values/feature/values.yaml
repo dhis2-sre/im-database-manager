@@ -9,15 +9,15 @@ serviceAccount:
     eks.amazonaws.com/role-arn: arn:aws:iam::767224633206:role/instance-cluster-test-im-database-manager-feature
 
 userService:
-  host: im-user-feature.instance-manager-feature.svc.cluster.local:8080
+  host: im-user-feature.instance-manager-feature.svc:8080
   basePath: /skaffold
 
 jobService:
-  host: im-job-feature.instance-manager-feature.svc.cluster.local:8080
+  host: im-job-feature.instance-manager-feature.svc:8080
   basePath: /skaffold
 
 database:
-  host: im-database-manager-postgresql-feature.instance-manager-feature.svc.cluster.local
+  host: im-database-manager-postgresql-feature.instance-manager-feature.svc
   port: 5432
   name: im-database-manager
 
@@ -29,7 +29,7 @@ jwks:
 s3Bucket: test-db-manager-bucket
 
 rabbitMq:
-  host: im-database-manager-rabbitmq-feature.instance-manager-feature.svc.cluster.local
+  host: im-rabbitmq-feature.instance-manager-feature.svc
   port: 5672
 
 resources:

@@ -7,27 +7,27 @@ serviceAccount:
     eks.amazonaws.com/role-arn: arn:aws:iam::767224633206:role/instance-cluster-test-im-database-manager-dev
 
 userService:
-  host: im-user-dev.instance-manager-dev.svc.cluster.local:8080
+  host: im-user-dev.instance-manager-dev.svc:8080
   basePath: /
 
 jobService:
-  host: im-job-dev.instance-manager-dev.svc.cluster.local:8080
+  host: im-job-dev.instance-manager-dev.svc:8080
   basePath: /
 
 database:
-  host: im-database-manager-postgresql-dev.instance-manager-dev.svc.cluster.local
+  host: im-database-manager-postgresql-dev.instance-manager-dev.svc
   port: 5432
   name: im-database-manager
 
 jwks:
-  host: http://im-user-dev.instance-manager-dev.svc.cluster.local:8080/jwks
+  host: http://im-user-dev.instance-manager-dev.svc:8080/jwks
   index: 0
   minimumRefreshInterval: 960 # 15 minutes
 
 s3Bucket: test-db-manager-bucket
 
 rabbitMq:
-  host: im-database-manager-rabbitmq-dev.instance-manager-dev.svc.cluster.local
+  host: im-rabbitmq-dev.instance-manager-dev.svc
   port: 5672
 
 resources:

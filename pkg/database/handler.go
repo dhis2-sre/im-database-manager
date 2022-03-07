@@ -580,6 +580,8 @@ type UpdateDatabaseRequest struct {
 //
 // Update database by id
 //
+// TODO: Race condition? If two clients request at the same time... Do we need a transaction between find and update
+//
 // Security:
 //   oauth2:
 //

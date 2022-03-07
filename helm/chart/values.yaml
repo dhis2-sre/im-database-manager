@@ -4,6 +4,8 @@
 
 containerPort: 8080
 
+tmpfsSizeLimit: 128Mi
+
 basePath:
 
 replicaCount: 1
@@ -60,13 +62,14 @@ podAnnotations: {}
 podSecurityContext: {}
   # fsGroup: 2000
 
-securityContext: {}
-  # capabilities:
-  #   drop:
-  #   - ALL
-  # readOnlyRootFilesystem: true
-  # runAsNonRoot: true
-  # runAsUser: 1000
+securityContext:
+  capabilities:
+    drop:
+      - ALL
+  readOnlyRootFilesystem: true
+  runAsNonRoot: true
+  runAsUser: 405
+  runAsGroup: 100
 
 service:
   type: ClusterIP

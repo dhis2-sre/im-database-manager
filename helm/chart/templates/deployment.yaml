@@ -52,6 +52,15 @@ spec:
                 name: {{ include "im-database-manager.fullname" . }}
             - secretRef:
                 name: {{ include "im-database-manager.fullname" . }}
+          volumeMounts:
+            - mountPath: /tmp
+              name: tmp
+              subPath: tmp
+      volumes:
+        - name: tmp
+          emptyDir:
+            medium: Memory
+            sizeLimit: {{ .Values.tmpfsSizeLimit }}
       {{- with .Values.nodeSelector }}
       nodeSelector:
         {{- toYaml . | nindent 8 }}

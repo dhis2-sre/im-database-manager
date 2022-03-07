@@ -4,7 +4,7 @@ build:
   artifacts:
     - image: dhis2/instance-database-manager
 deploy:
-  statusCheckDeadlineSeconds: 120
+  statusCheckDeadlineSeconds: 180
   helm:
     releases:
       - name: im-database-manager-{{ .ENVIRONMENT }}

@@ -14,26 +14,26 @@ database:
   username: user
   password: pass
   name: name
-  host: postgresql.namespace.svc.cluster.local
+  host: postgresql.namespace.svc
   port: 5432
 
 rabbitMq:
   username: user
   password: pass
-  host: im-database-manager-rabbitmq-feature.instance-manager-feature.svc.cluster.local
+  host: im-database-manager-rabbitmq-feature.instance-manager-feature.svc
   port: 5672
 
 jwks:
-  host: http://jwks.namespace.svc.cluster.local:8080/jwks.json
+  host: http://jwks.namespace.svc:8080/jwks.json
   index: 0
   minimumRefreshInterval: "960" # 15 minutes
 
 userService:
-  host: user-service.namespace.svc.cluster.local
+  host: user-service.namespace.svc
   basePath:
 
 jobService:
-  host: job-service.namespace.svc.cluster.local
+  host: job-service.namespace.svc
   basePath:
 
 s3Bucket: nameOfBucket

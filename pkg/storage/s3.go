@@ -13,7 +13,7 @@ import (
 type S3Client interface {
 	Upload(bucket string, key string, body *bytes.Buffer) error
 	Delete(bucket string, key string) error
-	Download(bucket string, key string) (io.ReadCloser, error)
+	Download(bucket string, key string) (int64, io.ReadCloser, error)
 }
 
 func ProvideS3Client() S3Client {
@@ -54,10 +54,10 @@ func (s s3Client) Delete(bucket string, key string) error {
 	return err
 }
 
-func (s s3Client) Download(bucket string, key string) (io.ReadCloser, error) {
+func (s s3Client) Download(bucket string, key string) (int64, io.ReadCloser, error) {
 	awsS3Client, err := s.getS3Client()
 	if err != nil {
-		return nil, err
+		return 0, nil, err
 	}
 
 	object, err := awsS3Client.GetObject(context.TODO(), &s3.GetObjectInput{
@@ -65,10 +65,10 @@ func (s s3Client) Download(bucket string, key string) (io.ReadCloser, error) {
 		Key:    aws.String(key),
 	})
 	if err != nil {
-		return nil, err
+		return 0, nil, err
 	}
 
-	return object.Body, nil
+	return object.ContentLength, object.Body, nil
 }
 
 func (s s3Client) getS3Client() (*s3.Client, error) {

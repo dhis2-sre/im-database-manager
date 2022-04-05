@@ -22,7 +22,7 @@ type Service interface {
 	Lock(id uint, instanceId uint) (*model.Database, error)
 	Unlock(id uint) error
 	Upload(d *model.Database, group *models.Group, file io.Reader, filename string) (*model.Database, error)
-	Download(id uint) (io.ReadCloser, error)
+	Download(id uint) (int64, io.ReadCloser, error)
 	Delete(id uint) error
 	List(groups []*models.Group) ([]*model.Database, error)
 	Update(d *model.Database) error
@@ -105,19 +105,19 @@ func (s service) Upload(d *model.Database, group *models.Group, file io.Reader, 
 	return d, nil
 }
 
-func (s service) Download(id uint) (io.ReadCloser, error) {
+func (s service) Download(id uint) (int64, io.ReadCloser, error) {
 	d, err := s.repository.FindById(id)
 	if err != nil {
-		return nil, err
+		return 0, nil, err
 	}
 
 	if d.Url == "" {
-		return nil, apperror.NewBadRequest(fmt.Sprintf("database with %d doesn't reference any url", id))
+		return 0, nil, apperror.NewBadRequest(fmt.Sprintf("database with %d doesn't reference any url", id))
 	}
 
 	u, err := url.Parse(d.Url)
 	if err != nil {
-		return nil, err
+		return 0, nil, err
 	}
 
 	key := u.Path[1:] // Strip leading "/"

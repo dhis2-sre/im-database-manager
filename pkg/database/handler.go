@@ -437,7 +437,7 @@ func (h Handler) Download(c *gin.Context) {
 		return
 	}
 
-	download, err := h.databaseService.Download(uint(id))
+	contentLength, reader, err := h.databaseService.Download(uint(id))
 	if err != nil {
 		_ = c.Error(err)
 		return
@@ -445,7 +445,12 @@ func (h Handler) Download(c *gin.Context) {
 
 	_, file := path.Split(d.Url)
 	c.Header("Content-Disposition", "attachment; filename="+file)
-	_, err = io.Copy(c.Writer, download)
+	c.Header("Content-Description", "File Transfer")
+	c.Header("Content-Transfer-Encoding", "binary")
+	c.Header("Content-Type", "application/octet-stream")
+	c.Header("Content-Length", fmt.Sprintf("%d", contentLength))
+
+	_, err = io.Copy(c.Writer, reader)
 	if err != nil {
 		_ = c.Error(err)
 		return

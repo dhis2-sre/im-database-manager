@@ -399,6 +399,12 @@ func (h Handler) Upload(c *gin.Context) {
 		return
 	}
 
+	err = file.Close()
+	if err != nil {
+		_ = c.Error(err)
+		return
+	}
+
 	c.JSON(http.StatusCreated, save)
 }
 

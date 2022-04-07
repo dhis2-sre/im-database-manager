@@ -87,7 +87,7 @@ func (h Handler) Create(c *gin.Context) {
 //   415: Error
 func (h Handler) FindById(c *gin.Context) {
 	idParam := c.Param("id")
-	id, err := strconv.Atoi(idParam)
+	id, err := strconv.ParseUint(idParam, 10, 64)
 	if err != nil {
 		badRequest := apperror.NewBadRequest("error parsing id")
 		_ = c.Error(badRequest)
@@ -123,7 +123,7 @@ func (h Handler) FindById(c *gin.Context) {
 //   415: Error
 func (h Handler) FindUrlById(c *gin.Context) {
 	idParam := c.Param("id")
-	id, err := strconv.Atoi(idParam)
+	id, err := strconv.ParseUint(idParam, 10, 64)
 	if err != nil {
 		badRequest := apperror.NewBadRequest("error parsing id")
 		_ = c.Error(badRequest)
@@ -166,7 +166,7 @@ type LockDatabaseRequest struct {
 //   415: Error
 func (h Handler) Lock(c *gin.Context) {
 	idParam := c.Param("id")
-	id, err := strconv.Atoi(idParam)
+	id, err := strconv.ParseUint(idParam, 10, 64)
 	if err != nil {
 		badRequest := apperror.NewBadRequest("error parsing id")
 		_ = c.Error(badRequest)
@@ -216,7 +216,7 @@ func (h Handler) Lock(c *gin.Context) {
 //   415: Error
 func (h Handler) Unlock(c *gin.Context) {
 	idParam := c.Param("id")
-	id, err := strconv.Atoi(idParam)
+	id, err := strconv.ParseUint(idParam, 10, 64)
 	if err != nil {
 		badRequest := apperror.NewBadRequest("error parsing id")
 		_ = c.Error(badRequest)
@@ -276,7 +276,7 @@ type SaveDatabaseResponse struct {
 //   415: Error
 func (h Handler) Save(c *gin.Context) {
 	idParam := c.Param("id")
-	id, err := strconv.Atoi(idParam)
+	id, err := strconv.ParseUint(idParam, 10, 64)
 	if err != nil {
 		badRequest := apperror.NewBadRequest("error parsing id")
 		_ = c.Error(badRequest)
@@ -343,7 +343,7 @@ type UploadDatabaseRequest struct {
 //   415: Error
 func (h Handler) Upload(c *gin.Context) {
 	idParam := c.Param("id")
-	id, err := strconv.Atoi(idParam)
+	id, err := strconv.ParseUint(idParam, 10, 64)
 	if err != nil {
 		badRequest := apperror.NewBadRequest("error parsing id")
 		_ = c.Error(badRequest)
@@ -423,7 +423,7 @@ func (h Handler) Upload(c *gin.Context) {
 //   415: Error
 func (h Handler) Download(c *gin.Context) {
 	idParam := c.Param("id")
-	id, err := strconv.Atoi(idParam)
+	id, err := strconv.ParseUint(idParam, 10, 64)
 	if err != nil {
 		badRequest := apperror.NewBadRequest("error parsing id")
 		_ = c.Error(badRequest)
@@ -473,7 +473,7 @@ func (h Handler) Download(c *gin.Context) {
 //   415: Error
 func (h Handler) Delete(c *gin.Context) {
 	idParam := c.Param("id")
-	id, err := strconv.Atoi(idParam)
+	id, err := strconv.ParseUint(idParam, 10, 64)
 	if err != nil {
 		badRequest := apperror.NewBadRequest("error parsing id")
 		_ = c.Error(badRequest)
@@ -598,7 +598,7 @@ type UpdateDatabaseRequest struct {
 //   415: Error
 func (h Handler) Update(c *gin.Context) {
 	idParam := c.Param("id")
-	id, err := strconv.Atoi(idParam)
+	id, err := strconv.ParseUint(idParam, 10, 64)
 	if err != nil {
 		badRequest := apperror.NewBadRequest("error parsing id")
 		_ = c.Error(badRequest)

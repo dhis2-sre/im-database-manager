@@ -443,14 +443,14 @@ func (h Handler) Download(c *gin.Context) {
 	}
 
 	_, file := path.Split(d.Url)
-	cb := func(contentLength int64) {
-		c.Header("Content-Disposition", "attachment; filename="+file)
-		c.Header("Content-Description", "File Transfer")
-		c.Header("Content-Transfer-Encoding", "binary")
-		c.Header("Content-Type", "application/octet-stream")
-		c.Header("Content-Length", fmt.Sprintf("%d", contentLength))
-	}
-	err = h.databaseService.Download(uint(id), c.Writer, cb)
+	c.Header("Content-Disposition", "attachment; filename="+file)
+	c.Header("Content-Description", "File Transfer")
+	c.Header("Content-Transfer-Encoding", "binary")
+	c.Header("Content-Type", "application/octet-stream")
+
+	err = h.databaseService.Download(uint(id), c.Writer, func(contentLength int64) {
+		c.Header("Content-Length", strconv.FormatInt(contentLength, 10))
+	})
 	if err != nil {
 		_ = c.Error(err)
 		return

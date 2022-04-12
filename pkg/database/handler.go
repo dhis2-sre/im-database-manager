@@ -8,7 +8,6 @@ import (
 	userClient "github.com/dhis2-sre/im-user/pkg/client"
 	"github.com/dhis2-sre/im-user/swagger/sdk/models"
 	"github.com/gin-gonic/gin"
-	"io"
 	"mime/multipart"
 	"net/http"
 	"path"
@@ -443,20 +442,15 @@ func (h Handler) Download(c *gin.Context) {
 		return
 	}
 
-	contentLength, reader, err := h.databaseService.Download(uint(id))
-	if err != nil {
-		_ = c.Error(err)
-		return
-	}
-
 	_, file := path.Split(d.Url)
-	c.Header("Content-Disposition", "attachment; filename="+file)
-	c.Header("Content-Description", "File Transfer")
-	c.Header("Content-Transfer-Encoding", "binary")
-	c.Header("Content-Type", "application/octet-stream")
-	c.Header("Content-Length", fmt.Sprintf("%d", contentLength))
-
-	_, err = io.Copy(c.Writer, reader)
+	cb := func(contentLength int64) {
+		c.Header("Content-Disposition", "attachment; filename="+file)
+		c.Header("Content-Description", "File Transfer")
+		c.Header("Content-Transfer-Encoding", "binary")
+		c.Header("Content-Type", "application/octet-stream")
+		c.Header("Content-Length", fmt.Sprintf("%d", contentLength))
+	}
+	err = h.databaseService.Download(uint(id), c.Writer, cb)
 	if err != nil {
 		_ = c.Error(err)
 		return

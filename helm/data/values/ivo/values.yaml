@@ -1,0 +1,39 @@
+image:
+  repository: dhis2/im-manager
+  pullPolicy: Always
+
+serviceAccount:
+  annotations:
+    eks.amazonaws.com/role-arn: arn:aws:iam::767224633206:role/instance-cluster-test-im-database-manager-ivo
+
+userService:
+  host: im-user-ivo.instance-manager-ivo.svc:8080
+  basePath: /
+
+jobService:
+  host: im-job-ivo.instance-manager-ivo.svc:8080
+  basePath: /
+
+database:
+  host: im-database-manager-postgresql-ivo.instance-manager-ivo.svc
+  port: 5432
+  name: im-database-manager
+
+jwks:
+  host: http://im-user-ivo.instance-manager-ivo.svc:8080/jwks
+  index: 0
+  minimumRefreshInterval: 960 # 15 minutes
+
+s3Bucket: test-db-manager-bucket
+
+rabbitMq:
+  host: im-rabbitmq-ivo.instance-manager-ivo.svc
+  port: 5672
+
+resources:
+  limits:
+    cpu: 200m
+    memory: 512Mi
+  requests:
+    cpu: 100m
+    memory: 64Mi

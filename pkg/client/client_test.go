@@ -1,14 +1,6 @@
 package client
 
 import (
-	"fmt"
-	"github.com/dhis2-sre/im-database-manager/internal/di"
-	"github.com/dhis2-sre/im-database-manager/internal/server"
-	"github.com/dhis2-sre/im-database-manager/swagger/sdk/models"
-	"github.com/stretchr/testify/assert"
-	"log"
-	"net/http/httptest"
-	"net/url"
 	"testing"
 )
 
@@ -17,26 +9,27 @@ const AccessToken = "eyJhbGciOiJSUzI1NiIsInR5cCI6IkpXVCJ9.eyJleHAiOjQ3OTYzODQwNz
 func TestFindDatabaseById(t *testing.T) {
 	// TODO: fix test... im-user is needed
 	return
+	/*
+		environment := di.GetEnvironment()
+		r := server.GetEngine(environment)
+		ts := httptest.NewServer(r)
+		defer ts.Close()
 
-	environment := di.GetEnvironment()
-	r := server.GetEngine(environment)
-	ts := httptest.NewServer(r)
-	defer ts.Close()
+		parsedUrl, err := url.Parse(ts.URL)
+		assert.NoError(t, err)
+		host := fmt.Sprintf("%s:%s", parsedUrl.Hostname(), parsedUrl.Port())
+		c := ProvideClient(host, environment.Config.BasePath)
 
-	parsedUrl, err := url.Parse(ts.URL)
-	assert.NoError(t, err)
-	host := fmt.Sprintf("%s:%s", parsedUrl.Hostname(), parsedUrl.Port())
-	c := ProvideClient(host, environment.Config.BasePath)
+		create, err := c.Create(AccessToken, &models.CreateDatabaseRequest{
+			GroupID: 1,
+			Name:    "whatever",
+		})
+		assert.NoError(t, err)
 
-	create, err := c.Create(AccessToken, &models.CreateDatabaseRequest{
-		GroupID: 1,
-		Name:    "whatever",
-	})
-	assert.NoError(t, err)
+		db, err := c.FindById(AccessToken, uint(create.ID))
+		log.Printf("%+v", db)
+		//	assert.NoError(t, err)
 
-	db, err := c.FindById(AccessToken, uint(create.ID))
-	log.Printf("%+v", db)
-	//	assert.NoError(t, err)
-
-	//	assert.Equal(t, uint64(1), u.ID)
+		//	assert.Equal(t, uint64(1), u.ID)
+	*/
 }

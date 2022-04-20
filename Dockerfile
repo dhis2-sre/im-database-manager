@@ -8,7 +8,7 @@ RUN go mod download -x
 COPY . .
 RUN go build -o /app/im-database-manager ./cmd/serve
 
-FROM alpine:3.13
+FROM alpine:3.15
 RUN apk --no-cache -U upgrade \
     && apk add --no-cache postgresql-client
 WORKDIR /app

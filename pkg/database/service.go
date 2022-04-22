@@ -3,6 +3,11 @@ package database
 import (
 	"bytes"
 	"fmt"
+	"io"
+	"net/url"
+	"strconv"
+	"strings"
+
 	"github.com/dhis2-sre/im-database-manager/internal/apperror"
 	"github.com/dhis2-sre/im-database-manager/pkg/config"
 	"github.com/dhis2-sre/im-database-manager/pkg/model"
@@ -10,10 +15,6 @@ import (
 	jobClient "github.com/dhis2-sre/im-job/pkg/client"
 	jobModels "github.com/dhis2-sre/im-job/swagger/sdk/models"
 	"github.com/dhis2-sre/im-user/swagger/sdk/models"
-	"io"
-	"net/url"
-	"strconv"
-	"strings"
 )
 
 type Service interface {

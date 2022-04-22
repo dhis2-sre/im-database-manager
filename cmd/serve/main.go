@@ -26,9 +26,10 @@
 package main
 
 import (
+	"log"
+
 	"github.com/dhis2-sre/im-database-manager/internal/di"
 	"github.com/dhis2-sre/im-database-manager/internal/server"
-	"log"
 )
 
 func main() {

@@ -7,13 +7,14 @@
 package di
 
 import (
+	"log"
+
 	"github.com/dhis2-sre/im-database-manager/internal/client"
 	"github.com/dhis2-sre/im-database-manager/internal/handler"
 	"github.com/dhis2-sre/im-database-manager/pkg/config"
 	"github.com/dhis2-sre/im-database-manager/pkg/database"
 	"github.com/dhis2-sre/im-database-manager/pkg/storage"
 	"gorm.io/gorm"
-	"log"
 )
 
 // Injectors from wire.go:

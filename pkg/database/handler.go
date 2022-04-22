@@ -2,16 +2,17 @@ package database
 
 import (
 	"fmt"
+	"mime/multipart"
+	"net/http"
+	"path"
+	"strconv"
+
 	"github.com/dhis2-sre/im-database-manager/internal/apperror"
 	"github.com/dhis2-sre/im-database-manager/internal/handler"
 	"github.com/dhis2-sre/im-database-manager/pkg/model"
 	userClient "github.com/dhis2-sre/im-user/pkg/client"
 	"github.com/dhis2-sre/im-user/swagger/sdk/models"
 	"github.com/gin-gonic/gin"
-	"mime/multipart"
-	"net/http"
-	"path"
-	"strconv"
 )
 
 func ProvideHandler(userClient userClient.Client, databaseService Service) Handler {

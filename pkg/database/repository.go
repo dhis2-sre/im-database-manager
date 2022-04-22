@@ -2,9 +2,10 @@ package database
 
 import (
 	"fmt"
+	"strconv"
+
 	"github.com/dhis2-sre/im-database-manager/pkg/model"
 	"gorm.io/gorm"
-	"strconv"
 )
 
 type Repository interface {

@@ -5,6 +5,9 @@ clean-cmd = docker compose down --remove-orphans --volumes
 binary:
 	go build -o im-database-manager -ldflags "-s -w" ./cmd/serve
 
+check:
+	pre-commit run --all-files --show-diff-on-failure
+
 smoke-test:
 	docker compose up -d database jwks
 	sleep 3
@@ -12,6 +15,11 @@ smoke-test:
 
 docker-image:
 	IMAGE_TAG=$(tag) docker compose build prod
+
+init:
+	direnv allow
+	pip install pre-commit
+	pre-commit install --install-hooks --overwrite
 
 push-docker-image:
 	IMAGE_TAG=$(tag) docker compose push prod

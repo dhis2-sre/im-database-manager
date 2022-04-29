@@ -52,7 +52,7 @@ publish-helm:
         https://helm-charts.fitfit.dk/api/charts
 
 swagger-check-install:
-	which swagger || go get -u github.com/go-swagger/go-swagger/cmd/swagger
+	which swagger || go install github.com/go-swagger/go-swagger/cmd/swagger@latest
 
 swagger-clean:
 	rm -rf swagger/sdk/*

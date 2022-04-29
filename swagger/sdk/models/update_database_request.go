@@ -12,7 +12,7 @@ import (
 	"github.com/go-openapi/swag"
 )
 
-// UpdateDatabaseRequest TODO: Make all? properties optional... ensure we only update if new value is present
+// UpdateDatabaseRequest TODO: Make all? properties optional... ensure we only update if a new value is present
 //
 // swagger:model UpdateDatabaseRequest
 type UpdateDatabaseRequest struct {

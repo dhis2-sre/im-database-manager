@@ -120,7 +120,7 @@ definitions:
     x-go-package: github.com/dhis2-sre/im-database-manager/pkg/database
   UpdateDatabaseRequest:
     description: 'TODO: Make all? properties optional... ensure we only update if
-      new value is present'
+      a new value is present'
     properties:
       groupId:
         format: uint64
@@ -240,7 +240,8 @@ paths:
       security:
       - oauth2: []
     put:
-      description: Update database by id
+      description: 'TODO: Race condition? If two clients request at the same time...
+        Do we need a transaction between find and update'
       operationId: updateDatabaseById
       parameters:
       - format: uint64
@@ -268,6 +269,7 @@ paths:
       - oauth2: []
       - TODO:
         - document
+      summary: Update database by id
   /databases/{id}/download:
     get:
       description: Download database

@@ -446,7 +446,9 @@ func (a *Client) UnlockDatabaseByID(params *UnlockDatabaseByIDParams, authInfo r
 }
 
 /*
-  UpdateDatabaseByID Update database by id
+  UpdateDatabaseByID updates database by id
+
+  TODO: Race condition? If two clients request at the same time... Do we need a transaction between find and update
 */
 func (a *Client) UpdateDatabaseByID(params *UpdateDatabaseByIDParams, authInfo runtime.ClientAuthInfoWriter, opts ...ClientOption) (*UpdateDatabaseByIDOK, error) {
 	// TODO: Validate the params before sending

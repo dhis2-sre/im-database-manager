@@ -34,7 +34,7 @@ definitions:
       Url:
         type: string
     type: object
-    x-go-package: github.com/dhis2-sre/im-database-manager/pkg/model
+    x-go-package: github.com/dhis2-sre/im-database-manager/pkg/database
   DeletedAt:
     $ref: '#/definitions/NullTime'
   GroupsWithDatabases:

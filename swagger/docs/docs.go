@@ -49,6 +49,7 @@ type _ struct {
 	Body database.UpdateDatabaseRequest
 }
 
+/*
 // swagger:parameters saveDatabaseById
 type _ struct {
 	// Save database request body parameter
@@ -62,6 +63,7 @@ type SaveDatabaseResponse struct {
 	//in: body
 	Body database.SaveDatabaseResponse
 }
+*/
 
 // swagger:response DatabaseUrl
 type _ struct {

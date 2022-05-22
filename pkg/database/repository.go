@@ -2,8 +2,6 @@ package database
 
 import (
 	"fmt"
-	"strconv"
-
 	"github.com/dhis2-sre/im-database-manager/pkg/model"
 	"gorm.io/gorm"
 )
@@ -15,7 +13,7 @@ type Repository interface {
 	Lock(id uint, instanceId uint) (*model.Database, error)
 	Unlock(id uint) error
 	Delete(id uint) error
-	FindByGroupIds(ids []uint) ([]*model.Database, error)
+	FindByGroupNames(names []string) ([]*model.Database, error)
 	Update(d *model.Database) error
 }
 
@@ -83,16 +81,11 @@ func (r repository) Delete(id uint) error {
 	return r.db.Unscoped().Delete(&model.Database{}, id).Error
 }
 
-func (r repository) FindByGroupIds(ids []uint) ([]*model.Database, error) {
+func (r repository) FindByGroupNames(names []string) ([]*model.Database, error) {
 	var databases []*model.Database
 
-	stringIds := make([]string, len(ids))
-	for i, id := range ids {
-		stringIds[i] = strconv.Itoa(int(id))
-	}
-
 	err := r.db.
-		Where("group_id IN ?", stringIds).
+		Where("group_name IN ?", names).
 		Find(&databases).Error
 
 	return databases, err

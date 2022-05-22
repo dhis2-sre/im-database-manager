@@ -1,7 +1,6 @@
 package database
 
 import (
-	"fmt"
 	"mime/multipart"
 	"net/http"
 	"path"
@@ -28,8 +27,8 @@ type Handler struct {
 }
 
 type CreateDatabaseRequest struct {
-	Name    string `json:"name" binding:"required"`
-	GroupId uint   `json:"groupId" binding:"required"`
+	Name      string `json:"name" binding:"required"`
+	GroupName string `json:"groupName" binding:"required"`
 }
 
 // Create database
@@ -53,8 +52,8 @@ func (h Handler) Create(c *gin.Context) {
 	}
 
 	d := &model.Database{
-		Name:    request.Name,
-		GroupID: request.GroupId,
+		Name:      request.Name,
+		GroupName: request.GroupName,
 	}
 
 	err := h.canAccess(c, d)
@@ -237,7 +236,7 @@ func (h Handler) Unlock(c *gin.Context) {
 	}
 
 	// This is a bit hacky. All other handlers are using the h.canAccess method only group admins can unlock (admins can't)
-	isGroupAdministrator := handler.IsGroupAdministrator(d.GroupID, userWithGroups.AdminGroups)
+	isGroupAdministrator := handler.IsGroupAdministrator(d.GroupName, userWithGroups.AdminGroups)
 	if !isGroupAdministrator {
 		forbidden := apperror.NewForbidden("access denied")
 		_ = c.Error(forbidden)
@@ -253,6 +252,7 @@ func (h Handler) Unlock(c *gin.Context) {
 	c.Status(http.StatusAccepted)
 }
 
+/*
 type SaveDatabaseRequest struct {
 	InstanceId uint `json:"instanceId" binding:"required"`
 }
@@ -270,7 +270,7 @@ type SaveDatabaseResponse struct {
 //   oauth2:
 //
 // responses:
-//   202: SaveDatabaseResponse
+//   202:
 //   401: Error
 //   403: Error
 //   404: Error
@@ -323,6 +323,7 @@ func (h Handler) Save(c *gin.Context) {
 
 	c.JSON(http.StatusAccepted, SaveDatabaseResponse{runId})
 }
+*/
 
 type UploadDatabaseRequest struct {
 	Database *multipart.FileHeader `form:"database" binding:"required"`
@@ -387,7 +388,7 @@ func (h Handler) Upload(c *gin.Context) {
 		return
 	}
 
-	group, err := h.userClient.FindGroupById(token, d.GroupID)
+	group, err := h.userClient.FindGroupByName(token, d.GroupName)
 	if err != nil {
 		_ = c.Error(err)
 		return
@@ -555,11 +556,10 @@ func (h Handler) List(c *gin.Context) {
 func (h Handler) groupsWithDatabases(groups []*models.Group, databases []*model.Database) []GroupsWithDatabases {
 	groupsWithDatabases := make([]GroupsWithDatabases, len(groups))
 	for i, group := range groups {
-		groupsWithDatabases[i].ID = uint(group.ID)
 		groupsWithDatabases[i].Name = group.Name
 		groupsWithDatabases[i].Hostname = group.Hostname
 		groupsWithDatabases[i].Databases = h.filterByGroupId(databases, func(instance *model.Database) bool {
-			return instance.GroupID == uint(group.ID)
+			return instance.GroupName == group.Name
 		})
 	}
 	return groupsWithDatabases
@@ -576,9 +576,9 @@ func (h Handler) filterByGroupId(databases []*model.Database, test func(instance
 
 // TODO: Make all? properties optional... ensure we only update if a new value is present
 type UpdateDatabaseRequest struct {
-	Name    string `json:"name" binding:"required"`
-	GroupId uint   `json:"groupId" binding:"required"`
-	Url     string `json:"url" binding:"required"`
+	Name      string `json:"name" binding:"required"`
+	GroupName string `json:"groupName" binding:"required"`
+	Url       string `json:"url" binding:"required"`
 }
 
 // Update database
@@ -625,7 +625,7 @@ func (h Handler) Update(c *gin.Context) {
 	}
 
 	d.Name = request.Name
-	d.GroupID = request.GroupId
+	d.GroupName = request.GroupName
 	d.Url = request.Url
 
 	err = h.databaseService.Update(d)

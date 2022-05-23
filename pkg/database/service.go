@@ -3,6 +3,7 @@ package database
 import (
 	"bytes"
 	"fmt"
+	"github.com/dhis2-sre/im-database-manager/pkg/model"
 	"io"
 	"net/url"
 	"strconv"
@@ -16,15 +17,15 @@ import (
 )
 
 type Service interface {
-	Create(d *Database) error
-	FindById(id uint) (*Database, error)
-	Lock(id uint, instanceId uint) (*Database, error)
+	Create(d *model.Database) error
+	FindById(id uint) (*model.Database, error)
+	Lock(id uint, instanceId uint) (*model.Database, error)
 	Unlock(id uint) error
-	Upload(d *Database, group *models.Group, file io.Reader, filename string) (*Database, error)
+	Upload(d *model.Database, group *models.Group, file io.Reader, filename string) (*model.Database, error)
 	Download(id uint, dst io.Writer, headers func(contentLength int64)) error
 	Delete(id uint) error
-	List(groups []*models.Group) ([]*Database, error)
-	Update(d *Database) error
+	List(groups []*models.Group) ([]*model.Database, error)
+	Update(d *model.Database) error
 	//Save(token string, id uint) (string, error)
 }
 
@@ -39,11 +40,11 @@ type service struct {
 	repository Repository
 }
 
-func (s service) Create(d *Database) error {
+func (s service) Create(d *model.Database) error {
 	return s.repository.Create(d)
 }
 
-func (s service) FindById(id uint) (*Database, error) {
+func (s service) FindById(id uint) (*model.Database, error) {
 	d, err := s.repository.FindById(id)
 	if err != nil {
 		if err.Error() == "record not found" {
@@ -54,7 +55,7 @@ func (s service) FindById(id uint) (*Database, error) {
 	return d, err
 }
 
-func (s service) Lock(id uint, instanceId uint) (*Database, error) {
+func (s service) Lock(id uint, instanceId uint) (*model.Database, error) {
 	d, err := s.repository.Lock(id, instanceId)
 	if err != nil {
 		if err.Error() == "record not found" {
@@ -80,7 +81,7 @@ func (s service) Unlock(id uint) error {
 	return err
 }
 
-func (s service) Upload(d *Database, group *models.Group, file io.Reader, filename string) (*Database, error) {
+func (s service) Upload(d *model.Database, group *models.Group, file io.Reader, filename string) (*model.Database, error) {
 	buffer := new(bytes.Buffer)
 	_, err := buffer.ReadFrom(file)
 	if err != nil {
@@ -145,7 +146,7 @@ func (s service) Delete(id uint) error {
 	return s.repository.Delete(id)
 }
 
-func (s service) List(groups []*models.Group) ([]*Database, error) {
+func (s service) List(groups []*models.Group) ([]*model.Database, error) {
 	groupNames := make([]string, len(groups))
 	for i, group := range groups {
 		groupNames[i] = group.Name
@@ -158,7 +159,7 @@ func (s service) List(groups []*models.Group) ([]*Database, error) {
 	return instances, nil
 }
 
-func (s service) Update(d *Database) error {
+func (s service) Update(d *model.Database) error {
 	return s.repository.Update(d)
 }
 

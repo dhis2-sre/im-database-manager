@@ -1,6 +1,7 @@
 package database
 
 import (
+	"github.com/dhis2-sre/im-database-manager/pkg/model"
 	"mime/multipart"
 	"net/http"
 	"path"
@@ -50,7 +51,7 @@ func (h Handler) Create(c *gin.Context) {
 		return
 	}
 
-	d := &Database{
+	d := &model.Database{
 		Name:      request.Name,
 		GroupName: request.GroupName,
 	}
@@ -507,7 +508,7 @@ type GroupsWithDatabases struct {
 	ID        uint
 	Name      string
 	Hostname  string
-	Databases []*Database
+	Databases []*model.Database
 }
 
 // List databases
@@ -552,19 +553,19 @@ func (h Handler) List(c *gin.Context) {
 	c.JSON(http.StatusOK, h.groupsWithDatabases(groups, d))
 }
 
-func (h Handler) groupsWithDatabases(groups []*models.Group, databases []*Database) []GroupsWithDatabases {
+func (h Handler) groupsWithDatabases(groups []*models.Group, databases []*model.Database) []GroupsWithDatabases {
 	groupsWithDatabases := make([]GroupsWithDatabases, len(groups))
 	for i, group := range groups {
 		groupsWithDatabases[i].Name = group.Name
 		groupsWithDatabases[i].Hostname = group.Hostname
-		groupsWithDatabases[i].Databases = h.filterByGroupId(databases, func(instance *Database) bool {
+		groupsWithDatabases[i].Databases = h.filterByGroupId(databases, func(instance *model.Database) bool {
 			return instance.GroupName == group.Name
 		})
 	}
 	return groupsWithDatabases
 }
 
-func (h Handler) filterByGroupId(databases []*Database, test func(instance *Database) bool) (ret []*Database) {
+func (h Handler) filterByGroupId(databases []*model.Database, test func(instance *model.Database) bool) (ret []*model.Database) {
 	for _, database := range databases {
 		if test(database) {
 			ret = append(ret, database)
@@ -655,7 +656,7 @@ func (h Handler) getUserWithGroups(c *gin.Context) (*models.User, error) {
 	return userWithGroups, nil
 }
 
-func (h Handler) canAccess(c *gin.Context, d *Database) error {
+func (h Handler) canAccess(c *gin.Context, d *model.Database) error {
 	userWithGroups, err := h.getUserWithGroups(c)
 	if err != nil {
 		return err

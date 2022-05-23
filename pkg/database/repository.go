@@ -2,18 +2,19 @@ package database
 
 import (
 	"fmt"
+	"github.com/dhis2-sre/im-database-manager/pkg/model"
 	"gorm.io/gorm"
 )
 
 type Repository interface {
-	Create(d *Database) error
-	Save(d *Database) error
-	FindById(id uint) (*Database, error)
-	Lock(id uint, instanceId uint) (*Database, error)
+	Create(d *model.Database) error
+	Save(d *model.Database) error
+	FindById(id uint) (*model.Database, error)
+	Lock(id uint, instanceId uint) (*model.Database, error)
 	Unlock(id uint) error
 	Delete(id uint) error
-	FindByGroupNames(names []string) ([]*Database, error)
-	Update(d *Database) error
+	FindByGroupNames(names []string) ([]*model.Database, error)
+	Update(d *model.Database) error
 }
 
 func ProvideRepository(DB *gorm.DB) Repository {
@@ -24,22 +25,22 @@ type repository struct {
 	db *gorm.DB
 }
 
-func (r repository) Create(d *Database) error {
+func (r repository) Create(d *model.Database) error {
 	return r.db.Create(&d).Error
 }
 
-func (r repository) Save(d *Database) error {
+func (r repository) Save(d *model.Database) error {
 	return r.db.Save(&d).Error
 }
 
-func (r repository) FindById(id uint) (*Database, error) {
-	var d *Database
+func (r repository) FindById(id uint) (*model.Database, error) {
+	var d *model.Database
 	err := r.db.First(&d, id).Error
 	return d, err
 }
 
-func (r repository) Lock(id uint, instanceId uint) (*Database, error) {
-	var d *Database
+func (r repository) Lock(id uint, instanceId uint) (*model.Database, error) {
+	var d *model.Database
 
 	errTx := r.db.Transaction(func(tx *gorm.DB) error {
 		err := tx.First(&d, id).Error
@@ -63,7 +64,7 @@ func (r repository) Lock(id uint, instanceId uint) (*Database, error) {
 }
 
 func (r repository) Unlock(id uint) error {
-	err := r.db.Model(&Database{
+	err := r.db.Model(&model.Database{
 		Model: gorm.Model{
 			ID: id,
 		},
@@ -77,11 +78,11 @@ func (r repository) Unlock(id uint) error {
 }
 
 func (r repository) Delete(id uint) error {
-	return r.db.Unscoped().Delete(&Database{}, id).Error
+	return r.db.Unscoped().Delete(&model.Database{}, id).Error
 }
 
-func (r repository) FindByGroupNames(names []string) ([]*Database, error) {
-	var databases []*Database
+func (r repository) FindByGroupNames(names []string) ([]*model.Database, error) {
+	var databases []*model.Database
 
 	err := r.db.
 		Where("group_name IN ?", names).
@@ -90,6 +91,6 @@ func (r repository) FindByGroupNames(names []string) ([]*Database, error) {
 	return databases, err
 }
 
-func (r repository) Update(d *Database) error {
+func (r repository) Update(d *model.Database) error {
 	return r.db.Save(d).Error
 }

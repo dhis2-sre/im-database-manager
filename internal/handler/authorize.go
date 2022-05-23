@@ -23,7 +23,6 @@ func IsGroupAdministrator(groupName string, groups []*models.Group) bool {
 }
 
 func isMemberOf(groupName string, groups []*models.Group) bool {
-	f := func(g *models.Group) bool { return g.Name == groupName }
-	idx := slices.IndexFunc(groups, f)
+	idx := slices.IndexFunc(groups, func(g *models.Group) bool { return g.Name == groupName })
 	return idx != -1
 }

@@ -26,8 +26,8 @@ type Database struct {
 	// deleted at
 	DeletedAt *DeletedAt `json:"DeletedAt,omitempty"`
 
-	// group ID
-	GroupID uint64 `json:"GroupID,omitempty"`
+	// group name
+	GroupName string `json:"GroupName,omitempty"`
 
 	// ID
 	ID uint64 `json:"ID,omitempty"`

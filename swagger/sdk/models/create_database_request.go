@@ -17,8 +17,8 @@ import (
 // swagger:model CreateDatabaseRequest
 type CreateDatabaseRequest struct {
 
-	// group Id
-	GroupID uint64 `json:"groupId,omitempty"`
+	// group name
+	GroupName string `json:"groupName,omitempty"`
 
 	// name
 	Name string `json:"name,omitempty"`

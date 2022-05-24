@@ -1,6 +1,4 @@
-package docs
-
-import "github.com/dhis2-sre/im-database-manager/pkg/database"
+package database
 
 // swagger:response
 type Error struct {
@@ -21,7 +19,7 @@ type _ struct {
 	// Create database request body parameter
 	// in: body
 	// required: true
-	Body database.CreateDatabaseRequest
+	Body CreateDatabaseRequest
 }
 
 // swagger:parameters lockDatabaseById unlockDatabaseById
@@ -29,7 +27,7 @@ type _ struct {
 	// Lock/unlock database request body parameter
 	// in: body
 	// required: true
-	Body database.LockDatabaseRequest
+	Body LockDatabaseRequest
 }
 
 // swagger:parameters uploadDatabase
@@ -38,7 +36,7 @@ type _ struct {
 	// in: formData
 	// required: true
 	// swagger:file
-	File database.UploadDatabaseRequest
+	File UploadDatabaseRequest
 }
 
 // swagger:parameters updateDatabaseById
@@ -46,9 +44,10 @@ type _ struct {
 	// Update database request body parameter
 	// in: body
 	// required: true
-	Body database.UpdateDatabaseRequest
+	Body UpdateDatabaseRequest
 }
 
+/*
 // swagger:parameters saveDatabaseById
 type _ struct {
 	// Save database request body parameter
@@ -62,6 +61,7 @@ type SaveDatabaseResponse struct {
 	//in: body
 	Body database.SaveDatabaseResponse
 }
+*/
 
 // swagger:response DatabaseUrl
 type _ struct {

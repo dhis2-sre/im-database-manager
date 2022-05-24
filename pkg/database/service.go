@@ -3,6 +3,7 @@ package database
 import (
 	"bytes"
 	"fmt"
+	"github.com/dhis2-sre/im-database-manager/pkg/model"
 	"io"
 	"net/url"
 	"strconv"
@@ -10,10 +11,8 @@ import (
 
 	"github.com/dhis2-sre/im-database-manager/internal/apperror"
 	"github.com/dhis2-sre/im-database-manager/pkg/config"
-	"github.com/dhis2-sre/im-database-manager/pkg/model"
 	"github.com/dhis2-sre/im-database-manager/pkg/storage"
 	jobClient "github.com/dhis2-sre/im-job/pkg/client"
-	jobModels "github.com/dhis2-sre/im-job/swagger/sdk/models"
 	"github.com/dhis2-sre/im-user/swagger/sdk/models"
 )
 
@@ -27,7 +26,7 @@ type Service interface {
 	Delete(id uint) error
 	List(groups []*models.Group) ([]*model.Database, error)
 	Update(d *model.Database) error
-	Save(token string, id uint) (string, error)
+	//Save(token string, id uint) (string, error)
 }
 
 func ProvideService(c config.Config, s3Client storage.S3Client, jobClient jobClient.Client, repository Repository) Service {
@@ -148,12 +147,12 @@ func (s service) Delete(id uint) error {
 }
 
 func (s service) List(groups []*models.Group) ([]*model.Database, error) {
-	groupIds := make([]uint, len(groups))
+	groupNames := make([]string, len(groups))
 	for i, group := range groups {
-		groupIds[i] = uint(group.ID)
+		groupNames[i] = group.Name
 	}
 
-	instances, err := s.repository.FindByGroupIds(groupIds)
+	instances, err := s.repository.FindByGroupNames(groupNames)
 	if err != nil {
 		return nil, err
 	}
@@ -164,6 +163,7 @@ func (s service) Update(d *model.Database) error {
 	return s.repository.Update(d)
 }
 
+/*
 func (s service) Save(token string, id uint) (string, error) {
 	d, err := s.FindById(id)
 	if err != nil {
@@ -188,3 +188,4 @@ func (s service) Save(token string, id uint) (string, error) {
 
 	return runId, nil
 }
+*/

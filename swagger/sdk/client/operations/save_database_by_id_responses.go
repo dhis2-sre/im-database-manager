@@ -7,12 +7,9 @@ package operations
 
 import (
 	"fmt"
-	"io"
 
 	"github.com/go-openapi/runtime"
 	"github.com/go-openapi/strfmt"
-
-	"github.com/dhis2-sre/im-database-manager/swagger/sdk/models"
 )
 
 // SaveDatabaseByIDReader is a Reader for the SaveDatabaseByID structure.
@@ -68,24 +65,13 @@ func NewSaveDatabaseByIDAccepted() *SaveDatabaseByIDAccepted {
 SaveDatabaseByIDAccepted save database by Id accepted
 */
 type SaveDatabaseByIDAccepted struct {
-	Payload *models.SaveDatabaseResponse
 }
 
 func (o *SaveDatabaseByIDAccepted) Error() string {
-	return fmt.Sprintf("[POST /databases/{id}/save][%d] saveDatabaseByIdAccepted  %+v", 202, o.Payload)
-}
-func (o *SaveDatabaseByIDAccepted) GetPayload() *models.SaveDatabaseResponse {
-	return o.Payload
+	return fmt.Sprintf("[POST /databases/{id}/save][%d] saveDatabaseByIdAccepted ", 202)
 }
 
 func (o *SaveDatabaseByIDAccepted) readResponse(response runtime.ClientResponse, consumer runtime.Consumer, formats strfmt.Registry) error {
-
-	o.Payload = new(models.SaveDatabaseResponse)
-
-	// response payload
-	if err := consumer.Consume(response.Body(), o.Payload); err != nil && err != io.EOF {
-		return err
-	}
 
 	return nil
 }

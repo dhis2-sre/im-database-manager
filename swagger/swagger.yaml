@@ -3,10 +3,9 @@ consumes:
 definitions:
   CreateDatabaseRequest:
     properties:
-      groupId:
-        format: uint64
-        type: integer
-        x-go-name: GroupId
+      groupName:
+        type: string
+        x-go-name: GroupName
       name:
         type: string
         x-go-name: Name
@@ -19,9 +18,8 @@ definitions:
         type: string
       DeletedAt:
         $ref: '#/definitions/DeletedAt'
-      GroupID:
-        format: uint64
-        type: integer
+      GroupName:
+        type: string
       ID:
         format: uint64
         type: integer
@@ -103,29 +101,13 @@ definitions:
         x-go-name: Status
     type: object
     x-go-package: github.com/dhis2-sre/im-database-manager/pkg/health
-  SaveDatabaseRequest:
-    properties:
-      instanceId:
-        format: uint64
-        type: integer
-        x-go-name: InstanceId
-    type: object
-    x-go-package: github.com/dhis2-sre/im-database-manager/pkg/database
-  SaveDatabaseResponse:
-    properties:
-      runId:
-        type: string
-        x-go-name: RunId
-    type: object
-    x-go-package: github.com/dhis2-sre/im-database-manager/pkg/database
   UpdateDatabaseRequest:
     description: 'TODO: Make all? properties optional... ensure we only update if
       a new value is present'
     properties:
-      groupId:
-        format: uint64
-        type: integer
-        x-go-name: GroupId
+      groupName:
+        type: string
+        x-go-name: GroupName
       name:
         type: string
         x-go-name: Name
@@ -368,15 +350,9 @@ paths:
         required: true
         type: integer
         x-go-name: ID
-      - description: Save database request body parameter
-        in: body
-        name: Body
-        required: true
-        schema:
-          $ref: '#/definitions/SaveDatabaseRequest'
       responses:
         "202":
-          $ref: '#/responses/SaveDatabaseResponse'
+          description: ""
         "401":
           $ref: '#/responses/Error'
         "403":
@@ -460,10 +436,6 @@ responses:
     description: ""
     schema:
       $ref: '#/definitions/Response'
-  SaveDatabaseResponse:
-    description: ""
-    schema:
-      $ref: '#/definitions/SaveDatabaseResponse'
 securityDefinitions:
   oauth2:
     flow: password

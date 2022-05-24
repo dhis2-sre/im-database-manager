@@ -18,7 +18,7 @@ require (
 	github.com/go-openapi/validate v0.21.0
 	github.com/gofrs/uuid v4.2.0+incompatible
 	github.com/google/wire v0.5.0
-	github.com/lestrrat-go/jwx v1.2.24
+	github.com/lestrrat-go/jwx v1.2.25
 	github.com/stretchr/testify v1.7.1
 	gorm.io/driver/postgres v1.3.6
 	gorm.io/gorm v1.23.5

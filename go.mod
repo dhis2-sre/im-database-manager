@@ -20,7 +20,6 @@ require (
 	github.com/google/wire v0.5.0
 	github.com/lestrrat-go/jwx v1.2.24
 	github.com/stretchr/testify v1.7.1
-	golang.org/x/exp v0.0.0-20220518171630-0b5c67f07fdf
 	gorm.io/driver/postgres v1.3.5
 	gorm.io/gorm v1.23.5
 )

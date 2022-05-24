@@ -2,6 +2,7 @@ package database
 
 import (
 	"fmt"
+
 	"github.com/dhis2-sre/im-database-manager/pkg/model"
 	"gorm.io/gorm"
 )

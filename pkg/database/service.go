@@ -3,11 +3,12 @@ package database
 import (
 	"bytes"
 	"fmt"
-	"github.com/dhis2-sre/im-database-manager/pkg/model"
 	"io"
 	"net/url"
 	"strconv"
 	"strings"
+
+	"github.com/dhis2-sre/im-database-manager/pkg/model"
 
 	"github.com/dhis2-sre/im-database-manager/internal/apperror"
 	"github.com/dhis2-sre/im-database-manager/pkg/config"

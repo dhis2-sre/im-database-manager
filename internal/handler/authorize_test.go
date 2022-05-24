@@ -9,16 +9,16 @@ import (
 )
 
 func TestCanAccess_AccessDenied(t *testing.T) {
-	var groupId uint64 = 123
+	var group = "123"
 	user := &models.User{
 		Groups: []*models.Group{
 			{
-				ID: groupId,
+				Name: group,
 			},
 		},
 	}
 
-	database := &model.Database{GroupID: uint(groupId)}
+	database := &model.Database{GroupName: group}
 
 	canAccess := CanAccess(user, database)
 
@@ -26,16 +26,16 @@ func TestCanAccess_AccessDenied(t *testing.T) {
 }
 
 func TestCanAccess_IsMemberOf(t *testing.T) {
-	var groupId uint64 = 123
+	var group = "123"
 	user := &models.User{
 		Groups: []*models.Group{
 			{
-				ID: groupId,
+				Name: group,
 			},
 		},
 	}
 
-	database := &model.Database{GroupID: uint(groupId)}
+	database := &model.Database{GroupName: group}
 
 	canAccess := CanAccess(user, database)
 
@@ -43,16 +43,16 @@ func TestCanAccess_IsMemberOf(t *testing.T) {
 }
 
 func TestCanAccess_IsGroupAdministrator(t *testing.T) {
-	var groupId uint64 = 123
+	var group = "123"
 	user := &models.User{
 		AdminGroups: []*models.Group{
 			{
-				ID: groupId,
+				Name: group,
 			},
 		},
 	}
 
-	database := &model.Database{GroupID: uint(groupId)}
+	database := &model.Database{GroupName: group}
 
 	canAccess := CanAccess(user, database)
 
@@ -76,14 +76,14 @@ func TestCanAccess_IsAdministrator(t *testing.T) {
 }
 
 func TestIsGroupAdministrator(t *testing.T) {
-	var groupId uint64 = 123
+	var group = "123"
 	adminGroups := []*models.Group{
 		{
-			ID: groupId,
+			Name: group,
 		},
 	}
 
-	isAdmin := IsGroupAdministrator(uint(groupId), adminGroups)
+	isAdmin := IsGroupAdministrator(group, adminGroups)
 
 	assert.True(t, isAdmin)
 }

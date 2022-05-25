@@ -31,6 +31,7 @@ func ProvideDatabase(c config.Config) (*gorm.DB, error) {
 
 	err = db.AutoMigrate(
 		&model.Database{},
+		&model.ExternalDownload{},
 	)
 
 	if err != nil {

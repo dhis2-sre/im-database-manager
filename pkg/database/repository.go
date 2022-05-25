@@ -2,6 +2,8 @@ package database
 
 import (
 	"fmt"
+	"github.com/google/uuid"
+	"time"
 
 	"github.com/dhis2-sre/im-database-manager/pkg/model"
 	"gorm.io/gorm"
@@ -16,6 +18,9 @@ type Repository interface {
 	Delete(id uint) error
 	FindByGroupNames(names []string) ([]*model.Database, error)
 	Update(d *model.Database) error
+	CreateExternalDownload(databaseID uint, expiration time.Time) (model.ExternalDownload, error)
+	FindExternalDownload(uuid uuid.UUID) (model.ExternalDownload, error)
+	PurgeExternalDownload() error
 }
 
 func ProvideRepository(DB *gorm.DB) Repository {
@@ -94,4 +99,32 @@ func (r repository) FindByGroupNames(names []string) ([]*model.Database, error) 
 
 func (r repository) Update(d *model.Database) error {
 	return r.db.Save(d).Error
+}
+
+func (r repository) CreateExternalDownload(databaseID uint, expiration time.Time) (model.ExternalDownload, error) {
+	externalDownload := model.ExternalDownload{
+		UUID:       uuid.New(),
+		Expiration: expiration,
+		DatabaseID: databaseID,
+	}
+
+	err := r.db.Save(externalDownload).Error
+
+	return externalDownload, err
+}
+
+func (r repository) FindExternalDownload(uuid uuid.UUID) (model.ExternalDownload, error) {
+	var d model.ExternalDownload
+	err := r.db.
+		Where("expiration > ?", time.Now().UTC()).
+		First(&d, uuid).Error
+	return d, err
+}
+
+func (r repository) PurgeExternalDownload() error {
+	var d model.ExternalDownload
+	err := r.db.
+		Where("expiration < ?", time.Now().UTC()).
+		Delete(&d).Error
+	return err
 }

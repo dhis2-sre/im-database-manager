@@ -7,6 +7,7 @@ package models
 
 import (
 	"context"
+	"strconv"
 
 	"github.com/go-openapi/errors"
 	"github.com/go-openapi/strfmt"
@@ -25,6 +26,9 @@ type Database struct {
 
 	// deleted at
 	DeletedAt *DeletedAt `json:"DeletedAt,omitempty"`
+
+	// external downloads
+	ExternalDownloads []*ExternalDownload `json:"ExternalDownloads"`
 
 	// group name
 	GroupName string `json:"GroupName,omitempty"`
@@ -55,6 +59,10 @@ func (m *Database) Validate(formats strfmt.Registry) error {
 	}
 
 	if err := m.validateDeletedAt(formats); err != nil {
+		res = append(res, err)
+	}
+
+	if err := m.validateExternalDownloads(formats); err != nil {
 		res = append(res, err)
 	}
 
@@ -99,6 +107,32 @@ func (m *Database) validateDeletedAt(formats strfmt.Registry) error {
 	return nil
 }
 
+func (m *Database) validateExternalDownloads(formats strfmt.Registry) error {
+	if swag.IsZero(m.ExternalDownloads) { // not required
+		return nil
+	}
+
+	for i := 0; i < len(m.ExternalDownloads); i++ {
+		if swag.IsZero(m.ExternalDownloads[i]) { // not required
+			continue
+		}
+
+		if m.ExternalDownloads[i] != nil {
+			if err := m.ExternalDownloads[i].Validate(formats); err != nil {
+				if ve, ok := err.(*errors.Validation); ok {
+					return ve.ValidateName("ExternalDownloads" + "." + strconv.Itoa(i))
+				} else if ce, ok := err.(*errors.CompositeError); ok {
+					return ce.ValidateName("ExternalDownloads" + "." + strconv.Itoa(i))
+				}
+				return err
+			}
+		}
+
+	}
+
+	return nil
+}
+
 func (m *Database) validateUpdatedAt(formats strfmt.Registry) error {
 	if swag.IsZero(m.UpdatedAt) { // not required
 		return nil
@@ -119,6 +153,10 @@ func (m *Database) ContextValidate(ctx context.Context, formats strfmt.Registry)
 		res = append(res, err)
 	}
 
+	if err := m.contextValidateExternalDownloads(ctx, formats); err != nil {
+		res = append(res, err)
+	}
+
 	if len(res) > 0 {
 		return errors.CompositeValidationError(res...)
 	}
@@ -136,6 +174,26 @@ func (m *Database) contextValidateDeletedAt(ctx context.Context, formats strfmt.
 			}
 			return err
 		}
+	}
+
+	return nil
+}
+
+func (m *Database) contextValidateExternalDownloads(ctx context.Context, formats strfmt.Registry) error {
+
+	for i := 0; i < len(m.ExternalDownloads); i++ {
+
+		if m.ExternalDownloads[i] != nil {
+			if err := m.ExternalDownloads[i].ContextValidate(ctx, formats); err != nil {
+				if ve, ok := err.(*errors.Validation); ok {
+					return ve.ValidateName("ExternalDownloads" + "." + strconv.Itoa(i))
+				} else if ce, ok := err.(*errors.CompositeError); ok {
+					return ce.ValidateName("ExternalDownloads" + "." + strconv.Itoa(i))
+				}
+				return err
+			}
+		}
+
 	}
 
 	return nil

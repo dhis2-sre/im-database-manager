@@ -175,7 +175,7 @@ func (s service) CreateExternalDownload(databaseID uint, expiration time.Time) (
 	}
 
 	now := time.Now()
-	if expiration.Before(now) {
+	if expiration.After(now) {
 		return model.ExternalDownload{}, fmt.Errorf("expiration %s needs to be in the future (current %s)", expiration, now)
 	}
 

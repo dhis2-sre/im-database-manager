@@ -118,12 +118,14 @@ definitions:
     type: object
     x-go-package: github.com/dhis2-sre/im-database-manager/pkg/health
   UUID:
+    description: |-
+      A UUID is a 128 bit (16 byte) Universal Unique IDentifier as defined in RFC
+      4122.
     items:
       format: uint8
       type: integer
-    title: UUID is an array type to represent the value of a UUID, as defined in RFC-4122.
     type: array
-    x-go-package: github.com/gofrs/uuid
+    x-go-package: github.com/google/uuid
   UpdateDatabaseRequest:
     description: 'TODO: Make all? properties optional... ensure we only update if
       a new value is present'

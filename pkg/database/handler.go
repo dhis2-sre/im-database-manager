@@ -1,10 +1,12 @@
 package database
 
 import (
+	"github.com/google/uuid"
 	"mime/multipart"
 	"net/http"
 	"path"
 	"strconv"
+	"time"
 
 	"github.com/dhis2-sre/im-database-manager/pkg/model"
 
@@ -419,7 +421,7 @@ func (h Handler) Upload(c *gin.Context) {
 //   oauth2:
 //
 // responses:
-//   200:
+//   200: DownloadDatabaseResponse
 //   401: Error
 //   403: Error
 //   404: Error
@@ -669,4 +671,113 @@ func (h Handler) canAccess(c *gin.Context, d *model.Database) error {
 	}
 
 	return nil
+}
+
+type CreateExternalDatabaseRequest struct {
+	Expiration time.Time `json:"expiration" binding:"required"`
+}
+
+// CreateExternalDownload
+// swagger:route POST /databases/{id}/external createExternalDownloadDatabase
+//
+// Create external database download
+//
+// Security:
+//   oauth2:
+//
+// responses:
+//   200: CreateExternalDownloadResponse
+//   401: Error
+//   403: Error
+//   404: Error
+//   415: Error
+func (h Handler) CreateExternalDownload(c *gin.Context) {
+	idParam := c.Param("id")
+	id, err := strconv.ParseUint(idParam, 10, 64)
+	if err != nil {
+		badRequest := apperror.NewBadRequest("error parsing id")
+		_ = c.Error(badRequest)
+		return
+	}
+
+	var request CreateExternalDatabaseRequest
+	if err := handler.DataBinder(c, &request); err != nil {
+		_ = c.Error(err)
+		return
+	}
+
+	d, err := h.databaseService.FindById(uint(id))
+	if err != nil {
+		_ = c.Error(err)
+		return
+	}
+
+	err = h.canAccess(c, d)
+	if err != nil {
+		_ = c.Error(err)
+		return
+	}
+
+	externalDownload, err := h.databaseService.CreateExternalDownload(d.ID, request.Expiration)
+	if err != nil {
+		_ = c.Error(err)
+		return
+	}
+
+	c.JSON(http.StatusCreated, externalDownload)
+}
+
+// ExternalDownload database
+// swagger:route GET /databases/external/{uuid} externalDownloadDatabase
+//
+// Download database
+//
+// Security:
+//   oauth2:
+//
+// responses:
+//   200: DownloadDatabaseResponse
+//   401: Error
+//   403: Error
+//   404: Error
+//   415: Error
+func (h Handler) ExternalDownload(c *gin.Context) {
+	uuidParam := c.Param("uuid")
+	if uuidParam == "" {
+		badRequest := apperror.NewBadRequest("error missing uuid")
+		_ = c.Error(badRequest)
+		return
+	}
+
+	id, err := uuid.Parse(uuidParam)
+	if err != nil {
+		_ = c.Error(err)
+		return
+	}
+
+	download, err := h.databaseService.FindExternalDownload(id)
+	if err != nil {
+		_ = c.Error(err)
+		return
+	}
+
+	d, err := h.databaseService.FindById(download.DatabaseID)
+	if err != nil {
+		_ = c.Error(err)
+		return
+	}
+
+	_, file := path.Split(d.Url)
+	c.Header("Content-Disposition", "attachment; filename="+file)
+	c.Header("Content-Description", "File Transfer")
+	c.Header("Content-Transfer-Encoding", "binary")
+	c.Header("Content-Type", "application/octet-stream")
+
+	err = h.databaseService.Download(d.ID, c.Writer, func(contentLength int64) {
+		c.Header("Content-Length", strconv.FormatInt(contentLength, 10))
+	})
+	if err != nil {
+		_ = c.Error(err)
+		return
+	}
 }

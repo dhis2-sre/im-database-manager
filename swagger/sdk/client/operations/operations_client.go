@@ -32,9 +32,13 @@ type ClientOption func(*runtime.ClientOperation)
 type ClientService interface {
 	CreateDatabase(params *CreateDatabaseParams, authInfo runtime.ClientAuthInfoWriter, opts ...ClientOption) (*CreateDatabaseAccepted, error)
 
+	CreateExternalDownloadDatabase(params *CreateExternalDownloadDatabaseParams, authInfo runtime.ClientAuthInfoWriter, opts ...ClientOption) (*CreateExternalDownloadDatabaseOK, error)
+
 	DeleteDatabaseByID(params *DeleteDatabaseByIDParams, authInfo runtime.ClientAuthInfoWriter, opts ...ClientOption) (*DeleteDatabaseByIDAccepted, error)
 
 	DownloadDatabase(params *DownloadDatabaseParams, authInfo runtime.ClientAuthInfoWriter, opts ...ClientOption) (*DownloadDatabaseOK, error)
+
+	ExternalDownloadDatabase(params *ExternalDownloadDatabaseParams, authInfo runtime.ClientAuthInfoWriter, opts ...ClientOption) (*ExternalDownloadDatabaseOK, error)
 
 	FindDatabaseByID(params *FindDatabaseByIDParams, authInfo runtime.ClientAuthInfoWriter, opts ...ClientOption) (*FindDatabaseByIDOK, error)
 
@@ -93,6 +97,45 @@ func (a *Client) CreateDatabase(params *CreateDatabaseParams, authInfo runtime.C
 	// unexpected success response
 	// safeguard: normally, absent a default response, unknown success responses return an error above: so this is a codegen issue
 	msg := fmt.Sprintf("unexpected success response for createDatabase: API contract not enforced by server. Client expected to get an error, but got: %T", result)
+	panic(msg)
+}
+
+/*
+  CreateExternalDownloadDatabase Create external database download
+*/
+func (a *Client) CreateExternalDownloadDatabase(params *CreateExternalDownloadDatabaseParams, authInfo runtime.ClientAuthInfoWriter, opts ...ClientOption) (*CreateExternalDownloadDatabaseOK, error) {
+	// TODO: Validate the params before sending
+	if params == nil {
+		params = NewCreateExternalDownloadDatabaseParams()
+	}
+	op := &runtime.ClientOperation{
+		ID:                 "createExternalDownloadDatabase",
+		Method:             "POST",
+		PathPattern:        "/databases/{id}/external",
+		ProducesMediaTypes: []string{"application/json"},
+		ConsumesMediaTypes: []string{"application/json"},
+		Schemes:            []string{"http"},
+		Params:             params,
+		Reader:             &CreateExternalDownloadDatabaseReader{formats: a.formats},
+		AuthInfo:           authInfo,
+		Context:            params.Context,
+		Client:             params.HTTPClient,
+	}
+	for _, opt := range opts {
+		opt(op)
+	}
+
+	result, err := a.transport.Submit(op)
+	if err != nil {
+		return nil, err
+	}
+	success, ok := result.(*CreateExternalDownloadDatabaseOK)
+	if ok {
+		return success, nil
+	}
+	// unexpected success response
+	// safeguard: normally, absent a default response, unknown success responses return an error above: so this is a codegen issue
+	msg := fmt.Sprintf("unexpected success response for createExternalDownloadDatabase: API contract not enforced by server. Client expected to get an error, but got: %T", result)
 	panic(msg)
 }
 
@@ -171,6 +214,45 @@ func (a *Client) DownloadDatabase(params *DownloadDatabaseParams, authInfo runti
 	// unexpected success response
 	// safeguard: normally, absent a default response, unknown success responses return an error above: so this is a codegen issue
 	msg := fmt.Sprintf("unexpected success response for downloadDatabase: API contract not enforced by server. Client expected to get an error, but got: %T", result)
+	panic(msg)
+}
+
+/*
+  ExternalDownloadDatabase Download database
+*/
+func (a *Client) ExternalDownloadDatabase(params *ExternalDownloadDatabaseParams, authInfo runtime.ClientAuthInfoWriter, opts ...ClientOption) (*ExternalDownloadDatabaseOK, error) {
+	// TODO: Validate the params before sending
+	if params == nil {
+		params = NewExternalDownloadDatabaseParams()
+	}
+	op := &runtime.ClientOperation{
+		ID:                 "externalDownloadDatabase",
+		Method:             "GET",
+		PathPattern:        "/databases/external/{uuid}",
+		ProducesMediaTypes: []string{"application/json"},
+		ConsumesMediaTypes: []string{"application/json"},
+		Schemes:            []string{"http"},
+		Params:             params,
+		Reader:             &ExternalDownloadDatabaseReader{formats: a.formats},
+		AuthInfo:           authInfo,
+		Context:            params.Context,
+		Client:             params.HTTPClient,
+	}
+	for _, opt := range opts {
+		opt(op)
+	}
+
+	result, err := a.transport.Submit(op)
+	if err != nil {
+		return nil, err
+	}
+	success, ok := result.(*ExternalDownloadDatabaseOK)
+	if ok {
+		return success, nil
+	}
+	// unexpected success response
+	// safeguard: normally, absent a default response, unknown success responses return an error above: so this is a codegen issue
+	msg := fmt.Sprintf("unexpected success response for externalDownloadDatabase: API contract not enforced by server. Client expected to get an error, but got: %T", result)
 	panic(msg)
 }
 

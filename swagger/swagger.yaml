@@ -18,6 +18,10 @@ definitions:
         type: string
       DeletedAt:
         $ref: '#/definitions/DeletedAt'
+      ExternalDownloads:
+        items:
+          $ref: '#/definitions/ExternalDownload'
+        type: array
       GroupName:
         type: string
       ID:
@@ -37,6 +41,18 @@ definitions:
     x-go-package: github.com/dhis2-sre/im-database-manager/pkg/model
   DeletedAt:
     $ref: '#/definitions/NullTime'
+  ExternalDownload:
+    properties:
+      DatabaseID:
+        format: uint64
+        type: integer
+      Expiration:
+        format: date-time
+        type: string
+      UUID:
+        $ref: '#/definitions/UUID'
+    type: object
+    x-go-package: github.com/dhis2-sre/im-database-manager/pkg/model
   GroupsWithDatabases:
     properties:
       Databases:
@@ -101,6 +117,13 @@ definitions:
         x-go-name: Status
     type: object
     x-go-package: github.com/dhis2-sre/im-database-manager/pkg/health
+  UUID:
+    items:
+      format: uint8
+      type: integer
+    title: UUID is an array type to represent the value of a UUID, as defined in RFC-4122.
+    type: array
+    x-go-package: github.com/gofrs/uuid
   UpdateDatabaseRequest:
     description: 'TODO: Make all? properties optional... ensure we only update if
       a new value is present'
@@ -265,7 +288,31 @@ paths:
         x-go-name: ID
       responses:
         "200":
-          description: ""
+          $ref: '#/responses/DownloadDatabaseResponse'
+        "401":
+          $ref: '#/responses/Error'
+        "403":
+          $ref: '#/responses/Error'
+        "404":
+          $ref: '#/responses/Error'
+        "415":
+          $ref: '#/responses/Error'
+      security:
+      - oauth2: []
+  /databases/{id}/external:
+    post:
+      description: Create external database download
+      operationId: createExternalDownloadDatabase
+      parameters:
+      - format: uint64
+        in: path
+        name: id
+        required: true
+        type: integer
+        x-go-name: ID
+      responses:
+        "200":
+          $ref: '#/responses/CreateExternalDownloadResponse'
         "401":
           $ref: '#/responses/Error'
         "403":
@@ -418,6 +465,30 @@ paths:
           $ref: '#/responses/Error'
         "415":
           $ref: '#/responses/Error'
+  /databases/external/{uuid}:
+    get:
+      description: Download database
+      operationId: externalDownloadDatabase
+      parameters:
+      - format: uint64
+        in: path
+        name: uuid
+        required: true
+        type: integer
+        x-go-name: UUID
+      responses:
+        "200":
+          $ref: '#/responses/DownloadDatabaseResponse'
+        "401":
+          $ref: '#/responses/Error'
+        "403":
+          $ref: '#/responses/Error'
+        "404":
+          $ref: '#/responses/Error'
+        "415":
+          $ref: '#/responses/Error'
+      security:
+      - oauth2: []
   /health:
     get:
       description: Service health status
@@ -428,7 +499,13 @@ paths:
 produces:
 - application/json
 responses:
+  CreateExternalDownloadResponse:
+    description: ""
+    schema:
+      $ref: '#/definitions/ExternalDownload'
   DatabaseUrl:
+    description: ""
+  DownloadDatabaseResponse:
     description: ""
   Error:
     description: ""

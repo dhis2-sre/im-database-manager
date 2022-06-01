@@ -1,5 +1,7 @@
 package database
 
+import "github.com/dhis2-sre/im-database-manager/pkg/model"
+
 // swagger:response
 type Error struct {
 	// The error message
@@ -7,8 +9,8 @@ type Error struct {
 	Message string
 }
 
-//swagger:parameters findDatabaseById lockDatabaseById unlockDatabaseById uploadDatabase downloadDatabase deleteDatabaseById updateDatabaseById saveDatabaseById findDatabaseUrlById
-type IdParam struct {
+//swagger:parameters findDatabaseById lockDatabaseById unlockDatabaseById uploadDatabase downloadDatabase deleteDatabaseById updateDatabaseById saveDatabaseById findDatabaseUrlById createExternalDownloadDatabase
+type _ struct {
 	// in: path
 	// required: true
 	ID uint `json:"id"`
@@ -67,4 +69,23 @@ type SaveDatabaseResponse struct {
 type _ struct {
 	//in: body
 	_ string
+}
+
+//swagger:parameters externalDownloadDatabase
+type _ struct {
+	// in: path
+	// required: true
+	UUID uint `json:"uuid"`
+}
+
+// swagger:response DownloadDatabaseResponse
+type _ struct {
+	//in: body
+	_ string
+}
+
+// swagger:response CreateExternalDownloadResponse
+type _ struct {
+	//in: body
+	_ model.ExternalDownload
 }

@@ -3,10 +3,12 @@ package database
 import (
 	"bytes"
 	"fmt"
+	"github.com/google/uuid"
 	"io"
 	"net/url"
 	"strconv"
 	"strings"
+	"time"
 
 	"github.com/dhis2-sre/im-database-manager/pkg/model"
 
@@ -28,6 +30,8 @@ type Service interface {
 	List(groups []*models.Group) ([]*model.Database, error)
 	Update(d *model.Database) error
 	//Save(token string, id uint) (string, error)
+	CreateExternalDownload(databaseID uint, expiration time.Time) (model.ExternalDownload, error)
+	FindExternalDownload(uuid uuid.UUID) (model.ExternalDownload, error)
 }
 
 func ProvideService(c config.Config, s3Client storage.S3Client, jobClient jobClient.Client, repository Repository) Service {
@@ -162,6 +166,28 @@ func (s service) List(groups []*models.Group) ([]*model.Database, error) {
 
 func (s service) Update(d *model.Database) error {
 	return s.repository.Update(d)
+}
+
+func (s service) CreateExternalDownload(databaseID uint, expiration time.Time) (model.ExternalDownload, error) {
+	err := s.repository.PurgeExternalDownload()
+	if err != nil {
+		return model.ExternalDownload{}, err
+	}
+
+	now := time.Now()
+	if expiration.After(now) {
+		return model.ExternalDownload{}, fmt.Errorf("expiration %s needs to be in the future (current %s)", expiration, now)
+	}
+
+	return s.repository.CreateExternalDownload(databaseID, expiration)
+}
+
+func (s service) FindExternalDownload(uuid uuid.UUID) (model.ExternalDownload, error) {
+	err := s.repository.PurgeExternalDownload()
+	if err != nil {
+		return model.ExternalDownload{}, err
+	}
+	return s.repository.FindExternalDownload(uuid)
 }
 
 /*

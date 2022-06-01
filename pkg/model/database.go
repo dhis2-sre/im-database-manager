@@ -16,7 +16,7 @@ type Database struct {
 }
 
 type ExternalDownload struct {
-	UUID       uuid.UUID `gorm:"primarykey"`
+	UUID       uuid.UUID `gorm:"primaryKey;type:uuid"`
 	Expiration time.Time
 	DatabaseID uint
 }

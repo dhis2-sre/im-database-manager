@@ -11,7 +11,8 @@ import (
 	"github.com/go-openapi/strfmt"
 )
 
-// UUID UUID is an array type to represent the value of a UUID, as defined in RFC-4122.
+// UUID A UUID is a 128 bit (16 byte) Universal Unique IDentifier as defined in RFC
+// 4122.
 //
 // swagger:model UUID
 type UUID []uint8

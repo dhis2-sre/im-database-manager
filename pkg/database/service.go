@@ -3,12 +3,13 @@ package database
 import (
 	"bytes"
 	"fmt"
-	"github.com/google/uuid"
 	"io"
 	"net/url"
 	"strconv"
 	"strings"
 	"time"
+
+	"github.com/google/uuid"
 
 	"github.com/dhis2-sre/im-database-manager/pkg/model"
 

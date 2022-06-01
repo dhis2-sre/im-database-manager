@@ -2,8 +2,9 @@ package database
 
 import (
 	"fmt"
-	"github.com/google/uuid"
 	"time"
+
+	"github.com/google/uuid"
 
 	"github.com/dhis2-sre/im-database-manager/pkg/model"
 	"gorm.io/gorm"

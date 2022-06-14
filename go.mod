@@ -8,16 +8,16 @@ require (
 	github.com/aws/aws-sdk-go-v2/feature/s3/manager v1.11.14
 	github.com/aws/aws-sdk-go-v2/service/s3 v1.26.10
 	github.com/dhis2-sre/im-job v0.1.0
-	github.com/dhis2-sre/im-user v0.7.2
+	github.com/dhis2-sre/im-user v0.7.4
 	github.com/gin-contrib/cors v1.3.1
 	github.com/gin-gonic/gin v1.8.1
 	github.com/go-openapi/errors v0.20.2
 	github.com/go-openapi/runtime v0.24.1
 	github.com/go-openapi/strfmt v0.21.2
 	github.com/go-openapi/swag v0.21.1
-	github.com/go-openapi/validate v0.21.0
+	github.com/go-openapi/validate v0.22.0
 	github.com/gofrs/uuid v4.2.0+incompatible
-	github.com/google/uuid v1.2.0
+	github.com/google/uuid v1.3.0
 	github.com/google/wire v0.5.0
 	github.com/lestrrat-go/jwx v1.2.25
 	github.com/stretchr/testify v1.7.2

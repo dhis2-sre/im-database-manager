@@ -17,7 +17,7 @@ require (
 	github.com/go-openapi/swag v0.21.1
 	github.com/go-openapi/validate v0.21.0
 	github.com/gofrs/uuid v4.2.0+incompatible
-	github.com/google/uuid v1.2.0
+	github.com/google/uuid v1.3.0
 	github.com/google/wire v0.5.0
 	github.com/lestrrat-go/jwx v1.2.25
 	github.com/stretchr/testify v1.7.2

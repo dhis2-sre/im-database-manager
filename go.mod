@@ -21,7 +21,7 @@ require (
 	github.com/lestrrat-go/jwx v1.2.25
 	github.com/stretchr/testify v1.7.2
 	gorm.io/driver/postgres v1.3.7
-	gorm.io/gorm v1.23.5
+	gorm.io/gorm v1.23.6
 )
 
 require (

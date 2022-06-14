@@ -67,7 +67,4 @@ swagger-client: swagger-check-install
 
 swagger: swagger-clean swagger-docs swagger-client
 
-di:
-	wire gen ./internal/di
-
 .PHONY: binary check docker-image init push-docker-image dev test dev-test helm-chart publish-helm

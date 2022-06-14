@@ -26,17 +26,41 @@
 package main
 
 import (
-	"log"
+	"fmt"
+	"os"
 
-	"github.com/dhis2-sre/im-database-manager/internal/di"
+	"github.com/dhis2-sre/im-database-manager/internal/client"
+	"github.com/dhis2-sre/im-database-manager/internal/handler"
 	"github.com/dhis2-sre/im-database-manager/internal/server"
+	"github.com/dhis2-sre/im-database-manager/pkg/config"
+	"github.com/dhis2-sre/im-database-manager/pkg/database"
+	"github.com/dhis2-sre/im-database-manager/pkg/storage"
 )
 
 func main() {
-	environment := di.GetEnvironment()
-
-	r := server.GetEngine(environment)
-	if err := r.Run(); err != nil {
-		log.Fatal(err)
+	if err := run(); err != nil {
+		fmt.Fprintf(os.Stderr, "%s\n", err) // nolint:errcheck
+		os.Exit(1)
 	}
+}
+
+func run() error {
+	cfg := config.ProvideConfig()
+
+	db, err := storage.ProvideDatabase(cfg)
+	if err != nil {
+		return err
+	}
+
+	usrSvc := client.ProvideUserService(cfg)
+	s3Client := storage.ProvideS3Client()
+	jobSvc := client.ProvideJobService(cfg)
+	dbRepo := database.ProvideRepository(db)
+	dbSvc := database.ProvideService(cfg, s3Client, jobSvc, dbRepo)
+	dbHandler := database.ProvideHandler(usrSvc, dbSvc)
+
+	authMiddleware := handler.ProvideAuthentication(cfg)
+
+	r := server.GetEngine(cfg.BasePath, dbHandler, authMiddleware)
+	return r.Run()
 }

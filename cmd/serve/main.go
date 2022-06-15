@@ -46,7 +46,10 @@ func main() {
 }
 
 func run() error {
-	cfg := config.New()
+	cfg, err := config.New()
+	if err != nil {
+		return fmt.Errorf("error getting config: %v", err)
+	}
 
 	usrSvc := userClient.ProvideClient(cfg.UserService.Host, cfg.UserService.BasePath)
 
@@ -61,7 +64,10 @@ func run() error {
 
 	dbHandler := database.New(usrSvc, dbSvc)
 
-	authMiddleware := handler.NewAuthentication(cfg)
+	authMiddleware, err := handler.NewAuthentication(cfg)
+	if err != nil {
+		return err
+	}
 
 	r := server.GetEngine(cfg.BasePath, dbHandler, authMiddleware)
 	return r.Run()

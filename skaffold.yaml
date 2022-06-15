@@ -3,6 +3,8 @@ kind: Config
 build:
   artifacts:
     - image: dhis2/instance-database-manager
+  tagPolicy:
+    inputDigest: { }
 deploy:
   statusCheckDeadlineSeconds: 180
   helm:

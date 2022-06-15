@@ -7,7 +7,17 @@ import (
 	"strconv"
 )
 
-func ProvideConfig() Config {
+type Config struct {
+	BasePath       string
+	UserService    service
+	JobService     service
+	Postgresql     postgresql
+	RabbitMqURL    rabbitmq
+	Authentication Authentication
+	Bucket         string
+}
+
+func New() Config {
 	return Config{
 		BasePath: requireEnv("BASE_PATH"),
 		UserService: service{
@@ -40,16 +50,6 @@ func ProvideConfig() Config {
 		},
 		Bucket: requireEnv("S3_BUCKET"),
 	}
-}
-
-type Config struct {
-	BasePath       string
-	UserService    service
-	JobService     service
-	Postgresql     postgresql
-	RabbitMqURL    rabbitmq
-	Authentication Authentication
-	Bucket         string
 }
 
 type service struct {

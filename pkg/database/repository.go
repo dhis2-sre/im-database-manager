@@ -24,12 +24,12 @@ type Repository interface {
 	PurgeExternalDownload() error
 }
 
-func ProvideRepository(DB *gorm.DB) Repository {
-	return &repository{db: DB}
-}
-
 type repository struct {
 	db *gorm.DB
+}
+
+func NewRepository(DB *gorm.DB) *repository {
+	return &repository{db: DB}
 }
 
 func (r repository) Create(d *model.Database) error {
@@ -76,7 +76,6 @@ func (r repository) Unlock(id uint) error {
 			ID: id,
 		},
 	}).Update("instance_id", 0).Error
-
 	if err != nil {
 		return err
 	}

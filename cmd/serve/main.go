@@ -29,12 +29,13 @@ import (
 	"fmt"
 	"os"
 
-	"github.com/dhis2-sre/im-database-manager/internal/client"
 	"github.com/dhis2-sre/im-database-manager/internal/handler"
 	"github.com/dhis2-sre/im-database-manager/internal/server"
 	"github.com/dhis2-sre/im-database-manager/pkg/config"
 	"github.com/dhis2-sre/im-database-manager/pkg/database"
 	"github.com/dhis2-sre/im-database-manager/pkg/storage"
+	jobClient "github.com/dhis2-sre/im-job/pkg/client"
+	userClient "github.com/dhis2-sre/im-user/pkg/client"
 )
 
 func main() {
@@ -45,21 +46,22 @@ func main() {
 }
 
 func run() error {
-	cfg := config.ProvideConfig()
+	cfg := config.New()
 
-	db, err := storage.ProvideDatabase(cfg)
+	usrSvc := userClient.ProvideClient(cfg.UserService.Host, cfg.UserService.BasePath)
+
+	s3Client := storage.NewS3Client()
+	jobSvc := jobClient.ProvideClient(cfg.JobService.Host, cfg.JobService.BasePath)
+	db, err := storage.NewDatabase(cfg)
 	if err != nil {
 		return err
 	}
+	dbRepo := database.NewRepository(db)
+	dbSvc := database.NewService(cfg, s3Client, jobSvc, dbRepo)
 
-	usrSvc := client.ProvideUserService(cfg)
-	s3Client := storage.ProvideS3Client()
-	jobSvc := client.ProvideJobService(cfg)
-	dbRepo := database.ProvideRepository(db)
-	dbSvc := database.ProvideService(cfg, s3Client, jobSvc, dbRepo)
-	dbHandler := database.ProvideHandler(usrSvc, dbSvc)
+	dbHandler := database.New(usrSvc, dbSvc)
 
-	authMiddleware := handler.ProvideAuthentication(cfg)
+	authMiddleware := handler.NewAuthentication(cfg)
 
 	r := server.GetEngine(cfg.BasePath, dbHandler, authMiddleware)
 	return r.Run()

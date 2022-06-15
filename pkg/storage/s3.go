@@ -17,11 +17,10 @@ type S3Client interface {
 	Download(bucket string, key string, dst io.Writer, cb func(contentLength int64)) error
 }
 
-func ProvideS3Client() S3Client {
-	return s3Client{}
-}
+type s3Client struct{}
 
-type s3Client struct {
+func NewS3Client() S3Client {
+	return s3Client{}
 }
 
 func (s s3Client) Upload(bucket string, key string, body *bytes.Buffer) error {

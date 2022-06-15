@@ -18,7 +18,7 @@ func TestFindDatabaseById(t *testing.T) {
 		parsedUrl, err := url.Parse(ts.URL)
 		assert.NoError(t, err)
 		host := fmt.Sprintf("%s:%s", parsedUrl.Hostname(), parsedUrl.Port())
-		c := ProvideClient(host, environment.Config.BasePath)
+		c := New(host, environment.Config.BasePath)
 
 		create, err := c.Create(AccessToken, &models.CreateDatabaseRequest{
 			GroupID: 1,

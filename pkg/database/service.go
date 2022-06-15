@@ -30,13 +30,9 @@ type Service interface {
 	Delete(id uint) error
 	List(groups []*models.Group) ([]*model.Database, error)
 	Update(d *model.Database) error
-	//Save(token string, id uint) (string, error)
+	// Save(token string, id uint) (string, error)
 	CreateExternalDownload(databaseID uint, expiration time.Time) (model.ExternalDownload, error)
 	FindExternalDownload(uuid uuid.UUID) (model.ExternalDownload, error)
-}
-
-func ProvideService(c config.Config, s3Client storage.S3Client, jobClient jobClient.Client, repository Repository) Service {
-	return &service{c, s3Client, jobClient, repository}
 }
 
 type service struct {
@@ -44,6 +40,10 @@ type service struct {
 	s3Client   storage.S3Client
 	jobClient  jobClient.Client
 	repository Repository
+}
+
+func NewService(c config.Config, s3Client storage.S3Client, jobClient jobClient.Client, repository Repository) *service {
+	return &service{c, s3Client, jobClient, repository}
 }
 
 func (s service) Create(d *model.Database) error {

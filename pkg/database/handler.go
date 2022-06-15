@@ -18,16 +18,16 @@ import (
 	"github.com/gin-gonic/gin"
 )
 
-func ProvideHandler(userClient userClient.Client, databaseService Service) Handler {
+type Handler struct {
+	userClient      userClient.Client
+	databaseService Service
+}
+
+func New(userClient userClient.Client, databaseService Service) Handler {
 	return Handler{
 		userClient,
 		databaseService,
 	}
-}
-
-type Handler struct {
-	userClient      userClient.Client
-	databaseService Service
 }
 
 type CreateDatabaseRequest struct {

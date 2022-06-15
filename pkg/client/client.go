@@ -18,14 +18,14 @@ type Client interface {
 	//	Save(token string, databaseId uint, instanceId uint) (string, error)
 }
 
-func ProvideClient(host string, basePath string) Client {
+type cli struct {
+	clientService operations.ClientService
+}
+
+func New(host string, basePath string) *cli {
 	transport := httptransport.New(host, basePath, nil)
 	userService := operations.New(transport, strfmt.Default)
 	return &cli{userService}
-}
-
-type cli struct {
-	clientService operations.ClientService
 }
 
 func (c cli) Create(token string, createDatabaseRequest *models.CreateDatabaseRequest) (*models.Database, error) {

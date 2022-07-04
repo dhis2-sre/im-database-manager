@@ -6,7 +6,7 @@ require (
 	github.com/aws/aws-sdk-go-v2 v1.16.6
 	github.com/aws/aws-sdk-go-v2/config v1.15.12
 	github.com/aws/aws-sdk-go-v2/feature/s3/manager v1.11.17
-	github.com/aws/aws-sdk-go-v2/service/s3 v1.26.12
+	github.com/aws/aws-sdk-go-v2/service/s3 v1.27.0
 	github.com/dhis2-sre/im-job v0.1.0
 	github.com/dhis2-sre/im-user v0.8.0
 	github.com/gin-contrib/cors v1.3.1

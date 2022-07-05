@@ -13,21 +13,25 @@ import (
 
 	"github.com/dhis2-sre/im-database-manager/internal/apperror"
 	"github.com/dhis2-sre/im-database-manager/internal/handler"
-	userClient "github.com/dhis2-sre/im-user/pkg/client"
 	"github.com/dhis2-sre/im-user/swagger/sdk/models"
 	"github.com/gin-gonic/gin"
 )
 
 type Handler struct {
-	userClient      userClient.Client
+	userClient      userClientHandler
 	databaseService Service
 }
 
-func New(userClient userClient.Client, databaseService Service) Handler {
+func New(userClient userClientHandler, databaseService Service) Handler {
 	return Handler{
 		userClient,
 		databaseService,
 	}
+}
+
+type userClientHandler interface {
+	FindGroupByName(token string, name string) (*models.Group, error)
+	FindUserById(token string, id uint) (*models.User, error)
 }
 
 type CreateDatabaseRequest struct {

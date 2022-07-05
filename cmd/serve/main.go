@@ -51,7 +51,7 @@ func run() error {
 		return fmt.Errorf("error getting config: %v", err)
 	}
 
-	usrSvc := userClient.ProvideClient(cfg.UserService.Host, cfg.UserService.BasePath)
+	usrSvc := userClient.New(cfg.UserService.Host, cfg.UserService.BasePath)
 
 	s3Client := storage.NewS3Client()
 	jobSvc := jobClient.ProvideClient(cfg.JobService.Host, cfg.JobService.BasePath)

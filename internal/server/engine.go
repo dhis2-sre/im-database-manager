@@ -27,6 +27,7 @@ func GetEngine(basePath string, dbHandler database.Handler, authMiddleware handl
 	tokenAuthenticationRouter := router.Group("")
 	tokenAuthenticationRouter.Use(authMiddleware.TokenAuthentication)
 	tokenAuthenticationRouter.POST("/databases", dbHandler.Create)
+	tokenAuthenticationRouter.POST("/databases/:id/copy", dbHandler.Copy)
 	tokenAuthenticationRouter.POST("/databases/:id/upload", dbHandler.Upload)
 	tokenAuthenticationRouter.GET("/databases/:id/download", dbHandler.Download)
 	tokenAuthenticationRouter.GET("/databases", dbHandler.List)

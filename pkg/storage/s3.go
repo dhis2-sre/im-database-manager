@@ -3,15 +3,15 @@ package storage
 import (
 	"bytes"
 	"context"
-	"io"
-
 	"github.com/aws/aws-sdk-go-v2/aws"
 	s3config "github.com/aws/aws-sdk-go-v2/config"
 	"github.com/aws/aws-sdk-go-v2/feature/s3/manager"
 	"github.com/aws/aws-sdk-go-v2/service/s3"
+	"io"
 )
 
 type S3Client interface {
+	Copy(bucket string, source string, destination string) error
 	Upload(bucket string, key string, body *bytes.Buffer) error
 	Delete(bucket string, key string) error
 	Download(bucket string, key string, dst io.Writer, cb func(contentLength int64)) error
@@ -21,6 +21,21 @@ type s3Client struct{}
 
 func NewS3Client() S3Client {
 	return s3Client{}
+}
+
+func (s s3Client) Copy(bucket string, source string, destination string) error {
+	awsS3Client, err := s.getS3Client()
+	if err != nil {
+		return err
+	}
+
+	_, err = awsS3Client.CopyObject(context.TODO(), &s3.CopyObjectInput{
+		Bucket:     aws.String(bucket),
+		CopySource: aws.String(source),
+		Key:        aws.String(destination),
+	})
+
+	return err
 }
 
 func (s s3Client) Upload(bucket string, key string, body *bytes.Buffer) error {

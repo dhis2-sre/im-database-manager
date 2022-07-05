@@ -22,6 +22,7 @@ import (
 
 type Service interface {
 	Create(d *model.Database) error
+	Copy(id uint, d *model.Database, group *models.Group) error
 	FindById(id uint) (*model.Database, error)
 	Lock(id uint, instanceId uint) (*model.Database, error)
 	Unlock(id uint) error
@@ -47,6 +48,36 @@ func NewService(c config.Config, s3Client storage.S3Client, jobClient jobClient.
 }
 
 func (s service) Create(d *model.Database) error {
+	return s.repository.Create(d)
+}
+
+func (s service) Copy(id uint, d *model.Database, group *models.Group) error {
+	source, err := s.FindById(id)
+	if err != nil {
+		if err.Error() == "record not found" {
+			idStr := strconv.FormatUint(uint64(id), 10)
+			err = apperror.NewNotFound("database not found", idStr)
+		}
+		return err
+	}
+
+	if source.Url == "" {
+		return fmt.Errorf("database with id %d has no s3 url", d.ID)
+	}
+
+	u, err := url.Parse(source.Url)
+	if err != nil {
+		return err
+	}
+
+	targetKey := fmt.Sprintf("%s/%s/%s", group.Name, d.Name, d.Name)
+
+	key := u.Path[1:] // Strip leading "/"
+	err = s.s3Client.Copy(s.c.Bucket, key, targetKey)
+	if err != nil {
+		return err
+	}
+
 	return s.repository.Create(d)
 }
 

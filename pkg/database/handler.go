@@ -78,6 +78,70 @@ func (h Handler) Create(c *gin.Context) {
 	c.JSON(http.StatusCreated, d)
 }
 
+type CopyDatabaseRequest struct {
+	Name      string `json:"name" binding:"required"`
+	GroupName string `json:"groupName" binding:"required"`
+}
+
+// Copy database
+// swagger:route POST /databases/{id}/copy copyDatabase
+//
+// Copy database
+//
+// Security:
+//   oauth2:
+//
+// responses:
+//   202: Database
+//   401: Error
+//   403: Error
+//   415: Error
+func (h Handler) Copy(c *gin.Context) {
+	idParam := c.Param("id")
+	id, err := strconv.ParseUint(idParam, 10, 64)
+	if err != nil {
+		badRequest := apperror.NewBadRequest("error parsing id")
+		_ = c.Error(badRequest)
+		return
+	}
+
+	var request CopyDatabaseRequest
+	if err := handler.DataBinder(c, &request); err != nil {
+		_ = c.Error(err)
+		return
+	}
+
+	d := &model.Database{
+		Name:      request.Name,
+		GroupName: request.GroupName,
+	}
+
+	err = h.canAccess(c, d)
+	if err != nil {
+		_ = c.Error(err)
+		return
+	}
+
+	token, err := handler.GetTokenFromHttpAuthHeader(c)
+	if err != nil {
+		_ = c.Error(err)
+		return
+	}
+
+	group, err := h.userClient.FindGroupByName(token, d.GroupName)
+	if err != nil {
+		_ = c.Error(err)
+		return
+	}
+
+	if err := h.databaseService.Copy(uint(id), d, group); err != nil {
+		_ = c.Error(err)
+		return
+	}
+
+	c.JSON(http.StatusCreated, d)
+}
+
 // FindById database
 // swagger:route GET /databases/{id} findDatabaseById
 //

@@ -17,8 +17,8 @@ import (
 // swagger:model CopyDatabaseRequest
 type CopyDatabaseRequest struct {
 
-	// group name
-	GroupName string `json:"groupName,omitempty"`
+	// group
+	Group string `json:"group,omitempty"`
 
 	// name
 	Name string `json:"name,omitempty"`

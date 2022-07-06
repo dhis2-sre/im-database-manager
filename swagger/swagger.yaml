@@ -3,9 +3,9 @@ consumes:
 definitions:
   CopyDatabaseRequest:
     properties:
-      groupName:
+      group:
         type: string
-        x-go-name: GroupName
+        x-go-name: Group
       name:
         type: string
         x-go-name: Name

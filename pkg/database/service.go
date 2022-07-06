@@ -4,7 +4,6 @@ import (
 	"bytes"
 	"fmt"
 	"io"
-	"log"
 	"net/url"
 	"strconv"
 	"strings"
@@ -62,22 +61,19 @@ func (s service) Copy(id uint, d *model.Database, group *models.Group) error {
 		return err
 	}
 
-	if source.Url == "" {
-		return fmt.Errorf("database with id %d has no s3 url", d.ID)
-	}
-
 	u, err := url.Parse(source.Url)
 	if err != nil {
 		return err
 	}
 
-	targetKey := fmt.Sprintf("%s/%s/%s", group.Name, d.Name, d.Name)
-
-	key := u.Path[1:] // Strip leading "/"
-	err = s.s3Client.Copy(s.c.Bucket, key, targetKey)
+	sourceKey := u.Path[1:] // Strip leading "/"
+	destinationKey := fmt.Sprintf("%s/%s", group.Name, d.Name)
+	err = s.s3Client.Copy(s.c.Bucket, sourceKey, destinationKey)
 	if err != nil {
 		return err
 	}
+
+	d.Url = fmt.Sprintf("s3://%s/%s", s.c.Bucket, destinationKey)
 
 	return s.repository.Create(d)
 }

@@ -3,10 +3,10 @@
 set -euo pipefail
 
 NAME=$1
-GROUP_NAME=$2
+GROUP=$2
 SOURCE=$3
 
 echo "{
   \"name\": \"$NAME\",
-  \"groupName\": \"$GROUP_NAME\"
+  \"group\": \"$GROUP\"
 }" | $HTTP post "$INSTANCE_HOST/databases/$SOURCE/copy" "Authorization: Bearer $ACCESS_TOKEN"

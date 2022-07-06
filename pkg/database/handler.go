@@ -113,8 +113,8 @@ func (h Handler) Upload(c *gin.Context) {
 }
 
 type CopyDatabaseRequest struct {
-	Name      string `json:"name" binding:"required"`
-	GroupName string `json:"groupName" binding:"required"`
+	Name  string `json:"name" binding:"required"`
+	Group string `json:"group" binding:"required"`
 }
 
 // Copy database
@@ -147,7 +147,7 @@ func (h Handler) Copy(c *gin.Context) {
 
 	d := &model.Database{
 		Name:      request.Name,
-		GroupName: request.GroupName,
+		GroupName: request.Group,
 	}
 
 	err = h.canAccess(c, d)

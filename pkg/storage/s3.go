@@ -7,6 +7,7 @@ import (
 	s3config "github.com/aws/aws-sdk-go-v2/config"
 	"github.com/aws/aws-sdk-go-v2/feature/s3/manager"
 	"github.com/aws/aws-sdk-go-v2/service/s3"
+	"github.com/aws/aws-sdk-go-v2/service/s3/types"
 	"io"
 )
 
@@ -31,8 +32,9 @@ func (s s3Client) Copy(bucket string, source string, destination string) error {
 
 	_, err = awsS3Client.CopyObject(context.TODO(), &s3.CopyObjectInput{
 		Bucket:     aws.String(bucket),
-		CopySource: aws.String(source),
+		CopySource: aws.String(bucket + "/" + source),
 		Key:        aws.String(destination),
+		ACL:        types.ObjectCannedACLPrivate,
 	})
 
 	return err
@@ -50,6 +52,7 @@ func (s s3Client) Upload(bucket string, key string, body *bytes.Buffer) error {
 		Bucket: aws.String(bucket),
 		Key:    aws.String(key),
 		Body:   bytes.NewReader(body.Bytes()),
+		ACL:    types.ObjectCannedACLPrivate,
 	})
 
 	return err

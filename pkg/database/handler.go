@@ -650,7 +650,6 @@ func (h Handler) filterByGroupId(databases []*model.Database, test func(instance
 type UpdateDatabaseRequest struct {
 	Name      string `json:"name" binding:"required"`
 	GroupName string `json:"groupName" binding:"required"`
-	Url       string `json:"url" binding:"required"`
 }
 
 // Update database
@@ -698,7 +697,6 @@ func (h Handler) Update(c *gin.Context) {
 
 	d.Name = request.Name
 	d.GroupName = request.GroupName
-	d.Url = request.Url
 
 	err = h.databaseService.Update(d)
 	if err != nil {

@@ -22,9 +22,6 @@ type UpdateDatabaseRequest struct {
 
 	// name
 	Name string `json:"name,omitempty"`
-
-	// Url
-	URL string `json:"url,omitempty"`
 }
 
 // Validate validates this update database request

@@ -136,9 +136,6 @@ definitions:
       name:
         type: string
         x-go-name: Name
-      url:
-        type: string
-        x-go-name: Url
     type: object
     x-go-package: github.com/dhis2-sre/im-database-manager/pkg/database
 info:

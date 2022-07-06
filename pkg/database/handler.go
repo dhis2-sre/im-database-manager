@@ -34,34 +34,41 @@ type userClientHandler interface {
 	FindUserById(token string, id uint) (*models.User, error)
 }
 
-type CreateDatabaseRequest struct {
-	Name      string `json:"name" binding:"required"`
-	GroupName string `json:"groupName" binding:"required"`
+type UploadDatabaseRequest struct {
+	Group    string                `form:"group" binding:"required"`
+	Database *multipart.FileHeader `form:"database" binding:"required"`
 }
 
-// Create database
-// swagger:route POST /databases createDatabase
+// Upload database
+// swagger:route POST /databases uploadDatabase
 //
-// Create database
+// Upload database
 //
 // Security:
 //   oauth2:
 //
 // responses:
-//   202: Database
+//   201: Database
 //   401: Error
 //   403: Error
+//   404: Error
 //   415: Error
-func (h Handler) Create(c *gin.Context) {
-	var request CreateDatabaseRequest
+func (h Handler) Upload(c *gin.Context) {
+	var request UploadDatabaseRequest
 	if err := handler.DataBinder(c, &request); err != nil {
 		_ = c.Error(err)
 		return
 	}
 
+	if request.Database == nil {
+		badRequest := apperror.NewBadRequest("file not found")
+		_ = c.Error(badRequest)
+		return
+	}
+
 	d := &model.Database{
-		Name:      request.Name,
-		GroupName: request.GroupName,
+		Name:      request.Database.Filename,
+		GroupName: request.Group,
 	}
 
 	err := h.canAccess(c, d)
@@ -70,12 +77,39 @@ func (h Handler) Create(c *gin.Context) {
 		return
 	}
 
-	if err := h.databaseService.Create(d); err != nil {
+	token, err := handler.GetTokenFromHttpAuthHeader(c)
+	if err != nil {
 		_ = c.Error(err)
 		return
 	}
 
-	c.JSON(http.StatusCreated, d)
+	group, err := h.userClient.FindGroupByName(token, d.GroupName)
+	if err != nil {
+		_ = c.Error(err)
+		return
+	}
+
+	file, err := request.Database.Open()
+	if err != nil {
+		_ = c.Error(err)
+		return
+	}
+
+	defer func(file multipart.File) {
+		err := file.Close()
+		if err != nil {
+			_ = c.Error(err)
+			return
+		}
+	}(file)
+
+	save, err := h.databaseService.Upload(d, group, file)
+	if err != nil {
+		_ = c.Error(err)
+		return
+	}
+
+	c.JSON(http.StatusCreated, save)
 }
 
 type CopyDatabaseRequest struct {
@@ -396,90 +430,6 @@ func (h Handler) Save(c *gin.Context) {
 	c.JSON(http.StatusAccepted, SaveDatabaseResponse{runId})
 }
 */
-
-type UploadDatabaseRequest struct {
-	Database *multipart.FileHeader `form:"database" binding:"required"`
-}
-
-// Upload database
-// swagger:route POST /databases/{id}/upload uploadDatabase
-//
-// Upload database
-//
-// Security:
-//   oauth2:
-//
-// responses:
-//   201: Database
-//   401: Error
-//   403: Error
-//   404: Error
-//   415: Error
-func (h Handler) Upload(c *gin.Context) {
-	idParam := c.Param("id")
-	id, err := strconv.ParseUint(idParam, 10, 64)
-	if err != nil {
-		badRequest := apperror.NewBadRequest("error parsing id")
-		_ = c.Error(badRequest)
-		return
-	}
-
-	var request UploadDatabaseRequest
-	if err := handler.DataBinder(c, &request); err != nil {
-		_ = c.Error(err)
-		return
-	}
-
-	if request.Database == nil {
-		badRequest := apperror.NewBadRequest("file not found")
-		_ = c.Error(badRequest)
-		return
-	}
-
-	d, err := h.databaseService.FindById(uint(id))
-	if err != nil {
-		_ = c.Error(err)
-		return
-	}
-
-	err = h.canAccess(c, d)
-	if err != nil {
-		_ = c.Error(err)
-		return
-	}
-
-	file, err := request.Database.Open()
-	if err != nil {
-		_ = c.Error(err)
-		return
-	}
-
-	token, err := handler.GetTokenFromHttpAuthHeader(c)
-	if err != nil {
-		_ = c.Error(err)
-		return
-	}
-
-	group, err := h.userClient.FindGroupByName(token, d.GroupName)
-	if err != nil {
-		_ = c.Error(err)
-		return
-	}
-
-	save, err := h.databaseService.Upload(d, group, file, request.Database.Filename)
-	if err != nil {
-		_ = c.Error(err)
-		return
-	}
-
-	err = file.Close()
-	if err != nil {
-		_ = c.Error(err)
-		return
-	}
-
-	c.JSON(http.StatusCreated, save)
-}
 
 // Download database
 // swagger:route GET /databases/{id}/download downloadDatabase

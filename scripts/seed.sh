@@ -2,14 +2,11 @@
 
 set -x
 
-GROUP_NAME=whoami
+GROUP=whoami
 
 function createDatabase() {
   echo "Login..."
   export ACCESS_TOKEN="" && eval $(./login.sh) && echo "$ACCESS_TOKEN"
-
-  echo "Creating database... $1"
-  DATABASE_ID=$(./create.sh "$1" $GROUP_NAME | jq -r '.ID')
 
   echo "Downloading database... $1"
   curl -C - "$2" -o "$HOME/Downloads/$1.sql.gz"
@@ -19,7 +16,7 @@ function createDatabase() {
   export ACCESS_TOKEN="" && eval $(./login.sh) && echo "$ACCESS_TOKEN"
 
   echo "Uploading database...$1"
-  ./upload.sh "$DATABASE_ID" "$HOME/Downloads/$1.sql.gz"
+  ./upload.sh "$GROUP" "$HOME/Downloads/$1.sql.gz"
 }
 
 

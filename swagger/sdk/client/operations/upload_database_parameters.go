@@ -14,7 +14,6 @@ import (
 	"github.com/go-openapi/runtime"
 	cr "github.com/go-openapi/runtime/client"
 	"github.com/go-openapi/strfmt"
-	"github.com/go-openapi/swag"
 )
 
 // NewUploadDatabaseParams creates a new UploadDatabaseParams object,
@@ -65,11 +64,6 @@ type UploadDatabaseParams struct {
 	   Upload database request body parameter
 	*/
 	File runtime.NamedReadCloser
-
-	// ID.
-	//
-	// Format: uint64
-	ID uint64
 
 	timeout    time.Duration
 	Context    context.Context
@@ -135,17 +129,6 @@ func (o *UploadDatabaseParams) SetFile(file runtime.NamedReadCloser) {
 	o.File = file
 }
 
-// WithID adds the id to the upload database params
-func (o *UploadDatabaseParams) WithID(id uint64) *UploadDatabaseParams {
-	o.SetID(id)
-	return o
-}
-
-// SetID adds the id to the upload database params
-func (o *UploadDatabaseParams) SetID(id uint64) {
-	o.ID = id
-}
-
 // WriteToRequest writes these params to a swagger request
 func (o *UploadDatabaseParams) WriteToRequest(r runtime.ClientRequest, reg strfmt.Registry) error {
 
@@ -155,11 +138,6 @@ func (o *UploadDatabaseParams) WriteToRequest(r runtime.ClientRequest, reg strfm
 	var res []error
 	// form file param File
 	if err := r.SetFileParam("File", o.File); err != nil {
-		return err
-	}
-
-	// path param id
-	if err := r.SetPathParam("id", swag.FormatUint64(o.ID)); err != nil {
 		return err
 	}
 

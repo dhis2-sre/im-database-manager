@@ -4,6 +4,7 @@ import (
 	"bytes"
 	"fmt"
 	"io"
+	"log"
 	"net/url"
 	"strconv"
 	"strings"
@@ -26,7 +27,7 @@ type Service interface {
 	FindById(id uint) (*model.Database, error)
 	Lock(id uint, instanceId uint) (*model.Database, error)
 	Unlock(id uint) error
-	Upload(d *model.Database, group *models.Group, file io.Reader, filename string) (*model.Database, error)
+	Upload(d *model.Database, group *models.Group, file io.Reader) (*model.Database, error)
 	Download(id uint, dst io.Writer, headers func(contentLength int64)) error
 	Delete(id uint) error
 	List(groups []*models.Group) ([]*model.Database, error)
@@ -118,14 +119,14 @@ func (s service) Unlock(id uint) error {
 	return err
 }
 
-func (s service) Upload(d *model.Database, group *models.Group, file io.Reader, filename string) (*model.Database, error) {
+func (s service) Upload(d *model.Database, group *models.Group, file io.Reader) (*model.Database, error) {
 	buffer := new(bytes.Buffer)
 	_, err := buffer.ReadFrom(file)
 	if err != nil {
 		return nil, err
 	}
 
-	key := fmt.Sprintf("%s/%s/%s", group.Name, d.Name, filename)
+	key := fmt.Sprintf("%s/%s", group.Name, d.Name)
 
 	err = s.s3Client.Upload(s.c.Bucket, key, buffer)
 	if err != nil {
@@ -167,17 +168,15 @@ func (s service) Delete(id uint) error {
 		return err
 	}
 
-	if d.Url != "" {
-		u, err := url.Parse(d.Url)
-		if err != nil {
-			return err
-		}
+	u, err := url.Parse(d.Url)
+	if err != nil {
+		return err
+	}
 
-		key := u.Path[1:] // Strip leading "/"
-		err = s.s3Client.Delete(s.c.Bucket, key)
-		if err != nil {
-			return err
-		}
+	key := u.Path[1:] // Strip leading "/"
+	err = s.s3Client.Delete(s.c.Bucket, key)
+	if err != nil {
+		return err
 	}
 
 	return s.repository.Delete(id)

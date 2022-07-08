@@ -66,7 +66,7 @@ func (s service) Copy(id uint, d *model.Database, group *models.Group) error {
 		return err
 	}
 
-	sourceKey := u.Path[1:] // Strip leading "/"
+	sourceKey := strings.TrimPrefix(u.Path, "/")
 	destinationKey := fmt.Sprintf("%s/%s", group.Name, d.Name)
 	err = s.s3Client.Copy(s.c.Bucket, sourceKey, destinationKey)
 	if err != nil {
@@ -154,7 +154,7 @@ func (s service) Download(id uint, dst io.Writer, cb func(contentLength int64)) 
 		return err
 	}
 
-	key := u.Path[1:] // Strip leading "/"
+	key := strings.TrimPrefix(u.Path, "/")
 	return s.s3Client.Download(s.c.Bucket, key, dst, cb)
 }
 
@@ -169,7 +169,7 @@ func (s service) Delete(id uint) error {
 		return err
 	}
 
-	key := u.Path[1:] // Strip leading "/"
+	key := strings.TrimPrefix(u.Path, "/")
 	err = s.s3Client.Delete(s.c.Bucket, key)
 	if err != nil {
 		return err

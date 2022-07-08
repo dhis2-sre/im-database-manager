@@ -596,10 +596,8 @@ func (h Handler) filterByGroupId(databases []*model.Database, test func(instance
 	return
 }
 
-// TODO: Make all? properties optional... ensure we only update if a new value is present
 type UpdateDatabaseRequest struct {
-	Name      string `json:"name" binding:"required"`
-	GroupName string `json:"groupName" binding:"required"`
+	Name string `json:"name" binding:"required"`
 }
 
 // Update database
@@ -646,7 +644,6 @@ func (h Handler) Update(c *gin.Context) {
 	}
 
 	d.Name = request.Name
-	d.GroupName = request.GroupName
 
 	err = h.databaseService.Update(d)
 	if err != nil {

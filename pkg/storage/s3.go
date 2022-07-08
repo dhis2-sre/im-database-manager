@@ -19,19 +19,24 @@ type S3Client interface {
 	Download(bucket string, key string, dst io.Writer, cb func(contentLength int64)) error
 }
 
-type s3Client struct{}
+type s3Client struct {
+	client *s3.Client
+}
 
-func NewS3Client() S3Client {
-	return s3Client{}
+func NewS3Client() (S3Client, error) {
+	// TODO: Region? Why isn't our bucket in eu-north-1?
+	cfg, err := s3config.LoadDefaultConfig(context.TODO(), s3config.WithRegion("eu-west-1"))
+	if err != nil {
+		return nil, err
+	}
+
+	client := s3.NewFromConfig(cfg)
+
+	return s3Client{client}, nil
 }
 
 func (s s3Client) Copy(bucket string, source string, destination string) error {
-	awsS3Client, err := s.getS3Client()
-	if err != nil {
-		return err
-	}
-
-	_, err = awsS3Client.CopyObject(context.TODO(), &s3.CopyObjectInput{
+	_, err := s.client.CopyObject(context.TODO(), &s3.CopyObjectInput{
 		Bucket:     aws.String(bucket),
 		CopySource: aws.String(bucket + "/" + source),
 		Key:        aws.String(destination),
@@ -42,14 +47,9 @@ func (s s3Client) Copy(bucket string, source string, destination string) error {
 }
 
 func (s s3Client) Upload(bucket string, key string, body *bytes.Buffer) error {
-	awsS3Client, err := s.getS3Client()
-	if err != nil {
-		return err
-	}
+	uploader := manager.NewUploader(s.client)
 
-	uploader := manager.NewUploader(awsS3Client)
-
-	_, err = uploader.Upload(context.TODO(), &s3.PutObjectInput{
+	_, err := uploader.Upload(context.TODO(), &s3.PutObjectInput{
 		Bucket: aws.String(bucket),
 		Key:    aws.String(key),
 		Body:   bytes.NewReader(body.Bytes()),
@@ -60,12 +60,7 @@ func (s s3Client) Upload(bucket string, key string, body *bytes.Buffer) error {
 }
 
 func (s s3Client) Delete(bucket string, key string) error {
-	awsS3Client, err := s.getS3Client()
-	if err != nil {
-		return err
-	}
-
-	_, err = awsS3Client.DeleteObject(context.TODO(), &s3.DeleteObjectInput{
+	_, err := s.client.DeleteObject(context.TODO(), &s3.DeleteObjectInput{
 		Bucket: aws.String(bucket),
 		Key:    aws.String(key),
 	})
@@ -74,12 +69,7 @@ func (s s3Client) Delete(bucket string, key string) error {
 }
 
 func (s s3Client) Download(bucket string, key string, dst io.Writer, cb func(contentLength int64)) error {
-	awsS3Client, err := s.getS3Client()
-	if err != nil {
-		return err
-	}
-
-	object, err := awsS3Client.GetObject(context.TODO(), &s3.GetObjectInput{
+	object, err := s.client.GetObject(context.TODO(), &s3.GetObjectInput{
 		Bucket: aws.String(bucket),
 		Key:    aws.String(key),
 	})
@@ -91,15 +81,4 @@ func (s s3Client) Download(bucket string, key string, dst io.Writer, cb func(con
 
 	_, err = io.Copy(dst, object.Body)
 	return fmt.Errorf("error downloading object from bucket %q using key %q: %s", bucket, key, err)
-}
-
-func (s s3Client) getS3Client() (*s3.Client, error) {
-	// TODO: Region? Why isn't our bucket in eu-north-1?
-	cfg, err := s3config.LoadDefaultConfig(context.TODO(), s3config.WithRegion("eu-west-1"))
-	if err != nil {
-		return nil, err
-	}
-
-	awsS3Client := s3.NewFromConfig(cfg)
-	return awsS3Client, err
 }

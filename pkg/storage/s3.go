@@ -3,6 +3,7 @@ package storage
 import (
 	"bytes"
 	"context"
+	"fmt"
 	"github.com/aws/aws-sdk-go-v2/aws"
 	s3config "github.com/aws/aws-sdk-go-v2/config"
 	"github.com/aws/aws-sdk-go-v2/feature/s3/manager"
@@ -37,7 +38,7 @@ func (s s3Client) Copy(bucket string, source string, destination string) error {
 		ACL:        types.ObjectCannedACLPrivate,
 	})
 
-	return err
+	return fmt.Errorf("error copying object from %q to %q: %s", source, destination, err)
 }
 
 func (s s3Client) Upload(bucket string, key string, body *bytes.Buffer) error {
@@ -55,7 +56,7 @@ func (s s3Client) Upload(bucket string, key string, body *bytes.Buffer) error {
 		ACL:    types.ObjectCannedACLPrivate,
 	})
 
-	return err
+	return fmt.Errorf("error uploading object to bucket %q using key %q: %s", bucket, key, err)
 }
 
 func (s s3Client) Delete(bucket string, key string) error {
@@ -69,7 +70,7 @@ func (s s3Client) Delete(bucket string, key string) error {
 		Key:    aws.String(key),
 	})
 
-	return err
+	return fmt.Errorf("error deleting object from bucket %q using key %q: %s", bucket, key, err)
 }
 
 func (s s3Client) Download(bucket string, key string, dst io.Writer, cb func(contentLength int64)) error {
@@ -89,7 +90,7 @@ func (s s3Client) Download(bucket string, key string, dst io.Writer, cb func(con
 	cb(object.ContentLength)
 
 	_, err = io.Copy(dst, object.Body)
-	return err
+	return fmt.Errorf("error downloading object from bucket %q using key %q: %s", bucket, key, err)
 }
 
 func (s s3Client) getS3Client() (*s3.Client, error) {

@@ -127,12 +127,7 @@ definitions:
     type: array
     x-go-package: github.com/google/uuid
   UpdateDatabaseRequest:
-    description: 'TODO: Make all? properties optional... ensure we only update if
-      a new value is present'
     properties:
-      groupName:
-        type: string
-        x-go-name: GroupName
       name:
         type: string
         x-go-name: Name
@@ -411,30 +406,6 @@ paths:
         "404":
           $ref: '#/responses/Error'
         "409":
-          $ref: '#/responses/Error'
-        "415":
-          $ref: '#/responses/Error'
-      security:
-      - oauth2: []
-  /databases/{id}/save:
-    post:
-      description: Save database by id
-      operationId: saveDatabaseById
-      parameters:
-      - format: uint64
-        in: path
-        name: id
-        required: true
-        type: integer
-        x-go-name: ID
-      responses:
-        "202":
-          description: ""
-        "401":
-          $ref: '#/responses/Error'
-        "403":
-          $ref: '#/responses/Error'
-        "404":
           $ref: '#/responses/Error'
         "415":
           $ref: '#/responses/Error'

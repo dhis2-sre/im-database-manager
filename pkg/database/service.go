@@ -4,12 +4,13 @@ import (
 	"bytes"
 	"errors"
 	"fmt"
-	"gorm.io/gorm"
 	"io"
 	"net/url"
 	"strconv"
 	"strings"
 	"time"
+
+	"gorm.io/gorm"
 
 	"github.com/google/uuid"
 
@@ -33,7 +34,6 @@ type Service interface {
 	Delete(id uint) error
 	List(groups []*models.Group) ([]*model.Database, error)
 	Update(d *model.Database) error
-	// Save(token string, id uint) (string, error)
 	CreateExternalDownload(databaseID uint, expiration time.Time) (model.ExternalDownload, error)
 	FindExternalDownload(uuid uuid.UUID) (model.ExternalDownload, error)
 }
@@ -218,30 +218,3 @@ func (s service) FindExternalDownload(uuid uuid.UUID) (model.ExternalDownload, e
 	}
 	return s.repository.FindExternalDownload(uuid)
 }
-
-/*
-func (s service) Save(token string, id uint) (string, error) {
-	d, err := s.FindById(id)
-	if err != nil {
-		return "", err
-	}
-
-	key := fmt.Sprintf("%d/%s", d.GroupID, d.Name)
-	payload := map[string]string{
-		"S3_BUCKET": s.c.Bucket,
-		"S3_KEY":    key,
-	}
-	body := &jobModels.RunJobRequest{
-		GroupID:  uint64(d.GroupID),
-		Payload:  payload,
-		TargetID: uint64(d.InstanceID),
-	}
-
-	runId, err := s.jobClient.Run(token, uint(3), body)
-	if err != nil {
-		return "", err
-	}
-
-	return runId, nil
-}
-*/

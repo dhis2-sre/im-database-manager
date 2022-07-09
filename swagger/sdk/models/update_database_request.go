@@ -12,13 +12,10 @@ import (
 	"github.com/go-openapi/swag"
 )
 
-// UpdateDatabaseRequest TODO: Make all? properties optional... ensure we only update if a new value is present
+// UpdateDatabaseRequest update database request
 //
 // swagger:model UpdateDatabaseRequest
 type UpdateDatabaseRequest struct {
-
-	// group name
-	GroupName string `json:"groupName,omitempty"`
 
 	// name
 	Name string `json:"name,omitempty"`

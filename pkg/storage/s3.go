@@ -4,13 +4,12 @@ import (
 	"bytes"
 	"context"
 	"fmt"
-	"io"
-
 	"github.com/aws/aws-sdk-go-v2/aws"
 	s3config "github.com/aws/aws-sdk-go-v2/config"
 	"github.com/aws/aws-sdk-go-v2/feature/s3/manager"
 	"github.com/aws/aws-sdk-go-v2/service/s3"
 	"github.com/aws/aws-sdk-go-v2/service/s3/types"
+	"io"
 )
 
 type S3Client interface {
@@ -44,7 +43,10 @@ func (s s3Client) Copy(bucket string, source string, destination string) error {
 		ACL:        types.ObjectCannedACLPrivate,
 	})
 
-	return fmt.Errorf("error copying object from %q to %q: %s", source, destination, err)
+	if err != nil {
+		return fmt.Errorf("error copying object from %q to %q: %s", source, destination, err)
+	}
+	return nil
 }
 
 func (s s3Client) Upload(bucket string, key string, body *bytes.Buffer) error {
@@ -57,7 +59,10 @@ func (s s3Client) Upload(bucket string, key string, body *bytes.Buffer) error {
 		ACL:    types.ObjectCannedACLPrivate,
 	})
 
-	return fmt.Errorf("error uploading object to bucket %q using key %q: %s", bucket, key, err)
+	if err != nil {
+		return fmt.Errorf("error uploading object to bucket %q using key %q: %s", bucket, key, err)
+	}
+	return nil
 }
 
 func (s s3Client) Delete(bucket string, key string) error {
@@ -66,7 +71,10 @@ func (s s3Client) Delete(bucket string, key string) error {
 		Key:    aws.String(key),
 	})
 
-	return fmt.Errorf("error deleting object from bucket %q using key %q: %s", bucket, key, err)
+	if err != nil {
+		return fmt.Errorf("error deleting object from bucket %q using key %q: %s", bucket, key, err)
+	}
+	return nil
 }
 
 func (s s3Client) Download(bucket string, key string, dst io.Writer, cb func(contentLength int64)) error {
@@ -75,11 +83,12 @@ func (s s3Client) Download(bucket string, key string, dst io.Writer, cb func(con
 		Key:    aws.String(key),
 	})
 	if err != nil {
-		return err
+		return fmt.Errorf("error downloading object from bucket %q using key %q: %s", bucket, key, err)
 	}
 
 	cb(object.ContentLength)
 
 	_, err = io.Copy(dst, object.Body)
-	return fmt.Errorf("error downloading object from bucket %q using key %q: %s", bucket, key, err)
+
+	return err
 }

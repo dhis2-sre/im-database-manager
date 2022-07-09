@@ -72,7 +72,7 @@ type UploadDatabaseCreated struct {
 }
 
 func (o *UploadDatabaseCreated) Error() string {
-	return fmt.Sprintf("[POST /databases/{id}/upload][%d] uploadDatabaseCreated  %+v", 201, o.Payload)
+	return fmt.Sprintf("[POST /databases][%d] uploadDatabaseCreated  %+v", 201, o.Payload)
 }
 func (o *UploadDatabaseCreated) GetPayload() *models.Database {
 	return o.Payload
@@ -103,7 +103,7 @@ type UploadDatabaseUnauthorized struct {
 }
 
 func (o *UploadDatabaseUnauthorized) Error() string {
-	return fmt.Sprintf("[POST /databases/{id}/upload][%d] uploadDatabaseUnauthorized ", 401)
+	return fmt.Sprintf("[POST /databases][%d] uploadDatabaseUnauthorized ", 401)
 }
 
 func (o *UploadDatabaseUnauthorized) readResponse(response runtime.ClientResponse, consumer runtime.Consumer, formats strfmt.Registry) error {
@@ -124,7 +124,7 @@ type UploadDatabaseForbidden struct {
 }
 
 func (o *UploadDatabaseForbidden) Error() string {
-	return fmt.Sprintf("[POST /databases/{id}/upload][%d] uploadDatabaseForbidden ", 403)
+	return fmt.Sprintf("[POST /databases][%d] uploadDatabaseForbidden ", 403)
 }
 
 func (o *UploadDatabaseForbidden) readResponse(response runtime.ClientResponse, consumer runtime.Consumer, formats strfmt.Registry) error {
@@ -145,7 +145,7 @@ type UploadDatabaseNotFound struct {
 }
 
 func (o *UploadDatabaseNotFound) Error() string {
-	return fmt.Sprintf("[POST /databases/{id}/upload][%d] uploadDatabaseNotFound ", 404)
+	return fmt.Sprintf("[POST /databases][%d] uploadDatabaseNotFound ", 404)
 }
 
 func (o *UploadDatabaseNotFound) readResponse(response runtime.ClientResponse, consumer runtime.Consumer, formats strfmt.Registry) error {
@@ -166,7 +166,7 @@ type UploadDatabaseUnsupportedMediaType struct {
 }
 
 func (o *UploadDatabaseUnsupportedMediaType) Error() string {
-	return fmt.Sprintf("[POST /databases/{id}/upload][%d] uploadDatabaseUnsupportedMediaType ", 415)
+	return fmt.Sprintf("[POST /databases][%d] uploadDatabaseUnsupportedMediaType ", 415)
 }
 
 func (o *UploadDatabaseUnsupportedMediaType) readResponse(response runtime.ClientResponse, consumer runtime.Consumer, formats strfmt.Registry) error {

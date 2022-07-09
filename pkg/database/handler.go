@@ -34,15 +34,93 @@ type userClientHandler interface {
 	FindUserById(token string, id uint) (*models.User, error)
 }
 
-type CreateDatabaseRequest struct {
-	Name      string `json:"name" binding:"required"`
-	GroupName string `json:"groupName" binding:"required"`
+type UploadDatabaseRequest struct {
+	Group    string                `form:"group" binding:"required"`
+	Database *multipart.FileHeader `form:"database" binding:"required"`
 }
 
-// Create database
-// swagger:route POST /databases createDatabase
+// Upload database
+// swagger:route POST /databases uploadDatabase
 //
-// Create database
+// Upload database
+//
+// Security:
+//   oauth2:
+//
+// responses:
+//   201: Database
+//   401: Error
+//   403: Error
+//   404: Error
+//   415: Error
+func (h Handler) Upload(c *gin.Context) {
+	var request UploadDatabaseRequest
+	if err := handler.DataBinder(c, &request); err != nil {
+		_ = c.Error(err)
+		return
+	}
+
+	if request.Database == nil {
+		badRequest := apperror.NewBadRequest("file not found")
+		_ = c.Error(badRequest)
+		return
+	}
+
+	d := &model.Database{
+		Name:      request.Database.Filename,
+		GroupName: request.Group,
+	}
+
+	err := h.canAccess(c, d)
+	if err != nil {
+		_ = c.Error(err)
+		return
+	}
+
+	token, err := handler.GetTokenFromHttpAuthHeader(c)
+	if err != nil {
+		_ = c.Error(err)
+		return
+	}
+
+	group, err := h.userClient.FindGroupByName(token, d.GroupName)
+	if err != nil {
+		_ = c.Error(err)
+		return
+	}
+
+	file, err := request.Database.Open()
+	if err != nil {
+		_ = c.Error(err)
+		return
+	}
+
+	defer func(file multipart.File) {
+		err := file.Close()
+		if err != nil {
+			_ = c.Error(err)
+			return
+		}
+	}(file)
+
+	save, err := h.databaseService.Upload(d, group, file)
+	if err != nil {
+		_ = c.Error(err)
+		return
+	}
+
+	c.JSON(http.StatusCreated, save)
+}
+
+type CopyDatabaseRequest struct {
+	Name  string `json:"name" binding:"required"`
+	Group string `json:"group" binding:"required"`
+}
+
+// Copy database
+// swagger:route POST /databases/{id}/copy copyDatabase
+//
+// Copy database
 //
 // Security:
 //   oauth2:
@@ -52,8 +130,16 @@ type CreateDatabaseRequest struct {
 //   401: Error
 //   403: Error
 //   415: Error
-func (h Handler) Create(c *gin.Context) {
-	var request CreateDatabaseRequest
+func (h Handler) Copy(c *gin.Context) {
+	idParam := c.Param("id")
+	id, err := strconv.ParseUint(idParam, 10, 64)
+	if err != nil {
+		badRequest := apperror.NewBadRequest("error parsing id")
+		_ = c.Error(badRequest)
+		return
+	}
+
+	var request CopyDatabaseRequest
 	if err := handler.DataBinder(c, &request); err != nil {
 		_ = c.Error(err)
 		return
@@ -61,16 +147,28 @@ func (h Handler) Create(c *gin.Context) {
 
 	d := &model.Database{
 		Name:      request.Name,
-		GroupName: request.GroupName,
+		GroupName: request.Group,
 	}
 
-	err := h.canAccess(c, d)
+	err = h.canAccess(c, d)
 	if err != nil {
 		_ = c.Error(err)
 		return
 	}
 
-	if err := h.databaseService.Create(d); err != nil {
+	token, err := handler.GetTokenFromHttpAuthHeader(c)
+	if err != nil {
+		_ = c.Error(err)
+		return
+	}
+
+	group, err := h.userClient.FindGroupByName(token, d.GroupName)
+	if err != nil {
+		_ = c.Error(err)
+		return
+	}
+
+	if err := h.databaseService.Copy(uint(id), d, group); err != nil {
 		_ = c.Error(err)
 		return
 	}
@@ -260,163 +358,6 @@ func (h Handler) Unlock(c *gin.Context) {
 	c.Status(http.StatusAccepted)
 }
 
-/*
-type SaveDatabaseRequest struct {
-	InstanceId uint `json:"instanceId" binding:"required"`
-}
-
-type SaveDatabaseResponse struct {
-	RunId string `json:"runId"`
-}
-
-// Save database
-// swagger:route POST /databases/{id}/save saveDatabaseById
-//
-// Save database by id
-//
-// Security:
-//   oauth2:
-//
-// responses:
-//   202:
-//   401: Error
-//   403: Error
-//   404: Error
-//   415: Error
-func (h Handler) Save(c *gin.Context) {
-	idParam := c.Param("id")
-	id, err := strconv.ParseUint(idParam, 10, 64)
-	if err != nil {
-		badRequest := apperror.NewBadRequest("error parsing id")
-		_ = c.Error(badRequest)
-		return
-	}
-
-	var request SaveDatabaseRequest
-	if err := handler.DataBinder(c, &request); err != nil {
-		_ = c.Error(err)
-		return
-	}
-
-	token, err := handler.GetTokenFromHttpAuthHeader(c)
-	if err != nil {
-		_ = c.Error(err)
-		return
-	}
-
-	d, err := h.databaseService.FindById(uint(id))
-	if err != nil {
-		_ = c.Error(err)
-		return
-	}
-
-	err = h.canAccess(c, d)
-	if err != nil {
-		_ = c.Error(err)
-		return
-	}
-
-	if d.InstanceID != request.InstanceId && d.InstanceID != 0 {
-		message := fmt.Sprintf("database locked by instance with id %d", d.InstanceID)
-		conflict := apperror.NewConflict(message)
-		_ = c.Error(conflict)
-		return
-	}
-
-	runId, err := h.databaseService.Save(token, uint(id))
-	if err != nil {
-		_ = c.Error(err)
-		return
-	}
-
-	c.JSON(http.StatusAccepted, SaveDatabaseResponse{runId})
-}
-*/
-
-type UploadDatabaseRequest struct {
-	Database *multipart.FileHeader `form:"database" binding:"required"`
-}
-
-// Upload database
-// swagger:route POST /databases/{id}/upload uploadDatabase
-//
-// Upload database
-//
-// Security:
-//   oauth2:
-//
-// responses:
-//   201: Database
-//   401: Error
-//   403: Error
-//   404: Error
-//   415: Error
-func (h Handler) Upload(c *gin.Context) {
-	idParam := c.Param("id")
-	id, err := strconv.ParseUint(idParam, 10, 64)
-	if err != nil {
-		badRequest := apperror.NewBadRequest("error parsing id")
-		_ = c.Error(badRequest)
-		return
-	}
-
-	var request UploadDatabaseRequest
-	if err := handler.DataBinder(c, &request); err != nil {
-		_ = c.Error(err)
-		return
-	}
-
-	if request.Database == nil {
-		badRequest := apperror.NewBadRequest("file not found")
-		_ = c.Error(badRequest)
-		return
-	}
-
-	d, err := h.databaseService.FindById(uint(id))
-	if err != nil {
-		_ = c.Error(err)
-		return
-	}
-
-	err = h.canAccess(c, d)
-	if err != nil {
-		_ = c.Error(err)
-		return
-	}
-
-	file, err := request.Database.Open()
-	if err != nil {
-		_ = c.Error(err)
-		return
-	}
-
-	token, err := handler.GetTokenFromHttpAuthHeader(c)
-	if err != nil {
-		_ = c.Error(err)
-		return
-	}
-
-	group, err := h.userClient.FindGroupByName(token, d.GroupName)
-	if err != nil {
-		_ = c.Error(err)
-		return
-	}
-
-	save, err := h.databaseService.Upload(d, group, file, request.Database.Filename)
-	if err != nil {
-		_ = c.Error(err)
-		return
-	}
-
-	err = file.Close()
-	if err != nil {
-		_ = c.Error(err)
-		return
-	}
-
-	c.JSON(http.StatusCreated, save)
-}
-
 // Download database
 // swagger:route GET /databases/{id}/download downloadDatabase
 //
@@ -582,11 +523,8 @@ func (h Handler) filterByGroupId(databases []*model.Database, test func(instance
 	return
 }
 
-// TODO: Make all? properties optional... ensure we only update if a new value is present
 type UpdateDatabaseRequest struct {
-	Name      string `json:"name" binding:"required"`
-	GroupName string `json:"groupName" binding:"required"`
-	Url       string `json:"url" binding:"required"`
+	Name string `json:"name" binding:"required"`
 }
 
 // Update database
@@ -633,8 +571,6 @@ func (h Handler) Update(c *gin.Context) {
 	}
 
 	d.Name = request.Name
-	d.GroupName = request.GroupName
-	d.Url = request.Url
 
 	err = h.databaseService.Update(d)
 	if err != nil {

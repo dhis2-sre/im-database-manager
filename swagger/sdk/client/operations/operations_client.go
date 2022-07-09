@@ -30,7 +30,7 @@ type ClientOption func(*runtime.ClientOperation)
 
 // ClientService is the interface for Client methods
 type ClientService interface {
-	CreateDatabase(params *CreateDatabaseParams, authInfo runtime.ClientAuthInfoWriter, opts ...ClientOption) (*CreateDatabaseAccepted, error)
+	CopyDatabase(params *CopyDatabaseParams, authInfo runtime.ClientAuthInfoWriter, opts ...ClientOption) (*CopyDatabaseAccepted, error)
 
 	CreateExternalDownloadDatabase(params *CreateExternalDownloadDatabaseParams, authInfo runtime.ClientAuthInfoWriter, opts ...ClientOption) (*CreateExternalDownloadDatabaseOK, error)
 
@@ -50,8 +50,6 @@ type ClientService interface {
 
 	LockDatabaseByID(params *LockDatabaseByIDParams, authInfo runtime.ClientAuthInfoWriter, opts ...ClientOption) (*LockDatabaseByIDOK, error)
 
-	SaveDatabaseByID(params *SaveDatabaseByIDParams, authInfo runtime.ClientAuthInfoWriter, opts ...ClientOption) (*SaveDatabaseByIDAccepted, error)
-
 	UnlockDatabaseByID(params *UnlockDatabaseByIDParams, authInfo runtime.ClientAuthInfoWriter, opts ...ClientOption) (*UnlockDatabaseByIDAccepted, error)
 
 	UpdateDatabaseByID(params *UpdateDatabaseByIDParams, authInfo runtime.ClientAuthInfoWriter, opts ...ClientOption) (*UpdateDatabaseByIDOK, error)
@@ -62,22 +60,22 @@ type ClientService interface {
 }
 
 /*
-  CreateDatabase Create database
+  CopyDatabase Copy database
 */
-func (a *Client) CreateDatabase(params *CreateDatabaseParams, authInfo runtime.ClientAuthInfoWriter, opts ...ClientOption) (*CreateDatabaseAccepted, error) {
+func (a *Client) CopyDatabase(params *CopyDatabaseParams, authInfo runtime.ClientAuthInfoWriter, opts ...ClientOption) (*CopyDatabaseAccepted, error) {
 	// TODO: Validate the params before sending
 	if params == nil {
-		params = NewCreateDatabaseParams()
+		params = NewCopyDatabaseParams()
 	}
 	op := &runtime.ClientOperation{
-		ID:                 "createDatabase",
+		ID:                 "copyDatabase",
 		Method:             "POST",
-		PathPattern:        "/databases",
+		PathPattern:        "/databases/{id}/copy",
 		ProducesMediaTypes: []string{"application/json"},
 		ConsumesMediaTypes: []string{"application/json"},
 		Schemes:            []string{"http"},
 		Params:             params,
-		Reader:             &CreateDatabaseReader{formats: a.formats},
+		Reader:             &CopyDatabaseReader{formats: a.formats},
 		AuthInfo:           authInfo,
 		Context:            params.Context,
 		Client:             params.HTTPClient,
@@ -90,13 +88,13 @@ func (a *Client) CreateDatabase(params *CreateDatabaseParams, authInfo runtime.C
 	if err != nil {
 		return nil, err
 	}
-	success, ok := result.(*CreateDatabaseAccepted)
+	success, ok := result.(*CopyDatabaseAccepted)
 	if ok {
 		return success, nil
 	}
 	// unexpected success response
 	// safeguard: normally, absent a default response, unknown success responses return an error above: so this is a codegen issue
-	msg := fmt.Sprintf("unexpected success response for createDatabase: API contract not enforced by server. Client expected to get an error, but got: %T", result)
+	msg := fmt.Sprintf("unexpected success response for copyDatabase: API contract not enforced by server. Client expected to get an error, but got: %T", result)
 	panic(msg)
 }
 
@@ -450,45 +448,6 @@ func (a *Client) LockDatabaseByID(params *LockDatabaseByIDParams, authInfo runti
 }
 
 /*
-  SaveDatabaseByID Save database by id
-*/
-func (a *Client) SaveDatabaseByID(params *SaveDatabaseByIDParams, authInfo runtime.ClientAuthInfoWriter, opts ...ClientOption) (*SaveDatabaseByIDAccepted, error) {
-	// TODO: Validate the params before sending
-	if params == nil {
-		params = NewSaveDatabaseByIDParams()
-	}
-	op := &runtime.ClientOperation{
-		ID:                 "saveDatabaseById",
-		Method:             "POST",
-		PathPattern:        "/databases/{id}/save",
-		ProducesMediaTypes: []string{"application/json"},
-		ConsumesMediaTypes: []string{"application/json"},
-		Schemes:            []string{"http"},
-		Params:             params,
-		Reader:             &SaveDatabaseByIDReader{formats: a.formats},
-		AuthInfo:           authInfo,
-		Context:            params.Context,
-		Client:             params.HTTPClient,
-	}
-	for _, opt := range opts {
-		opt(op)
-	}
-
-	result, err := a.transport.Submit(op)
-	if err != nil {
-		return nil, err
-	}
-	success, ok := result.(*SaveDatabaseByIDAccepted)
-	if ok {
-		return success, nil
-	}
-	// unexpected success response
-	// safeguard: normally, absent a default response, unknown success responses return an error above: so this is a codegen issue
-	msg := fmt.Sprintf("unexpected success response for saveDatabaseById: API contract not enforced by server. Client expected to get an error, but got: %T", result)
-	panic(msg)
-}
-
-/*
   UnlockDatabaseByID Unlock database by id
 */
 func (a *Client) UnlockDatabaseByID(params *UnlockDatabaseByIDParams, authInfo runtime.ClientAuthInfoWriter, opts ...ClientOption) (*UnlockDatabaseByIDAccepted, error) {
@@ -579,7 +538,7 @@ func (a *Client) UploadDatabase(params *UploadDatabaseParams, authInfo runtime.C
 	op := &runtime.ClientOperation{
 		ID:                 "uploadDatabase",
 		Method:             "POST",
-		PathPattern:        "/databases/{id}/upload",
+		PathPattern:        "/databases",
 		ProducesMediaTypes: []string{"application/json"},
 		ConsumesMediaTypes: []string{"application/json"},
 		Schemes:            []string{"http"},

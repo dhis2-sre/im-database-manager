@@ -2,12 +2,15 @@ package database
 
 import (
 	"bytes"
+	"errors"
 	"fmt"
 	"io"
 	"net/url"
 	"strconv"
 	"strings"
 	"time"
+
+	"gorm.io/gorm"
 
 	"github.com/google/uuid"
 
@@ -22,15 +25,15 @@ import (
 
 type Service interface {
 	Create(d *model.Database) error
+	Copy(id uint, d *model.Database, group *models.Group) error
 	FindById(id uint) (*model.Database, error)
 	Lock(id uint, instanceId uint) (*model.Database, error)
 	Unlock(id uint) error
-	Upload(d *model.Database, group *models.Group, file io.Reader, filename string) (*model.Database, error)
+	Upload(d *model.Database, group *models.Group, file io.Reader) (*model.Database, error)
 	Download(id uint, dst io.Writer, headers func(contentLength int64)) error
 	Delete(id uint) error
 	List(groups []*models.Group) ([]*model.Database, error)
 	Update(d *model.Database) error
-	// Save(token string, id uint) (string, error)
 	CreateExternalDownload(databaseID uint, expiration time.Time) (model.ExternalDownload, error)
 	FindExternalDownload(uuid uuid.UUID) (model.ExternalDownload, error)
 }
@@ -50,10 +53,37 @@ func (s service) Create(d *model.Database) error {
 	return s.repository.Create(d)
 }
 
+func (s service) Copy(id uint, d *model.Database, group *models.Group) error {
+	source, err := s.FindById(id)
+	if err != nil {
+		if err.Error() == "record not found" {
+			idStr := strconv.FormatUint(uint64(id), 10)
+			err = apperror.NewNotFound("database not found", idStr)
+		}
+		return err
+	}
+
+	u, err := url.Parse(source.Url)
+	if err != nil {
+		return err
+	}
+
+	sourceKey := strings.TrimPrefix(u.Path, "/")
+	destinationKey := fmt.Sprintf("%s/%s", group.Name, d.Name)
+	err = s.s3Client.Copy(s.c.Bucket, sourceKey, destinationKey)
+	if err != nil {
+		return err
+	}
+
+	d.Url = fmt.Sprintf("s3://%s/%s", s.c.Bucket, destinationKey)
+
+	return s.repository.Create(d)
+}
+
 func (s service) FindById(id uint) (*model.Database, error) {
 	d, err := s.repository.FindById(id)
 	if err != nil {
-		if err.Error() == "record not found" {
+		if errors.Is(err, gorm.ErrRecordNotFound) {
 			idStr := strconv.FormatUint(uint64(id), 10)
 			err = apperror.NewNotFound("database not found", idStr)
 		}
@@ -87,14 +117,14 @@ func (s service) Unlock(id uint) error {
 	return err
 }
 
-func (s service) Upload(d *model.Database, group *models.Group, file io.Reader, filename string) (*model.Database, error) {
+func (s service) Upload(d *model.Database, group *models.Group, file io.Reader) (*model.Database, error) {
 	buffer := new(bytes.Buffer)
 	_, err := buffer.ReadFrom(file)
 	if err != nil {
 		return nil, err
 	}
 
-	key := fmt.Sprintf("%s/%s/%s", group.Name, d.Name, filename)
+	key := fmt.Sprintf("%s/%s", group.Name, d.Name)
 
 	err = s.s3Client.Upload(s.c.Bucket, key, buffer)
 	if err != nil {
@@ -126,7 +156,7 @@ func (s service) Download(id uint, dst io.Writer, cb func(contentLength int64)) 
 		return err
 	}
 
-	key := u.Path[1:] // Strip leading "/"
+	key := strings.TrimPrefix(u.Path, "/")
 	return s.s3Client.Download(s.c.Bucket, key, dst, cb)
 }
 
@@ -136,17 +166,15 @@ func (s service) Delete(id uint) error {
 		return err
 	}
 
-	if d.Url != "" {
-		u, err := url.Parse(d.Url)
-		if err != nil {
-			return err
-		}
+	u, err := url.Parse(d.Url)
+	if err != nil {
+		return err
+	}
 
-		key := u.Path[1:] // Strip leading "/"
-		err = s.s3Client.Delete(s.c.Bucket, key)
-		if err != nil {
-			return err
-		}
+	key := strings.TrimPrefix(u.Path, "/")
+	err = s.s3Client.Delete(s.c.Bucket, key)
+	if err != nil {
+		return err
 	}
 
 	return s.repository.Delete(id)
@@ -190,30 +218,3 @@ func (s service) FindExternalDownload(uuid uuid.UUID) (model.ExternalDownload, e
 	}
 	return s.repository.FindExternalDownload(uuid)
 }
-
-/*
-func (s service) Save(token string, id uint) (string, error) {
-	d, err := s.FindById(id)
-	if err != nil {
-		return "", err
-	}
-
-	key := fmt.Sprintf("%d/%s", d.GroupID, d.Name)
-	payload := map[string]string{
-		"S3_BUCKET": s.c.Bucket,
-		"S3_KEY":    key,
-	}
-	body := &jobModels.RunJobRequest{
-		GroupID:  uint64(d.GroupID),
-		Payload:  payload,
-		TargetID: uint64(d.InstanceID),
-	}
-
-	runId, err := s.jobClient.Run(token, uint(3), body)
-	if err != nil {
-		return "", err
-	}
-
-	return runId, nil
-}
-*/

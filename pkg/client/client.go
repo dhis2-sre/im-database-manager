@@ -13,9 +13,7 @@ import (
 )
 
 type Client interface {
-	Create(token string, createDatabaseRequest *models.CreateDatabaseRequest) (*models.Database, error)
 	FindById(token string, id uint) (*models.Database, error)
-	//	Save(token string, databaseId uint, instanceId uint) (string, error)
 }
 
 type cli struct {
@@ -26,19 +24,6 @@ func New(host string, basePath string) *cli {
 	transport := httptransport.New(host, basePath, nil)
 	userService := operations.New(transport, strfmt.Default)
 	return &cli{userService}
-}
-
-func (c cli) Create(token string, createDatabaseRequest *models.CreateDatabaseRequest) (*models.Database, error) {
-	params := &operations.CreateDatabaseParams{
-		Body:    createDatabaseRequest,
-		Context: context.Background(),
-	}
-	authInfo := httptransport.BearerToken(token)
-	db, err := c.clientService.CreateDatabase(params, authInfo)
-	if err != nil {
-		return nil, err
-	}
-	return db.GetPayload(), nil
 }
 
 func (c cli) FindById(token string, id uint) (*models.Database, error) {
@@ -54,22 +39,3 @@ func (c cli) FindById(token string, id uint) (*models.Database, error) {
 	}
 	return db.GetPayload(), nil
 }
-
-/*
-func (c cli) Save(token string, databaseId uint, instanceId uint) (string, error) {
-	body := &models.SaveDatabaseRequest{InstanceID: uint64(instanceId)}
-	params := &operations.SaveDatabaseByIDParams{
-		Body:    body,
-		ID:      uint64(databaseId),
-		Context: context.Background(),
-	}
-	authInfo := httptransport.BearerToken(token)
-
-	response, err := c.clientService.SaveDatabaseByID(params, authInfo)
-	if err != nil {
-		return "", err
-	}
-
-	return response.Payload.RunID, nil
-}
-*/

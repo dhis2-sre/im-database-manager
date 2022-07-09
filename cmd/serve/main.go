@@ -53,8 +53,13 @@ func run() error {
 
 	usrSvc := userClient.New(cfg.UserService.Host, cfg.UserService.BasePath)
 
-	s3Client := storage.NewS3Client()
+	s3Client, err := storage.NewS3Client()
+	if err != nil {
+		return err
+	}
+
 	jobSvc := jobClient.ProvideClient(cfg.JobService.Host, cfg.JobService.BasePath)
+
 	db, err := storage.NewDatabase(cfg)
 	if err != nil {
 		return err

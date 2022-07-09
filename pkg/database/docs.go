@@ -9,19 +9,23 @@ type Error struct {
 	Message string
 }
 
-//swagger:parameters findDatabaseById lockDatabaseById unlockDatabaseById uploadDatabase downloadDatabase deleteDatabaseById updateDatabaseById saveDatabaseById findDatabaseUrlById createExternalDownloadDatabase
+//swagger:parameters findDatabaseById lockDatabaseById unlockDatabaseById downloadDatabase deleteDatabaseById updateDatabaseById saveDatabaseById findDatabaseUrlById createExternalDownloadDatabase
 type _ struct {
 	// in: path
 	// required: true
 	ID uint `json:"id"`
 }
 
-// swagger:parameters createDatabase
+// swagger:parameters copyDatabase
 type _ struct {
-	// Create database request body parameter
+	// in: path
+	// required: true
+	ID uint `json:"id"`
+
+	// Copy database request body parameter
 	// in: body
 	// required: true
-	Body CreateDatabaseRequest
+	Body CopyDatabaseRequest
 }
 
 // swagger:parameters lockDatabaseById unlockDatabaseById

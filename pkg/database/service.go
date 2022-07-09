@@ -2,7 +2,9 @@ package database
 
 import (
 	"bytes"
+	"errors"
 	"fmt"
+	"gorm.io/gorm"
 	"io"
 	"net/url"
 	"strconv"
@@ -81,7 +83,7 @@ func (s service) Copy(id uint, d *model.Database, group *models.Group) error {
 func (s service) FindById(id uint) (*model.Database, error) {
 	d, err := s.repository.FindById(id)
 	if err != nil {
-		if err.Error() == "record not found" {
+		if errors.Is(err, gorm.ErrRecordNotFound) {
 			idStr := strconv.FormatUint(uint64(id), 10)
 			err = apperror.NewNotFound("database not found", idStr)
 		}

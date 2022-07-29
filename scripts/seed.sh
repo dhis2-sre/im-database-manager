@@ -20,14 +20,14 @@ function createDatabase() {
 }
 
 
-createDatabase "Sierra Leone - 2.36.0" https://databases.dhis2.org/sierra-leone/2.36.0/dhis2-db-sierra-leone.sql.gz
+## https://databases.dhis2.org/
 
+createDatabase "Sierra Leone - 2.36.0" https://databases.dhis2.org/sierra-leone/2.36.0/dhis2-db-sierra-leone.sql.gz
 #createDatabase "Sierra Leone - 2.36.1" https://databases.dhis2.org/sierra-leone/2.36.1/dhis2-db-sierra-leone.sql.gz
 #createDatabase "Sierra Leone - 2.36.2" https://databases.dhis2.org/sierra-leone/2.36.2/dhis2-db-sierra-leone.sql.gz
 #createDatabase "Sierra Leone - 2.36.3" https://databases.dhis2.org/sierra-leone/2.36.3/dhis2-db-sierra-leone.sql.gz
 #createDatabase "Sierra Leone - 2.36.4" https://databases.dhis2.org/sierra-leone/2.36.4/dhis2-db-sierra-leone.sql.gz
 #createDatabase "Sierra Leone - 2.36.5" https://databases.dhis2.org/sierra-leone/2.36.5/dhis2-db-sierra-leone.sql.gz
-#
 #createDatabase "Sierra Leone - 2.36.6" https://databases.dhis2.org/sierra-leone/2.36.6/dhis2-db-sierra-leone.sql.gz
 #
 #createDatabase "Sierra Leone - 2.37.0" https://databases.dhis2.org/sierra-leone/2.37.0/dhis2-db-sierra-leone.sql.gz
@@ -36,6 +36,10 @@ createDatabase "Sierra Leone - 2.36.0" https://databases.dhis2.org/sierra-leone/
 #createDatabase "Sierra Leone - 2.37.3" https://databases.dhis2.org/sierra-leone/2.37.3/dhis2-db-sierra-leone.sql.gz
 #createDatabase "Sierra Leone - 2.37.4" https://databases.dhis2.org/sierra-leone/2.37.4/dhis2-db-sierra-leone.sql.gz
 #createDatabase "Sierra Leone - 2.37.5" https://databases.dhis2.org/sierra-leone/2.37.5/dhis2-db-sierra-leone.sql.gz
-#createDatabase "Sierra Leone - 2.37.6" https://databases.dhis2.org/sierra-leone/2.37.6/dhis2-db-sierra-leone.sql.gz
+#createDatabase "Sierra Leone - 2.37.7" https://databases.dhis2.org/sierra-leone/2.37.6/dhis2-db-sierra-leone.sql.gz
+#
+#createDatabase "Sierra Leone - 2.38" https://databases.dhis2.org/sierra-leone/2.37.6/dhis2-db-sierra-leone.sql.gz
+#createDatabase "Sierra Leone - 2.38.0" https://databases.dhis2.org/sierra-leone/2.37.6/dhis2-db-sierra-leone.sql.gz
+#createDatabase "Sierra Leone - 2.38.1" https://databases.dhis2.org/sierra-leone/2.37.6/dhis2-db-sierra-leone.sql.gz
 
 ./list.sh | jq '.[].Databases[] | .ID, .Name, .Url'

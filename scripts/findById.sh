@@ -2,6 +2,6 @@
 
 set -euo pipefail
 
-ID=$1
+DATABASE=$1
 
-$HTTP "$INSTANCE_HOST/databases/$ID" "Authorization: Bearer $ACCESS_TOKEN"
+$HTTP "$INSTANCE_HOST/databases/$DATABASE" "Authorization: Bearer $ACCESS_TOKEN"

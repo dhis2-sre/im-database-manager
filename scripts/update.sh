@@ -2,11 +2,11 @@
 
 set -euo pipefail
 
-ID=$1
-NAME=$2
-GROUP_NAME=$2
+DATABASE=$1
+GROUP=$2
+NAME=$3
 
 echo "{
   \"name\": \"$NAME\",
-  \"groupName\": \"$GROUP_NAME\"
-}" | $HTTP put "$INSTANCE_HOST/databases/$ID" "Authorization: Bearer $ACCESS_TOKEN"
+  \"groupName\": \"$GROUP\"
+}" | $HTTP put "$INSTANCE_HOST/databases/$DATABASE" "Authorization: Bearer $ACCESS_TOKEN"

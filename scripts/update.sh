@@ -3,10 +3,8 @@
 set -euo pipefail
 
 DATABASE=$1
-GROUP=$2
-NAME=$3
+NAME=$2
 
 echo "{
-  \"name\": \"$NAME\",
-  \"groupName\": \"$GROUP\"
+  \"name\": \"$NAME\"
 }" | $HTTP put "$INSTANCE_HOST/databases/$DATABASE" "Authorization: Bearer $ACCESS_TOKEN"

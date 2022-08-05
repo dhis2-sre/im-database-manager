@@ -215,42 +215,6 @@ func (h Handler) FindById(c *gin.Context) {
 	c.JSON(http.StatusOK, d)
 }
 
-// FindUrlById database
-// swagger:route GET /databases/{id}/url findDatabaseUrlById
-//
-// Find database URL by id
-//
-// responses:
-//   200: DatabaseUrl
-//   400: Error
-//   401: Error
-//   403: Error
-//   404: Error
-//   415: Error
-func (h Handler) FindUrlById(c *gin.Context) {
-	idParam := c.Param("id")
-	id, err := strconv.ParseUint(idParam, 10, 64)
-	if err != nil {
-		badRequest := apperror.NewBadRequest("error parsing id")
-		_ = c.Error(badRequest)
-		return
-	}
-
-	d, err := h.databaseService.FindById(uint(id))
-	if err != nil {
-		_ = c.Error(err)
-		return
-	}
-
-	err = h.canAccess(c, d)
-	if err != nil {
-		_ = c.Error(err)
-		return
-	}
-
-	c.JSON(http.StatusOK, d.Url)
-}
-
 type LockDatabaseRequest struct {
 	InstanceId uint `json:"instanceId" binding:"required"`
 }

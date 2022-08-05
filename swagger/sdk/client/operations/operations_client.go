@@ -42,8 +42,6 @@ type ClientService interface {
 
 	FindDatabaseByID(params *FindDatabaseByIDParams, authInfo runtime.ClientAuthInfoWriter, opts ...ClientOption) (*FindDatabaseByIDOK, error)
 
-	FindDatabaseURLByID(params *FindDatabaseURLByIDParams, opts ...ClientOption) (*FindDatabaseURLByIDOK, error)
-
 	Health(params *HealthParams, opts ...ClientOption) (*HealthOK, error)
 
 	ListDatabases(params *ListDatabasesParams, authInfo runtime.ClientAuthInfoWriter, opts ...ClientOption) (*ListDatabasesOK, error)
@@ -290,44 +288,6 @@ func (a *Client) FindDatabaseByID(params *FindDatabaseByIDParams, authInfo runti
 	// unexpected success response
 	// safeguard: normally, absent a default response, unknown success responses return an error above: so this is a codegen issue
 	msg := fmt.Sprintf("unexpected success response for findDatabaseById: API contract not enforced by server. Client expected to get an error, but got: %T", result)
-	panic(msg)
-}
-
-/*
-  FindDatabaseURLByID Find database URL by id
-*/
-func (a *Client) FindDatabaseURLByID(params *FindDatabaseURLByIDParams, opts ...ClientOption) (*FindDatabaseURLByIDOK, error) {
-	// TODO: Validate the params before sending
-	if params == nil {
-		params = NewFindDatabaseURLByIDParams()
-	}
-	op := &runtime.ClientOperation{
-		ID:                 "findDatabaseUrlById",
-		Method:             "GET",
-		PathPattern:        "/databases/{id}/url",
-		ProducesMediaTypes: []string{"application/json"},
-		ConsumesMediaTypes: []string{"application/json"},
-		Schemes:            []string{"http"},
-		Params:             params,
-		Reader:             &FindDatabaseURLByIDReader{formats: a.formats},
-		Context:            params.Context,
-		Client:             params.HTTPClient,
-	}
-	for _, opt := range opts {
-		opt(op)
-	}
-
-	result, err := a.transport.Submit(op)
-	if err != nil {
-		return nil, err
-	}
-	success, ok := result.(*FindDatabaseURLByIDOK)
-	if ok {
-		return success, nil
-	}
-	// unexpected success response
-	// safeguard: normally, absent a default response, unknown success responses return an error above: so this is a codegen issue
-	msg := fmt.Sprintf("unexpected success response for findDatabaseUrlById: API contract not enforced by server. Client expected to get an error, but got: %T", result)
 	panic(msg)
 }
 

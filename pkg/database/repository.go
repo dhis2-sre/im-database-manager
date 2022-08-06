@@ -14,7 +14,7 @@ type Repository interface {
 	Create(d *model.Database) error
 	Save(d *model.Database) error
 	FindById(id uint) (*model.Database, error)
-	Lock(id uint, instanceId uint) (*model.Database, error)
+	Lock(id, instanceId, userId uint) (*model.Lock, error)
 	Unlock(id uint) error
 	Delete(id uint) error
 	FindByGroupNames(names []string) ([]*model.Database, error)
@@ -42,24 +42,34 @@ func (r repository) Save(d *model.Database) error {
 
 func (r repository) FindById(id uint) (*model.Database, error) {
 	var d *model.Database
-	err := r.db.First(&d, id).Error
+	err := r.db.
+		Preload("Lock").
+		First(&d, id).Error
 	return d, err
 }
 
-func (r repository) Lock(id uint, instanceId uint) (*model.Database, error) {
-	var d *model.Database
+func (r repository) Lock(id, instanceId, userId uint) (*model.Lock, error) {
+	var lock *model.Lock
 
 	errTx := r.db.Transaction(func(tx *gorm.DB) error {
-		err := tx.First(&d, id).Error
+		var d *model.Database
+		err := tx.
+			Preload("Lock").
+			First(&d, id).Error
 		if err != nil {
 			return err
 		}
 
-		if d.InstanceID != 0 {
-			return fmt.Errorf("already locked by: %d", d.InstanceID)
+		if d.Lock != nil && d.Lock.InstanceID != 0 {
+			return fmt.Errorf("database already locked by user \"%d\" and instance \"%d\"", userId, d.Lock.InstanceID)
 		}
 
-		err = tx.Model(&d).Update("instance_id", instanceId).Error
+		lock = &model.Lock{
+			DatabaseID: id,
+			InstanceID: instanceId,
+			UserID:     userId,
+		}
+		err = tx.Create(lock).Error
 		if err != nil {
 			return err
 		}
@@ -67,20 +77,11 @@ func (r repository) Lock(id uint, instanceId uint) (*model.Database, error) {
 		return nil
 	})
 
-	return d, errTx
+	return lock, errTx
 }
 
 func (r repository) Unlock(id uint) error {
-	err := r.db.Model(&model.Database{
-		Model: gorm.Model{
-			ID: id,
-		},
-	}).Update("instance_id", 0).Error
-	if err != nil {
-		return err
-	}
-
-	return nil
+	return r.db.Delete(&model.Lock{}, id).Error
 }
 
 func (r repository) Delete(id uint) error {

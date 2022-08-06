@@ -264,7 +264,7 @@ type LockDatabaseRequest struct {
 //   oauth2:
 //
 // responses:
-//   200: Database
+//   200: Lock
 //   401: Error
 //   403: Error
 //   404: Error
@@ -291,19 +291,25 @@ func (h Handler) Lock(c *gin.Context) {
 		return
 	}
 
+	user, err := handler.GetUserFromContext(c)
+	if err != nil {
+		_ = c.Error(err)
+		return
+	}
+
 	err = h.canAccess(c, d)
 	if err != nil {
 		_ = c.Error(err)
 		return
 	}
 
-	d, err = h.databaseService.Lock(uint(id), request.InstanceId)
+	lock, err := h.databaseService.Lock(uint(id), request.InstanceId, user.ID)
 	if err != nil {
 		_ = c.Error(err)
 		return
 	}
 
-	c.JSON(http.StatusCreated, d)
+	c.JSON(http.StatusCreated, lock)
 }
 
 // Unlock database
@@ -335,15 +341,19 @@ func (h Handler) Unlock(c *gin.Context) {
 		return
 	}
 
-	userWithGroups, err := h.getUserWithGroups(c)
+	user, err := h.getUserWithGroups(c)
 	if err != nil {
 		_ = c.Error(err)
 		return
 	}
 
-	// This is a bit hacky. All other handlers are using the h.canAccess method only group admins can unlock (admins can't)
-	isGroupAdministrator := handler.IsGroupAdministrator(d.GroupName, userWithGroups.AdminGroups)
-	if !isGroupAdministrator {
+	if d.Lock == nil {
+		c.String(http.StatusOK, "database not locked")
+		return
+	}
+
+	canUnlock := handler.CanUnlock(user, d)
+	if !canUnlock {
 		forbidden := apperror.NewForbidden("access denied")
 		_ = c.Error(forbidden)
 		return

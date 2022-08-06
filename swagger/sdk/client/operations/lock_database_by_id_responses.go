@@ -71,22 +71,22 @@ func NewLockDatabaseByIDOK() *LockDatabaseByIDOK {
 
 /* LockDatabaseByIDOK describes a response with status code 200, with default header values.
 
-Database
+Lock
 */
 type LockDatabaseByIDOK struct {
-	Payload *models.Database
+	Payload *models.Lock
 }
 
 func (o *LockDatabaseByIDOK) Error() string {
 	return fmt.Sprintf("[POST /databases/{id}/lock][%d] lockDatabaseByIdOK  %+v", 200, o.Payload)
 }
-func (o *LockDatabaseByIDOK) GetPayload() *models.Database {
+func (o *LockDatabaseByIDOK) GetPayload() *models.Lock {
 	return o.Payload
 }
 
 func (o *LockDatabaseByIDOK) readResponse(response runtime.ClientResponse, consumer runtime.Consumer, formats strfmt.Registry) error {
 
-	o.Payload = new(models.Database)
+	o.Payload = new(models.Lock)
 
 	// response payload
 	if err := consumer.Consume(response.Body(), o.Payload); err != nil && err != io.EOF {

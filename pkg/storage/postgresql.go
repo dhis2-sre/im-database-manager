@@ -30,6 +30,7 @@ func NewDatabase(c config.Config) (*gorm.DB, error) {
 
 	err = db.AutoMigrate(
 		&model.Database{},
+		&model.Lock{},
 		&model.ExternalDownload{},
 	)
 

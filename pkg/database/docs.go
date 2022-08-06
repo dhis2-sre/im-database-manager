@@ -9,7 +9,7 @@ type Error struct {
 	Message string
 }
 
-//swagger:parameters findDatabaseById lockDatabaseById unlockDatabaseById downloadDatabase deleteDatabaseById updateDatabaseById findDatabaseUrlById createExternalDownloadDatabase
+//swagger:parameters findDatabaseById lockDatabaseById unlockDatabaseById downloadDatabase deleteDatabaseById updateDatabaseById createExternalDownloadDatabase
 type _ struct {
 	// in: path
 	// required: true
@@ -51,12 +51,6 @@ type _ struct {
 	// in: body
 	// required: true
 	Body UpdateDatabaseRequest
-}
-
-// swagger:response DatabaseUrl
-type _ struct {
-	//in: body
-	_ string
 }
 
 //swagger:parameters externalDownloadDatabase

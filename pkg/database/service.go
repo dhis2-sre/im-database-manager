@@ -27,7 +27,7 @@ type Service interface {
 	Create(d *model.Database) error
 	Copy(id uint, d *model.Database, group *models.Group) error
 	FindById(id uint) (*model.Database, error)
-	Lock(id uint, instanceId uint) (*model.Database, error)
+	Lock(id uint, instanceId uint, userId uint) (*model.Lock, error)
 	Unlock(id uint) error
 	Upload(d *model.Database, group *models.Group, file io.Reader) (*model.Database, error)
 	Download(id uint, dst io.Writer, headers func(contentLength int64)) error
@@ -91,19 +91,25 @@ func (s service) FindById(id uint) (*model.Database, error) {
 	return d, err
 }
 
-func (s service) Lock(id uint, instanceId uint) (*model.Database, error) {
-	d, err := s.repository.Lock(id, instanceId)
+func (s service) Lock(id uint, instanceId uint, userId uint) (*model.Lock, error) {
+	lock, err := s.repository.Lock(id, instanceId, userId)
 	if err != nil {
+		// TODO: Don't handle errors like this
+		// Don't check the error by looking at the error message... Use the type
+		// Don't allow gorm errors outside the repository
 		if err.Error() == "record not found" {
 			idStr := strconv.FormatUint(uint64(id), 10)
 			err = apperror.NewNotFound("database not found", idStr)
 		}
 
+		// TODO: Don't handle errors like this
+		// Don't check the error by looking at the error message... Use the type
+		// Don't allow gorm errors outside the repository
 		if strings.HasPrefix(err.Error(), "already locked by: ") {
 			err = apperror.NewConflict(err.Error())
 		}
 	}
-	return d, err
+	return lock, err
 }
 
 func (s service) Unlock(id uint) error {

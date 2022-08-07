@@ -71,3 +71,9 @@ type _ struct {
 	//in: body
 	_ model.ExternalDownload
 }
+
+// swagger:response lockDatabaseById
+type _ struct {
+	//in: body
+	_ model.Lock
+}

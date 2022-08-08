@@ -423,30 +423,6 @@ paths:
           $ref: '#/responses/Error'
       security:
       - oauth2: []
-  /databases/{id}/url:
-    get:
-      description: Find database URL by id
-      operationId: findDatabaseUrlById
-      parameters:
-      - format: uint64
-        in: path
-        name: id
-        required: true
-        type: integer
-        x-go-name: ID
-      responses:
-        "200":
-          $ref: '#/responses/DatabaseUrl'
-        "400":
-          $ref: '#/responses/Error'
-        "401":
-          $ref: '#/responses/Error'
-        "403":
-          $ref: '#/responses/Error'
-        "404":
-          $ref: '#/responses/Error'
-        "415":
-          $ref: '#/responses/Error'
   /databases/external/{uuid}:
     get:
       description: Download database

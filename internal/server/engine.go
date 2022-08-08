@@ -21,7 +21,6 @@ func GetEngine(basePath string, dbHandler database.Handler, authMiddleware handl
 
 	router.GET("/health", health.Health)
 
-	router.GET("/databases/:id/url", dbHandler.FindUrlById)
 	router.GET("/databases/external/:uuid", dbHandler.ExternalDownload)
 
 	tokenAuthenticationRouter := router.Group("")

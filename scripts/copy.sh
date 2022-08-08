@@ -2,9 +2,9 @@
 
 set -euo pipefail
 
-NAME=$1
+SOURCE=$1
 GROUP=$2
-SOURCE=$3
+NAME=$3
 
 echo "{
   \"name\": \"$NAME\",

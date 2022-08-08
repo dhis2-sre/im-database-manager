@@ -2,6 +2,6 @@
 
 set -euo pipefail
 
-ID=$1
+DATABASE=$1
 
-$HTTP delete "$INSTANCE_HOST/databases/$ID/unlock" "Authorization: Bearer $ACCESS_TOKEN"
+$HTTP delete "$INSTANCE_HOST/databases/$DATABASE/unlock" "Authorization: Bearer $ACCESS_TOKEN"

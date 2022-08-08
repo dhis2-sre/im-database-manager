@@ -312,7 +312,7 @@ func (h Handler) Unlock(c *gin.Context) {
 	}
 
 	if d.Lock == nil {
-		c.String(http.StatusOK, "database not locked")
+		c.String(http.StatusNoContent, "database not locked")
 		return
 	}
 

@@ -27,9 +27,8 @@ definitions:
       ID:
         format: uint64
         type: integer
-      InstanceID:
-        format: uint64
-        type: integer
+      Lock:
+        $ref: '#/definitions/Lock'
       Name:
         type: string
       UpdatedAt:
@@ -68,6 +67,19 @@ definitions:
         type: string
     type: object
     x-go-package: github.com/dhis2-sre/im-database-manager/pkg/database
+  Lock:
+    properties:
+      DatabaseID:
+        format: uint64
+        type: integer
+      InstanceID:
+        format: uint64
+        type: integer
+      UserID:
+        format: uint64
+        type: integer
+    type: object
+    x-go-package: github.com/dhis2-sre/im-database-manager/pkg/model
   LockDatabaseRequest:
     properties:
       instanceId:
@@ -396,9 +408,9 @@ paths:
           $ref: '#/definitions/LockDatabaseRequest'
       responses:
         "200":
-          description: Database
+          description: Lock
           schema:
-            $ref: '#/definitions/Database'
+            $ref: '#/definitions/Lock'
         "401":
           $ref: '#/responses/Error'
         "403":
@@ -449,8 +461,6 @@ responses:
     description: ""
     schema:
       $ref: '#/definitions/ExternalDownload'
-  DatabaseUrl:
-    description: ""
   DownloadDatabaseResponse:
     description: ""
   Error:

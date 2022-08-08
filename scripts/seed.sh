@@ -19,7 +19,6 @@ function createDatabase() {
   ./upload.sh "$GROUP" "$HOME/Downloads/$1.sql.gz"
 }
 
-
 ## https://databases.dhis2.org/
 createDatabase "Sierra Leone - 2.36.11" https://databases.dhis2.org/sierra-leone/2.36.0/dhis2-db-sierra-leone.sql.gz
 createDatabase "Sierra Leone - 2.37.7" https://databases.dhis2.org/sierra-leone/2.37.6/dhis2-db-sierra-leone.sql.gz

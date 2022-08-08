@@ -36,8 +36,8 @@ type Database struct {
 	// ID
 	ID uint64 `json:"ID,omitempty"`
 
-	// instance ID
-	InstanceID uint64 `json:"InstanceID,omitempty"`
+	// lock
+	Lock *Lock `json:"Lock,omitempty"`
 
 	// name
 	Name string `json:"Name,omitempty"`
@@ -63,6 +63,10 @@ func (m *Database) Validate(formats strfmt.Registry) error {
 	}
 
 	if err := m.validateExternalDownloads(formats); err != nil {
+		res = append(res, err)
+	}
+
+	if err := m.validateLock(formats); err != nil {
 		res = append(res, err)
 	}
 
@@ -133,6 +137,25 @@ func (m *Database) validateExternalDownloads(formats strfmt.Registry) error {
 	return nil
 }
 
+func (m *Database) validateLock(formats strfmt.Registry) error {
+	if swag.IsZero(m.Lock) { // not required
+		return nil
+	}
+
+	if m.Lock != nil {
+		if err := m.Lock.Validate(formats); err != nil {
+			if ve, ok := err.(*errors.Validation); ok {
+				return ve.ValidateName("Lock")
+			} else if ce, ok := err.(*errors.CompositeError); ok {
+				return ce.ValidateName("Lock")
+			}
+			return err
+		}
+	}
+
+	return nil
+}
+
 func (m *Database) validateUpdatedAt(formats strfmt.Registry) error {
 	if swag.IsZero(m.UpdatedAt) { // not required
 		return nil
@@ -154,6 +177,10 @@ func (m *Database) ContextValidate(ctx context.Context, formats strfmt.Registry)
 	}
 
 	if err := m.contextValidateExternalDownloads(ctx, formats); err != nil {
+		res = append(res, err)
+	}
+
+	if err := m.contextValidateLock(ctx, formats); err != nil {
 		res = append(res, err)
 	}
 
@@ -194,6 +221,22 @@ func (m *Database) contextValidateExternalDownloads(ctx context.Context, formats
 			}
 		}
 
+	}
+
+	return nil
+}
+
+func (m *Database) contextValidateLock(ctx context.Context, formats strfmt.Registry) error {
+
+	if m.Lock != nil {
+		if err := m.Lock.ContextValidate(ctx, formats); err != nil {
+			if ve, ok := err.(*errors.Validation); ok {
+				return ve.ValidateName("Lock")
+			} else if ce, ok := err.(*errors.CompositeError); ok {
+				return ce.ValidateName("Lock")
+			}
+			return err
+		}
 	}
 
 	return nil

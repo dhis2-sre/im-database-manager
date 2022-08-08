@@ -8,12 +8,22 @@ import (
 const AdministratorGroupName = "administrators"
 
 func CanAccess(user *models.User, database *model.Database) bool {
-	return isAdministrator(user) ||
+	return IsAdministrator(user) ||
 		IsGroupAdministrator(database.GroupName, user.AdminGroups) ||
 		isMemberOf(database.GroupName, user.Groups)
 }
 
-func isAdministrator(user *models.User) bool {
+func CanUnlock(user *models.User, database *model.Database) bool {
+	return IsAdministrator(user) ||
+		IsGroupAdministrator(database.GroupName, user.AdminGroups) ||
+		hasLock(user, database)
+}
+
+func hasLock(user *models.User, database *model.Database) bool {
+	return database.Lock != nil && uint(user.ID) == database.Lock.UserID
+}
+
+func IsAdministrator(user *models.User) bool {
 	return isMemberOf(AdministratorGroupName, user.Groups)
 }
 

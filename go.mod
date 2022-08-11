@@ -11,7 +11,7 @@ require (
 	github.com/dhis2-sre/im-user v0.8.0
 	github.com/gin-contrib/cors v1.4.0
 	github.com/gin-gonic/gin v1.8.1
-	github.com/go-openapi/errors v0.20.2
+	github.com/go-openapi/errors v0.20.3
 	github.com/go-openapi/runtime v0.24.1
 	github.com/go-openapi/strfmt v0.21.3
 	github.com/go-openapi/swag v0.22.0

@@ -5,7 +5,7 @@ go 1.18
 require (
 	github.com/aws/aws-sdk-go-v2 v1.16.11
 	github.com/aws/aws-sdk-go-v2/config v1.16.1
-	github.com/aws/aws-sdk-go-v2/feature/s3/manager v1.11.24
+	github.com/aws/aws-sdk-go-v2/feature/s3/manager v1.11.25
 	github.com/aws/aws-sdk-go-v2/service/s3 v1.27.5
 	github.com/dhis2-sre/im-job v0.1.0
 	github.com/dhis2-sre/im-user v0.8.0

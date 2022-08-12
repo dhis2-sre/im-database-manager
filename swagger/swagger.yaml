@@ -469,6 +469,10 @@ responses:
     description: ""
     schema:
       $ref: '#/definitions/Response'
+  lockDatabaseById:
+    description: ""
+    schema:
+      $ref: '#/definitions/Lock'
 securityDefinitions:
   oauth2:
     flow: password

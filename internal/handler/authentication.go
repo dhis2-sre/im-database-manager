@@ -73,6 +73,7 @@ func (m AuthenticationMiddleware) TokenAuthentication(c *gin.Context) {
 
 	u, err := parseRequest(c.Request, publicKey)
 	if err != nil {
+		// TODO: token could be not valid for lots of reasons, return err or at least log it
 		unauthorized := apperror.NewUnauthorized("token not valid")
 		_ = c.Error(unauthorized)
 		c.Abort()

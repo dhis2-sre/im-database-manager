@@ -267,7 +267,7 @@ func (h Handler) Lock(c *gin.Context) {
 		return
 	}
 
-	lock, err := h.databaseService.Lock(uint(id), request.InstanceId, user.ID)
+	lock, err := h.databaseService.Lock(uint(id), request.InstanceId, uint(user.ID))
 	if err != nil {
 		_ = c.Error(err)
 		return
@@ -305,7 +305,7 @@ func (h Handler) Unlock(c *gin.Context) {
 		return
 	}
 
-	user, err := h.getUserWithGroups(c)
+	user, err := handler.GetUserFromContext(c)
 	if err != nil {
 		_ = c.Error(err)
 		return
@@ -454,26 +454,13 @@ func (h Handler) List(c *gin.Context) {
 		return
 	}
 
-	token, err := handler.GetTokenFromHttpAuthHeader(c)
+	d, err := h.databaseService.List(user.Groups)
 	if err != nil {
 		_ = c.Error(err)
 		return
 	}
 
-	userWithGroups, err := h.userClient.FindUserById(token, user.ID)
-	if err != nil {
-		_ = c.Error(err)
-		return
-	}
-
-	groups := userWithGroups.Groups
-	d, err := h.databaseService.List(groups)
-	if err != nil {
-		_ = c.Error(err)
-		return
-	}
-
-	c.JSON(http.StatusOK, h.groupsWithDatabases(groups, d))
+	c.JSON(http.StatusOK, h.groupsWithDatabases(user.Groups, d))
 }
 
 func (h Handler) groupsWithDatabases(groups []*models.Group, databases []*model.Database) []GroupsWithDatabases {
@@ -555,32 +542,13 @@ func (h Handler) Update(c *gin.Context) {
 	c.JSON(http.StatusOK, d)
 }
 
-func (h Handler) getUserWithGroups(c *gin.Context) (*models.User, error) {
-	user, err := handler.GetUserFromContext(c)
-	if err != nil {
-		return nil, err
-	}
-
-	token, err := handler.GetTokenFromHttpAuthHeader(c)
-	if err != nil {
-		return nil, err
-	}
-
-	userWithGroups, err := h.userClient.FindUserById(token, user.ID)
-	if err != nil {
-		return nil, err
-	}
-
-	return userWithGroups, nil
-}
-
 func (h Handler) canAccess(c *gin.Context, d *model.Database) error {
-	userWithGroups, err := h.getUserWithGroups(c)
+	user, err := handler.GetUserFromContext(c)
 	if err != nil {
 		return err
 	}
 
-	can := handler.CanAccess(userWithGroups, d)
+	can := handler.CanAccess(user, d)
 	if !can {
 		return apperror.NewForbidden("access denied")
 	}

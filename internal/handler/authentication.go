@@ -4,9 +4,10 @@ import (
 	"context"
 	"crypto/rsa"
 	"errors"
-	"github.com/dhis2-sre/im-user/swagger/sdk/models"
 	"net/http"
 	"time"
+
+	"github.com/dhis2-sre/im-user/swagger/sdk/models"
 
 	"github.com/dhis2-sre/im-database-manager/internal/apperror"
 	"github.com/dhis2-sre/im-database-manager/pkg/config"

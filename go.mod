@@ -20,7 +20,7 @@ require (
 	github.com/google/uuid v1.3.0
 	github.com/lestrrat-go/jwx v1.2.25
 	github.com/stretchr/testify v1.8.0
-	gorm.io/driver/postgres v1.3.8
+	gorm.io/driver/postgres v1.3.9
 	gorm.io/gorm v1.23.8
 )
 

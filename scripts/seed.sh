@@ -22,6 +22,6 @@ function createDatabase() {
 ## https://databases.dhis2.org/
 createDatabase "Sierra Leone - 2.36.11" https://databases.dhis2.org/sierra-leone/2.36.0/dhis2-db-sierra-leone.sql.gz
 createDatabase "Sierra Leone - 2.37.7" https://databases.dhis2.org/sierra-leone/2.37.6/dhis2-db-sierra-leone.sql.gz
-createDatabase "Sierra Leone - 2.38.1" https://databases.dhis2.org/sierra-leone/2.37.6/dhis2-db-sierra-leone.sql.gz
+createDatabase "Sierra Leone - 2.38.1" https://databases.dhis2.org/sierra-leone/2.38.1/dhis2-db-sierra-leone.sql.gz
 
 ./list.sh | jq '.[].Databases[] | .ID, .Name, .Url'

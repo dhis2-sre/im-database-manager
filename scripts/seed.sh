@@ -5,9 +5,6 @@ set -euo pipefail
 GROUP=whoami
 
 function createDatabase() {
-  echo "Login..."
-  export ACCESS_TOKEN="" && eval $(./login.sh) && echo "$ACCESS_TOKEN"
-
   echo "Downloading database... $1"
   curl -C - "$2" -o "$HOME/Downloads/$1.sql.gz"
   #curl "$2" -o "$HOME/Downloads/$1.sql.gz"

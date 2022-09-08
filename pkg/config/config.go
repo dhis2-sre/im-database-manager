@@ -7,13 +7,14 @@ import (
 )
 
 type Config struct {
-	BasePath       string
-	UserService    service
-	JobService     service
-	Postgresql     postgresql
-	RabbitMqURL    rabbitmq
-	Authentication Authentication
-	Bucket         string
+	BasePath        string
+	UserService     service
+	JobService      service
+	InstanceService service
+	Postgresql      postgresql
+	RabbitMqURL     rabbitmq
+	Authentication  Authentication
+	Bucket          string
 }
 
 func New() (Config, error) {
@@ -23,6 +24,11 @@ func New() (Config, error) {
 	}
 
 	usrSvc, err := newUserService()
+	if err != nil {
+		return Config{}, err
+	}
+
+	instanceSvc, err := newInstanceService()
 	if err != nil {
 		return Config{}, err
 	}
@@ -53,13 +59,14 @@ func New() (Config, error) {
 	}
 
 	return Config{
-		BasePath:       basePath,
-		UserService:    usrSvc,
-		JobService:     jobSvc,
-		Postgresql:     pg,
-		RabbitMqURL:    rb,
-		Authentication: auth,
-		Bucket:         bucket,
+		BasePath:        basePath,
+		UserService:     usrSvc,
+		InstanceService: instanceSvc,
+		JobService:      jobSvc,
+		Postgresql:      pg,
+		RabbitMqURL:     rb,
+		Authentication:  auth,
+		Bucket:          bucket,
 	}, nil
 }
 
@@ -76,6 +83,23 @@ func newUserService() (service, error) {
 		return service{}, err
 	}
 	basePath, err := requireEnv("USER_SERVICE_BASE_PATH")
+	if err != nil {
+		return service{}, err
+	}
+
+	return service{
+		Host:     host,
+		BasePath: basePath,
+	}, nil
+}
+
+func newInstanceService() (service, error) {
+	host, err := requireEnv("INSTANCE_SERVICE_HOST")
+	if err != nil {
+		return service{}, err
+	}
+
+	basePath, err := requireEnv("INSTANCE_SERVICE_BASE_PATH")
 	if err != nil {
 		return service{}, err
 	}

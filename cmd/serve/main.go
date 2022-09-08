@@ -35,6 +35,7 @@ import (
 	"github.com/dhis2-sre/im-database-manager/pkg/database"
 	"github.com/dhis2-sre/im-database-manager/pkg/storage"
 	jobClient "github.com/dhis2-sre/im-job/pkg/client"
+	instanceClient "github.com/dhis2-sre/im-manager/pkg/client"
 	userClient "github.com/dhis2-sre/im-user/pkg/client"
 )
 
@@ -52,6 +53,7 @@ func run() error {
 	}
 
 	usrSvc := userClient.New(cfg.UserService.Host, cfg.UserService.BasePath)
+	instanceSvc := instanceClient.New(cfg.InstanceService.Host, cfg.InstanceService.BasePath)
 
 	s3Client, err := storage.NewS3Client()
 	if err != nil {
@@ -65,9 +67,9 @@ func run() error {
 		return err
 	}
 	dbRepo := database.NewRepository(db)
-	dbSvc := database.NewService(cfg, s3Client, jobSvc, dbRepo)
+	dbSvc := database.NewService(cfg, usrSvc, s3Client, jobSvc, dbRepo)
 
-	dbHandler := database.New(usrSvc, dbSvc)
+	dbHandler := database.New(usrSvc, dbSvc, instanceSvc)
 
 	authMiddleware, err := handler.NewAuthentication(cfg)
 	if err != nil {

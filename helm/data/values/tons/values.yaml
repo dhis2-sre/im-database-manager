@@ -10,6 +10,10 @@ userService:
   host: im-user-tons.instance-manager-tons.svc:8080
   basePath: /
 
+instanceService:
+  host: im-manager-tons.instance-manager-tons.svc:8080
+  basePath: /
+
 jobService:
   host: im-job-tons.instance-manager-tons.svc:8080
   basePath: /
@@ -32,8 +36,8 @@ rabbitMq:
 
 resources:
   limits:
-    cpu: 200m
-    memory: 512Mi
+    cpu: 1000m
+    memory: 1024Mi
   requests:
     cpu: 100m
     memory: 64Mi

@@ -2,10 +2,15 @@ package database
 
 import (
 	"bytes"
+	"compress/gzip"
 	"errors"
 	"fmt"
+	instanceModels "github.com/dhis2-sre/im-manager/swagger/sdk/models"
+	pg "github.com/habx/pg-commands"
 	"io"
+	"log"
 	"net/url"
+	"os"
 	"strconv"
 	"strings"
 	"time"
@@ -36,17 +41,19 @@ type Service interface {
 	Update(d *model.Database) error
 	CreateExternalDownload(databaseID uint, expiration time.Time) (model.ExternalDownload, error)
 	FindExternalDownload(uuid uuid.UUID) (model.ExternalDownload, error)
+	SaveAs(token string, database *model.Database, instance *instanceModels.Instance, stack *instanceModels.Stack, newName string, format string) (*model.Database, error)
 }
 
 type service struct {
 	c          config.Config
+	userClient userClientHandler
 	s3Client   storage.S3Client
 	jobClient  jobClient.Client
 	repository Repository
 }
 
-func NewService(c config.Config, s3Client storage.S3Client, jobClient jobClient.Client, repository Repository) *service {
-	return &service{c, s3Client, jobClient, repository}
+func NewService(c config.Config, userClient userClientHandler, s3Client storage.S3Client, jobClient jobClient.Client, repository Repository) *service {
+	return &service{c, userClient, s3Client, jobClient, repository}
 }
 
 func (s service) Create(d *model.Database) error {
@@ -223,4 +230,145 @@ func (s service) FindExternalDownload(uuid uuid.UUID) (model.ExternalDownload, e
 		return model.ExternalDownload{}, err
 	}
 	return s.repository.FindExternalDownload(uuid)
+}
+
+func (s service) SaveAs(token string, database *model.Database, instance *instanceModels.Instance, stack *instanceModels.Stack, newName string, format string) (*model.Database, error) {
+	dump, err := newPgDumpConfig(instance, stack)
+	if err != nil {
+		return nil, err
+	}
+
+	dumpPath := "/mnt/data/"
+	dump.SetPath(dumpPath)
+	fileId := uuid.New().String()
+	dump.SetFileName(fileId + ".dump")
+	dump.SetupFormat(format)
+
+	dumpExec := dump.Exec(pg.ExecOptions{StreamPrint: true})
+	if dumpExec.Error != nil {
+		log.Println(dumpExec.Error.Err)
+		log.Println(dumpExec.Output)
+		return nil, dumpExec.Error.Err
+	}
+
+	dumpFile := dumpPath + dumpExec.File
+	file, err := os.Open(dumpFile)
+	if err != nil {
+		return nil, err
+	}
+
+	gzSuffix := ".gz"
+	gzFile := dumpPath + fileId + gzSuffix
+	if format == "plain" {
+		outFile, err := os.Create(gzFile)
+		if err != nil {
+			return nil, err
+		}
+		defer outFile.Close()
+
+		zw := gzip.NewWriter(outFile)
+		defer zw.Close()
+
+		zw.Name = strings.TrimSuffix(database.Name, gzSuffix)
+
+		_, err = io.Copy(zw, file)
+		if err != nil {
+			return nil, err
+		}
+
+		file, err = os.Open(gzFile)
+		if err != nil {
+			return nil, err
+		}
+	}
+
+	d := &model.Database{
+		Name: newName,
+		// TODO: For now, only saving to the same group is allowed
+		GroupName: database.GroupName,
+	}
+
+	group, err := s.userClient.FindGroupByName(token, database.GroupName)
+	if err != nil {
+		return nil, err
+	}
+	/*
+		if group.ClusterConfiguration.KubernetesConfiguration != "" {
+			// TODO: What about remote host? Port forward?
+			return nil, errors.New("remote cluster save not supported yet")
+		}
+	*/
+
+	save, err := s.Upload(d, group, file)
+	if err != nil {
+		return nil, err
+	}
+
+	err = file.Close()
+	if err != nil {
+		return nil, err
+	}
+	/*
+		err = os.Remove(dumpFile)
+		if err != nil {
+				return nil, err
+		}
+
+		if gzFormat {
+			err = os.Remove(gzFile)
+			if err != nil {
+						return nil, err
+			}
+		}
+	*/
+	return save, nil
+}
+
+func newPgDumpConfig(instance *instanceModels.Instance, stack *instanceModels.Stack) (*pg.Dump, error) {
+	databaseName, err := findParameter("DATABASE_NAME", instance, stack)
+	if err != nil {
+		return nil, err
+	}
+
+	databaseUsername, err := findParameter("DATABASE_USERNAME", instance, stack)
+	if err != nil {
+		return nil, err
+	}
+
+	databasePassword, err := findParameter("DATABASE_PASSWORD", instance, stack)
+	if err != nil {
+		return nil, err
+	}
+
+	dump := pg.NewDump(&pg.Postgres{
+		Host:     fmt.Sprintf(stack.HostnamePattern, instance.Name, instance.GroupName),
+		Port:     5432,
+		DB:       databaseName,
+		Username: databaseUsername,
+		Password: databasePassword,
+	})
+
+	return dump, nil
+}
+
+func findParameter(parameter string, instance *instanceModels.Instance, stack *instanceModels.Stack) (string, error) {
+	for _, p := range instance.RequiredParameters {
+		if p.StackRequiredParameterID == parameter {
+			return p.Value, nil
+		}
+	}
+
+	for _, p := range instance.OptionalParameters {
+		if p.StackOptionalParameterID == parameter {
+			return p.Value, nil
+		}
+	}
+
+	for _, p := range stack.OptionalParameters {
+		if p.Name == parameter {
+			return p.DefaultValue, nil
+		}
+	}
+
+	return "", errors.New("parameter not found: " + parameter)
 }

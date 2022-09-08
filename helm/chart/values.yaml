@@ -6,6 +6,9 @@ containerPort: 8080
 
 tmpfsSizeLimit: 128Mi
 
+dataSizeLimit: 30Gi
+dataMountPath: /mnt/data
+
 basePath:
 
 replicaCount: 1
@@ -30,6 +33,10 @@ jwks:
 
 userService:
   host: user-service.namespace.svc
+  basePath:
+
+instanceService:
+  host: manager-service.namespace.svc
   basePath:
 
 jobService:

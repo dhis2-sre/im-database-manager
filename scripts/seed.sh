@@ -2,7 +2,7 @@
 
 set -euo pipefail
 
-GROUP=whoami
+GROUP=$1
 
 function createDatabase() {
   echo "Downloading database... $1"

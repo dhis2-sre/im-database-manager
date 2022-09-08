@@ -16,6 +16,9 @@ data:
   USER_SERVICE_HOST: {{ .Values.userService.host }}
   USER_SERVICE_BASE_PATH: {{ .Values.userService.basePath }}
 
+  INSTANCE_SERVICE_HOST: {{ .Values.instanceService.host }}
+  INSTANCE_SERVICE_BASE_PATH: {{ .Values.instanceService.basePath }}
+
   JOB_SERVICE_HOST: {{ .Values.jobService.host }}
   JOB_SERVICE_BASE_PATH: {{ .Values.jobService.basePath }}
 

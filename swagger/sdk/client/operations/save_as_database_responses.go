@@ -72,7 +72,7 @@ type SaveAsDatabaseCreated struct {
 }
 
 func (o *SaveAsDatabaseCreated) Error() string {
-	return fmt.Sprintf("[POST /databases/saveas/{instanceId}][%d] saveAsDatabaseCreated  %+v", 201, o.Payload)
+	return fmt.Sprintf("[POST /databases/save-as/{instanceId}][%d] saveAsDatabaseCreated  %+v", 201, o.Payload)
 }
 func (o *SaveAsDatabaseCreated) GetPayload() *models.Database {
 	return o.Payload
@@ -103,7 +103,7 @@ type SaveAsDatabaseUnauthorized struct {
 }
 
 func (o *SaveAsDatabaseUnauthorized) Error() string {
-	return fmt.Sprintf("[POST /databases/saveas/{instanceId}][%d] saveAsDatabaseUnauthorized ", 401)
+	return fmt.Sprintf("[POST /databases/save-as/{instanceId}][%d] saveAsDatabaseUnauthorized ", 401)
 }
 
 func (o *SaveAsDatabaseUnauthorized) readResponse(response runtime.ClientResponse, consumer runtime.Consumer, formats strfmt.Registry) error {
@@ -124,7 +124,7 @@ type SaveAsDatabaseForbidden struct {
 }
 
 func (o *SaveAsDatabaseForbidden) Error() string {
-	return fmt.Sprintf("[POST /databases/saveas/{instanceId}][%d] saveAsDatabaseForbidden ", 403)
+	return fmt.Sprintf("[POST /databases/save-as/{instanceId}][%d] saveAsDatabaseForbidden ", 403)
 }
 
 func (o *SaveAsDatabaseForbidden) readResponse(response runtime.ClientResponse, consumer runtime.Consumer, formats strfmt.Registry) error {
@@ -145,7 +145,7 @@ type SaveAsDatabaseNotFound struct {
 }
 
 func (o *SaveAsDatabaseNotFound) Error() string {
-	return fmt.Sprintf("[POST /databases/saveas/{instanceId}][%d] saveAsDatabaseNotFound ", 404)
+	return fmt.Sprintf("[POST /databases/save-as/{instanceId}][%d] saveAsDatabaseNotFound ", 404)
 }
 
 func (o *SaveAsDatabaseNotFound) readResponse(response runtime.ClientResponse, consumer runtime.Consumer, formats strfmt.Registry) error {
@@ -166,7 +166,7 @@ type SaveAsDatabaseUnsupportedMediaType struct {
 }
 
 func (o *SaveAsDatabaseUnsupportedMediaType) Error() string {
-	return fmt.Sprintf("[POST /databases/saveas/{instanceId}][%d] saveAsDatabaseUnsupportedMediaType ", 415)
+	return fmt.Sprintf("[POST /databases/save-as/{instanceId}][%d] saveAsDatabaseUnsupportedMediaType ", 415)
 }
 
 func (o *SaveAsDatabaseUnsupportedMediaType) readResponse(response runtime.ClientResponse, consumer runtime.Consumer, formats strfmt.Registry) error {

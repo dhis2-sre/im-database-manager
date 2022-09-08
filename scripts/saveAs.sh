@@ -12,4 +12,4 @@ INSTANCE_ID=$($HTTP --check-status "$INSTANCE_HOST/instances-name-to-id/$GROUP/$
 echo "{
   \"name\": \"$NEW_NAME\",
   \"format\": \"$FORMAT\"
-}" | $HTTP post "$INSTANCE_HOST/databases/saveas/$INSTANCE_ID" "Authorization: Bearer $ACCESS_TOKEN"
+}" | $HTTP post "$INSTANCE_HOST/databases/save-as/$INSTANCE_ID" "Authorization: Bearer $ACCESS_TOKEN"

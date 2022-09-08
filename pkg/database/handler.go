@@ -128,7 +128,7 @@ type saveAsRequest struct {
 }
 
 // SaveAs database
-// swagger:route POST /databases/saveas/{instanceId} saveAsDatabase
+// swagger:route POST /databases/save-as/{instanceId} saveAsDatabase
 //
 // SaveAs database
 //

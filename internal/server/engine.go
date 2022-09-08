@@ -34,7 +34,7 @@ func GetEngine(basePath string, dbHandler database.Handler, authMiddleware handl
 	tokenAuthenticationRouter.DELETE("/databases/:id", dbHandler.Delete)
 	tokenAuthenticationRouter.POST("/databases/:id/lock", dbHandler.Lock)
 	tokenAuthenticationRouter.DELETE("/databases/:id/unlock", dbHandler.Unlock)
-	tokenAuthenticationRouter.POST("/databases/saveas/:instanceId", dbHandler.SaveAs)
+	tokenAuthenticationRouter.POST("/databases/save-as/:instanceId", dbHandler.SaveAs)
 	tokenAuthenticationRouter.POST("/databases/:id/external", dbHandler.CreateExternalDownload)
 
 	return r

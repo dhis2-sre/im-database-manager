@@ -447,7 +447,7 @@ paths:
           $ref: '#/responses/Error'
       security:
       - oauth2: []
-  /databases/saveas/{instanceId}:
+  /databases/save-as/{instanceId}:
     post:
       description: SaveAs database
       operationId: saveAsDatabase

@@ -420,7 +420,7 @@ func (a *Client) SaveAsDatabase(params *SaveAsDatabaseParams, authInfo runtime.C
 	op := &runtime.ClientOperation{
 		ID:                 "saveAsDatabase",
 		Method:             "POST",
-		PathPattern:        "/databases/saveas/{instanceId}",
+		PathPattern:        "/databases/save-as/{instanceId}",
 		ProducesMediaTypes: []string{"application/json"},
 		ConsumesMediaTypes: []string{"application/json"},
 		Schemes:            []string{"http"},

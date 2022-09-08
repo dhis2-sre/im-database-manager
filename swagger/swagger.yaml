@@ -457,7 +457,7 @@ paths:
         name: instanceId
         required: true
         type: integer
-        x-go-name: InstanceId
+        x-go-name: InstanceID
       responses:
         "201":
           description: Database

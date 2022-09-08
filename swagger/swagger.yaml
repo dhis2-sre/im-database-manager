@@ -447,6 +447,32 @@ paths:
           $ref: '#/responses/Error'
       security:
       - oauth2: []
+  /databases/saveas/{instanceId}:
+    post:
+      description: SaveAs database
+      operationId: saveAsDatabase
+      parameters:
+      - format: uint64
+        in: path
+        name: instanceId
+        required: true
+        type: integer
+        x-go-name: InstanceId
+      responses:
+        "201":
+          description: Database
+          schema:
+            $ref: '#/definitions/Database'
+        "401":
+          $ref: '#/responses/Error'
+        "403":
+          $ref: '#/responses/Error'
+        "404":
+          $ref: '#/responses/Error'
+        "415":
+          $ref: '#/responses/Error'
+      security:
+      - oauth2: []
   /health:
     get:
       description: Service health status
@@ -469,10 +495,6 @@ responses:
     description: ""
     schema:
       $ref: '#/definitions/Response'
-  lockDatabaseById:
-    description: ""
-    schema:
-      $ref: '#/definitions/Lock'
 securityDefinitions:
   oauth2:
     flow: password

@@ -3,9 +3,8 @@
 ## Quick start
 ```sh
 export ACCESS_TOKEN && eval (./login.sh) && echo $ACCESS_TOKEN
-./create.sh "Sierra Leone 2.36.0" whoami
 wget https://databases.dhis2.org/sierra-leone/2.36.0/dhis2-db-sierra-leone.sql.gz -P ~/Downloads
-./upload.sh 1 ~/Downloads/dhis2-db-sierra-leone.sql.gz
+./upload.sh whoami ~/Downloads/dhis2-db-sierra-leone.sql.gz
 ```
 
 
@@ -24,6 +23,6 @@ export ACCESS_TOKEN=eyJhbGciOiJSUzI1NiIsInR5cCI6IkpXVCJ9.eyJleHAiOjQ3OTYzODQwNzc
 dataSizeLimit seems to have no effect and the mounted disk doesn't seem to be a volume... But it is writable
 
 * Timeout... Eventually we'll need to run the export etc. in a background thread. Should we just return 202 or an id or something else?
-* Don't implement an endpoint on the database manager. Rather implement /instances/:id/save-as on the manager and let that produce an event which will be consumed by the database manager
-* Add support for remote clusters
-* Don't corrupt gz file!!!
+* Don't implement the endpoint on the database manager. Rather implement /instances/:id/save-as on the manager and let that produce an event which will be consumed by the database manager
+* Introduce some sort of status property on the database model... dumped, zipped... ready?
+* Store the dump log on the database model as well. The output from `dump.EnableVerbose()` and... ? gzip output?

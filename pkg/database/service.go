@@ -362,7 +362,7 @@ func (s service) SaveAs(token string, database *model.Database, instance *instan
 	return d, nil
 }
 
-func gz(gzFile string, database *model.Database, file *os.File) (*os.File, error) {
+func gz(gzFile string, database *model.Database, src *os.File) (*os.File, error) {
 	outFile, err := os.Create(gzFile)
 	if err != nil {
 		return nil, err
@@ -371,7 +371,7 @@ func gz(gzFile string, database *model.Database, file *os.File) (*os.File, error
 	zw := gzip.NewWriter(outFile)
 	zw.Name = strings.TrimSuffix(database.Name, ".gz")
 
-	_, err = io.Copy(zw, file)
+	_, err = io.Copy(zw, src)
 	if err != nil {
 		return nil, err
 	}
@@ -381,17 +381,17 @@ func gz(gzFile string, database *model.Database, file *os.File) (*os.File, error
 		return nil, err
 	}
 
-	err = file.Close()
+	err = src.Close()
 	if err != nil {
 		return nil, err
 	}
 
-	file, err = os.Open(gzFile)
+	src, err = os.Open(gzFile)
 	if err != nil {
 		return nil, err
 	}
 
-	return file, nil
+	return src, nil
 }
 
 func newPgDumpConfig(instance *instanceModels.Instance, stack *instanceModels.Stack) (*pg.Dump, error) {

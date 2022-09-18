@@ -124,7 +124,7 @@ type saveAsRequest struct {
 	Name string `json:"name" binding:"required"`
 	// TODO: Allow saving to another group, remember to ensure user is member of the other group
 	//	Group  string `json:"group"`
-	Format string `json:"format" binding:"required"`
+	Format string `json:"format" binding:"required,oneOf=plain custom"`
 }
 
 // SaveAs database

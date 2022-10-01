@@ -2,13 +2,22 @@ package database
 
 import (
 	"bytes"
+	"compress/gzip"
+	"context"
 	"errors"
 	"fmt"
 	"io"
+	"log"
 	"net/url"
+	"os"
 	"strconv"
 	"strings"
 	"time"
+
+	"github.com/anthhub/forwarder"
+
+	instanceModels "github.com/dhis2-sre/im-manager/swagger/sdk/models"
+	pg "github.com/habx/pg-commands"
 
 	"gorm.io/gorm"
 
@@ -36,17 +45,19 @@ type Service interface {
 	Update(d *model.Database) error
 	CreateExternalDownload(databaseID uint, expiration time.Time) (model.ExternalDownload, error)
 	FindExternalDownload(uuid uuid.UUID) (model.ExternalDownload, error)
+	SaveAs(token string, database *model.Database, instance *instanceModels.Instance, stack *instanceModels.Stack, newName string, format string) (*model.Database, error)
 }
 
 type service struct {
 	c          config.Config
+	userClient userClientHandler
 	s3Client   storage.S3Client
 	jobClient  jobClient.Client
 	repository Repository
 }
 
-func NewService(c config.Config, s3Client storage.S3Client, jobClient jobClient.Client, repository Repository) *service {
-	return &service{c, s3Client, jobClient, repository}
+func NewService(c config.Config, userClient userClientHandler, s3Client storage.S3Client, jobClient jobClient.Client, repository Repository) *service {
+	return &service{c, userClient, s3Client, jobClient, repository}
 }
 
 func (s service) Create(d *model.Database) error {
@@ -225,4 +236,203 @@ func (s service) FindExternalDownload(uuid uuid.UUID) (model.ExternalDownload, e
 		return model.ExternalDownload{}, err
 	}
 	return s.repository.FindExternalDownload(uuid)
+}
+
+func (s service) SaveAs(token string, database *model.Database, instance *instanceModels.Instance, stack *instanceModels.Stack, newName string, format string) (*model.Database, error) {
+	// TODO: Add to config
+	dumpPath := "/mnt/data/"
+
+	group, err := s.userClient.FindGroupByName(token, instance.GroupName)
+	if err != nil {
+		return nil, err
+	}
+
+	dump, err := newPgDumpConfig(instance, stack)
+	if err != nil {
+		return nil, err
+	}
+
+	newDatabase := &model.Database{
+		Name: newName,
+		// TODO: For now, only saving to the same group is supported
+		GroupName: instance.GroupName,
+	}
+
+	err = s.repository.Save(newDatabase)
+	if err != nil {
+		return nil, err
+	}
+
+	go func() {
+		var ret *forwarder.Result
+		if len(group.ClusterConfiguration.KubernetesConfiguration) > 0 {
+			hostname := fmt.Sprintf(stack.HostnamePattern, instance.Name, instance.GroupName)
+			serviceName := strings.Split(hostname, ".")[0]
+			options := []*forwarder.Option{
+				{
+					RemotePort:  5432,
+					ServiceName: serviceName,
+					Namespace:   instance.GroupName,
+				},
+			}
+
+			kubeConfig, err := decryptYaml(group.ClusterConfiguration.KubernetesConfiguration)
+			if err != nil {
+				logError(err)
+				return
+			}
+
+			ret, err = forwarder.WithForwardersEmbedConfig(context.Background(), options, kubeConfig)
+			if err != nil {
+				logError(err)
+				return
+			}
+			defer ret.Close()
+
+			ports, err := ret.Ready()
+			if err != nil {
+				logError(err)
+				return
+			}
+
+			dump.Host = "localhost"
+			dump.Port = int(ports[0][0].Local)
+		}
+
+		dump.SetPath(dumpPath)
+		fileId := uuid.New().String()
+		dump.SetFileName(fileId + ".dump")
+		dump.SetupFormat(format)
+
+		// TODO: Remove... Or at least make configurable
+		dump.EnableVerbose()
+
+		dumpExec := dump.Exec(pg.ExecOptions{StreamPrint: true})
+		if dumpExec.Error != nil {
+			log.Println(dumpExec.Error.Err)
+			log.Println(dumpExec.Output)
+			logError(dumpExec.Error.Err)
+			return
+		}
+
+		dumpFile := dumpPath + dumpExec.File
+		file, err := os.Open(dumpFile)
+		if err != nil {
+			logError(err)
+			return
+		}
+		defer removeTempFile(file)
+
+		if format == "plain" {
+			gzFileName := dumpPath + fileId + ".gz"
+			file, err = gz(gzFileName, database, file)
+			if err != nil {
+				logError(err)
+				return
+			}
+
+			defer removeTempFile(file)
+		}
+
+		_, err = s.Upload(newDatabase, group, file)
+		if err != nil {
+			logError(err)
+			return
+		}
+	}()
+
+	return newDatabase, nil
+}
+
+func logError(err error) {
+	// TODO: Persist error message
+	log.Println(err)
+}
+
+func removeTempFile(fd *os.File) {
+	for _, err := range [...]error{fd.Close(), os.Remove(fd.Name())} {
+		if err != nil {
+			log.Println("failed to remove temp file:", err)
+		}
+	}
+}
+
+func gz(gzFile string, database *model.Database, src *os.File) (*os.File, error) {
+	outFile, err := os.Create(gzFile)
+	if err != nil {
+		return nil, err
+	}
+
+	zw := gzip.NewWriter(outFile)
+	zw.Name = strings.TrimSuffix(database.Name, ".gz")
+
+	defer func(zw *gzip.Writer) {
+		err := zw.Close()
+		if err != nil {
+			log.Println(err)
+		}
+	}(zw)
+
+	_, err = io.Copy(zw, src)
+	if err != nil {
+		return nil, err
+	}
+
+	defer func(src *os.File) {
+		err := src.Close()
+		if err != nil {
+			log.Println(err)
+		}
+	}(src)
+
+	return outFile, nil
+}
+
+func newPgDumpConfig(instance *instanceModels.Instance, stack *instanceModels.Stack) (*pg.Dump, error) {
+	databaseName, err := findParameter("DATABASE_NAME", instance, stack)
+	if err != nil {
+		return nil, err
+	}
+
+	databaseUsername, err := findParameter("DATABASE_USERNAME", instance, stack)
+	if err != nil {
+		return nil, err
+	}
+
+	databasePassword, err := findParameter("DATABASE_PASSWORD", instance, stack)
+	if err != nil {
+		return nil, err
+	}
+
+	dump := pg.NewDump(&pg.Postgres{
+		Host:     fmt.Sprintf(stack.HostnamePattern, instance.Name, instance.GroupName),
+		Port:     5432,
+		DB:       databaseName,
+		Username: databaseUsername,
+		Password: databasePassword,
+	})
+
+	return dump, nil
+}
+
+func findParameter(parameter string, instance *instanceModels.Instance, stack *instanceModels.Stack) (string, error) {
+	for _, p := range instance.RequiredParameters {
+		if p.StackRequiredParameterID == parameter {
+			return p.Value, nil
+		}
+	}
+
+	for _, p := range instance.OptionalParameters {
+		if p.StackOptionalParameterID == parameter {
+			return p.Value, nil
+		}
+	}
+
+	for _, p := range stack.OptionalParameters {
+		if p.Name == parameter {
+			return p.DefaultValue, nil
+		}
+	}
+
+	return "", errors.New("parameter not found: " + parameter)
 }

@@ -65,9 +65,39 @@ type ListDatabasesOK struct {
 	Payload []*models.GroupsWithDatabases
 }
 
+// IsSuccess returns true when this list databases o k response has a 2xx status code
+func (o *ListDatabasesOK) IsSuccess() bool {
+	return true
+}
+
+// IsRedirect returns true when this list databases o k response has a 3xx status code
+func (o *ListDatabasesOK) IsRedirect() bool {
+	return false
+}
+
+// IsClientError returns true when this list databases o k response has a 4xx status code
+func (o *ListDatabasesOK) IsClientError() bool {
+	return false
+}
+
+// IsServerError returns true when this list databases o k response has a 5xx status code
+func (o *ListDatabasesOK) IsServerError() bool {
+	return false
+}
+
+// IsCode returns true when this list databases o k response a status code equal to that given
+func (o *ListDatabasesOK) IsCode(code int) bool {
+	return code == 200
+}
+
 func (o *ListDatabasesOK) Error() string {
 	return fmt.Sprintf("[GET /databases][%d] listDatabasesOK  %+v", 200, o.Payload)
 }
+
+func (o *ListDatabasesOK) String() string {
+	return fmt.Sprintf("[GET /databases][%d] listDatabasesOK  %+v", 200, o.Payload)
+}
+
 func (o *ListDatabasesOK) GetPayload() []*models.GroupsWithDatabases {
 	return o.Payload
 }
@@ -94,7 +124,36 @@ ListDatabasesUnauthorized list databases unauthorized
 type ListDatabasesUnauthorized struct {
 }
 
+// IsSuccess returns true when this list databases unauthorized response has a 2xx status code
+func (o *ListDatabasesUnauthorized) IsSuccess() bool {
+	return false
+}
+
+// IsRedirect returns true when this list databases unauthorized response has a 3xx status code
+func (o *ListDatabasesUnauthorized) IsRedirect() bool {
+	return false
+}
+
+// IsClientError returns true when this list databases unauthorized response has a 4xx status code
+func (o *ListDatabasesUnauthorized) IsClientError() bool {
+	return true
+}
+
+// IsServerError returns true when this list databases unauthorized response has a 5xx status code
+func (o *ListDatabasesUnauthorized) IsServerError() bool {
+	return false
+}
+
+// IsCode returns true when this list databases unauthorized response a status code equal to that given
+func (o *ListDatabasesUnauthorized) IsCode(code int) bool {
+	return code == 401
+}
+
 func (o *ListDatabasesUnauthorized) Error() string {
+	return fmt.Sprintf("[GET /databases][%d] listDatabasesUnauthorized ", 401)
+}
+
+func (o *ListDatabasesUnauthorized) String() string {
 	return fmt.Sprintf("[GET /databases][%d] listDatabasesUnauthorized ", 401)
 }
 
@@ -115,7 +174,36 @@ ListDatabasesForbidden list databases forbidden
 type ListDatabasesForbidden struct {
 }
 
+// IsSuccess returns true when this list databases forbidden response has a 2xx status code
+func (o *ListDatabasesForbidden) IsSuccess() bool {
+	return false
+}
+
+// IsRedirect returns true when this list databases forbidden response has a 3xx status code
+func (o *ListDatabasesForbidden) IsRedirect() bool {
+	return false
+}
+
+// IsClientError returns true when this list databases forbidden response has a 4xx status code
+func (o *ListDatabasesForbidden) IsClientError() bool {
+	return true
+}
+
+// IsServerError returns true when this list databases forbidden response has a 5xx status code
+func (o *ListDatabasesForbidden) IsServerError() bool {
+	return false
+}
+
+// IsCode returns true when this list databases forbidden response a status code equal to that given
+func (o *ListDatabasesForbidden) IsCode(code int) bool {
+	return code == 403
+}
+
 func (o *ListDatabasesForbidden) Error() string {
+	return fmt.Sprintf("[GET /databases][%d] listDatabasesForbidden ", 403)
+}
+
+func (o *ListDatabasesForbidden) String() string {
 	return fmt.Sprintf("[GET /databases][%d] listDatabasesForbidden ", 403)
 }
 
@@ -136,7 +224,36 @@ ListDatabasesUnsupportedMediaType list databases unsupported media type
 type ListDatabasesUnsupportedMediaType struct {
 }
 
+// IsSuccess returns true when this list databases unsupported media type response has a 2xx status code
+func (o *ListDatabasesUnsupportedMediaType) IsSuccess() bool {
+	return false
+}
+
+// IsRedirect returns true when this list databases unsupported media type response has a 3xx status code
+func (o *ListDatabasesUnsupportedMediaType) IsRedirect() bool {
+	return false
+}
+
+// IsClientError returns true when this list databases unsupported media type response has a 4xx status code
+func (o *ListDatabasesUnsupportedMediaType) IsClientError() bool {
+	return true
+}
+
+// IsServerError returns true when this list databases unsupported media type response has a 5xx status code
+func (o *ListDatabasesUnsupportedMediaType) IsServerError() bool {
+	return false
+}
+
+// IsCode returns true when this list databases unsupported media type response a status code equal to that given
+func (o *ListDatabasesUnsupportedMediaType) IsCode(code int) bool {
+	return code == 415
+}
+
 func (o *ListDatabasesUnsupportedMediaType) Error() string {
+	return fmt.Sprintf("[GET /databases][%d] listDatabasesUnsupportedMediaType ", 415)
+}
+
+func (o *ListDatabasesUnsupportedMediaType) String() string {
 	return fmt.Sprintf("[GET /databases][%d] listDatabasesUnsupportedMediaType ", 415)
 }
 

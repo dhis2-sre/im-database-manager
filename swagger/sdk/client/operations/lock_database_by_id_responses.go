@@ -77,9 +77,39 @@ type LockDatabaseByIDOK struct {
 	Payload *models.Lock
 }
 
+// IsSuccess returns true when this lock database by Id o k response has a 2xx status code
+func (o *LockDatabaseByIDOK) IsSuccess() bool {
+	return true
+}
+
+// IsRedirect returns true when this lock database by Id o k response has a 3xx status code
+func (o *LockDatabaseByIDOK) IsRedirect() bool {
+	return false
+}
+
+// IsClientError returns true when this lock database by Id o k response has a 4xx status code
+func (o *LockDatabaseByIDOK) IsClientError() bool {
+	return false
+}
+
+// IsServerError returns true when this lock database by Id o k response has a 5xx status code
+func (o *LockDatabaseByIDOK) IsServerError() bool {
+	return false
+}
+
+// IsCode returns true when this lock database by Id o k response a status code equal to that given
+func (o *LockDatabaseByIDOK) IsCode(code int) bool {
+	return code == 200
+}
+
 func (o *LockDatabaseByIDOK) Error() string {
 	return fmt.Sprintf("[POST /databases/{id}/lock][%d] lockDatabaseByIdOK  %+v", 200, o.Payload)
 }
+
+func (o *LockDatabaseByIDOK) String() string {
+	return fmt.Sprintf("[POST /databases/{id}/lock][%d] lockDatabaseByIdOK  %+v", 200, o.Payload)
+}
+
 func (o *LockDatabaseByIDOK) GetPayload() *models.Lock {
 	return o.Payload
 }
@@ -108,7 +138,36 @@ LockDatabaseByIDUnauthorized lock database by Id unauthorized
 type LockDatabaseByIDUnauthorized struct {
 }
 
+// IsSuccess returns true when this lock database by Id unauthorized response has a 2xx status code
+func (o *LockDatabaseByIDUnauthorized) IsSuccess() bool {
+	return false
+}
+
+// IsRedirect returns true when this lock database by Id unauthorized response has a 3xx status code
+func (o *LockDatabaseByIDUnauthorized) IsRedirect() bool {
+	return false
+}
+
+// IsClientError returns true when this lock database by Id unauthorized response has a 4xx status code
+func (o *LockDatabaseByIDUnauthorized) IsClientError() bool {
+	return true
+}
+
+// IsServerError returns true when this lock database by Id unauthorized response has a 5xx status code
+func (o *LockDatabaseByIDUnauthorized) IsServerError() bool {
+	return false
+}
+
+// IsCode returns true when this lock database by Id unauthorized response a status code equal to that given
+func (o *LockDatabaseByIDUnauthorized) IsCode(code int) bool {
+	return code == 401
+}
+
 func (o *LockDatabaseByIDUnauthorized) Error() string {
+	return fmt.Sprintf("[POST /databases/{id}/lock][%d] lockDatabaseByIdUnauthorized ", 401)
+}
+
+func (o *LockDatabaseByIDUnauthorized) String() string {
 	return fmt.Sprintf("[POST /databases/{id}/lock][%d] lockDatabaseByIdUnauthorized ", 401)
 }
 
@@ -129,7 +188,36 @@ LockDatabaseByIDForbidden lock database by Id forbidden
 type LockDatabaseByIDForbidden struct {
 }
 
+// IsSuccess returns true when this lock database by Id forbidden response has a 2xx status code
+func (o *LockDatabaseByIDForbidden) IsSuccess() bool {
+	return false
+}
+
+// IsRedirect returns true when this lock database by Id forbidden response has a 3xx status code
+func (o *LockDatabaseByIDForbidden) IsRedirect() bool {
+	return false
+}
+
+// IsClientError returns true when this lock database by Id forbidden response has a 4xx status code
+func (o *LockDatabaseByIDForbidden) IsClientError() bool {
+	return true
+}
+
+// IsServerError returns true when this lock database by Id forbidden response has a 5xx status code
+func (o *LockDatabaseByIDForbidden) IsServerError() bool {
+	return false
+}
+
+// IsCode returns true when this lock database by Id forbidden response a status code equal to that given
+func (o *LockDatabaseByIDForbidden) IsCode(code int) bool {
+	return code == 403
+}
+
 func (o *LockDatabaseByIDForbidden) Error() string {
+	return fmt.Sprintf("[POST /databases/{id}/lock][%d] lockDatabaseByIdForbidden ", 403)
+}
+
+func (o *LockDatabaseByIDForbidden) String() string {
 	return fmt.Sprintf("[POST /databases/{id}/lock][%d] lockDatabaseByIdForbidden ", 403)
 }
 
@@ -150,7 +238,36 @@ LockDatabaseByIDNotFound lock database by Id not found
 type LockDatabaseByIDNotFound struct {
 }
 
+// IsSuccess returns true when this lock database by Id not found response has a 2xx status code
+func (o *LockDatabaseByIDNotFound) IsSuccess() bool {
+	return false
+}
+
+// IsRedirect returns true when this lock database by Id not found response has a 3xx status code
+func (o *LockDatabaseByIDNotFound) IsRedirect() bool {
+	return false
+}
+
+// IsClientError returns true when this lock database by Id not found response has a 4xx status code
+func (o *LockDatabaseByIDNotFound) IsClientError() bool {
+	return true
+}
+
+// IsServerError returns true when this lock database by Id not found response has a 5xx status code
+func (o *LockDatabaseByIDNotFound) IsServerError() bool {
+	return false
+}
+
+// IsCode returns true when this lock database by Id not found response a status code equal to that given
+func (o *LockDatabaseByIDNotFound) IsCode(code int) bool {
+	return code == 404
+}
+
 func (o *LockDatabaseByIDNotFound) Error() string {
+	return fmt.Sprintf("[POST /databases/{id}/lock][%d] lockDatabaseByIdNotFound ", 404)
+}
+
+func (o *LockDatabaseByIDNotFound) String() string {
 	return fmt.Sprintf("[POST /databases/{id}/lock][%d] lockDatabaseByIdNotFound ", 404)
 }
 
@@ -171,7 +288,36 @@ LockDatabaseByIDConflict lock database by Id conflict
 type LockDatabaseByIDConflict struct {
 }
 
+// IsSuccess returns true when this lock database by Id conflict response has a 2xx status code
+func (o *LockDatabaseByIDConflict) IsSuccess() bool {
+	return false
+}
+
+// IsRedirect returns true when this lock database by Id conflict response has a 3xx status code
+func (o *LockDatabaseByIDConflict) IsRedirect() bool {
+	return false
+}
+
+// IsClientError returns true when this lock database by Id conflict response has a 4xx status code
+func (o *LockDatabaseByIDConflict) IsClientError() bool {
+	return true
+}
+
+// IsServerError returns true when this lock database by Id conflict response has a 5xx status code
+func (o *LockDatabaseByIDConflict) IsServerError() bool {
+	return false
+}
+
+// IsCode returns true when this lock database by Id conflict response a status code equal to that given
+func (o *LockDatabaseByIDConflict) IsCode(code int) bool {
+	return code == 409
+}
+
 func (o *LockDatabaseByIDConflict) Error() string {
+	return fmt.Sprintf("[POST /databases/{id}/lock][%d] lockDatabaseByIdConflict ", 409)
+}
+
+func (o *LockDatabaseByIDConflict) String() string {
 	return fmt.Sprintf("[POST /databases/{id}/lock][%d] lockDatabaseByIdConflict ", 409)
 }
 
@@ -192,7 +338,36 @@ LockDatabaseByIDUnsupportedMediaType lock database by Id unsupported media type
 type LockDatabaseByIDUnsupportedMediaType struct {
 }
 
+// IsSuccess returns true when this lock database by Id unsupported media type response has a 2xx status code
+func (o *LockDatabaseByIDUnsupportedMediaType) IsSuccess() bool {
+	return false
+}
+
+// IsRedirect returns true when this lock database by Id unsupported media type response has a 3xx status code
+func (o *LockDatabaseByIDUnsupportedMediaType) IsRedirect() bool {
+	return false
+}
+
+// IsClientError returns true when this lock database by Id unsupported media type response has a 4xx status code
+func (o *LockDatabaseByIDUnsupportedMediaType) IsClientError() bool {
+	return true
+}
+
+// IsServerError returns true when this lock database by Id unsupported media type response has a 5xx status code
+func (o *LockDatabaseByIDUnsupportedMediaType) IsServerError() bool {
+	return false
+}
+
+// IsCode returns true when this lock database by Id unsupported media type response a status code equal to that given
+func (o *LockDatabaseByIDUnsupportedMediaType) IsCode(code int) bool {
+	return code == 415
+}
+
 func (o *LockDatabaseByIDUnsupportedMediaType) Error() string {
+	return fmt.Sprintf("[POST /databases/{id}/lock][%d] lockDatabaseByIdUnsupportedMediaType ", 415)
+}
+
+func (o *LockDatabaseByIDUnsupportedMediaType) String() string {
 	return fmt.Sprintf("[POST /databases/{id}/lock][%d] lockDatabaseByIdUnsupportedMediaType ", 415)
 }
 

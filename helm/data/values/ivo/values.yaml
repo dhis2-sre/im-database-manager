@@ -10,6 +10,10 @@ userService:
   host: im-user-ivo.instance-manager-ivo.svc:8080
   basePath: /
 
+instanceService:
+  host: im-manager-ivo.instance-manager-ivo.svc:8080
+  basePath: /
+
 jobService:
   host: im-job-ivo.instance-manager-ivo.svc:8080
   basePath: /

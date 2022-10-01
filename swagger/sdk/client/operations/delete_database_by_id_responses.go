@@ -67,7 +67,36 @@ DeleteDatabaseByIDAccepted delete database by Id accepted
 type DeleteDatabaseByIDAccepted struct {
 }
 
+// IsSuccess returns true when this delete database by Id accepted response has a 2xx status code
+func (o *DeleteDatabaseByIDAccepted) IsSuccess() bool {
+	return true
+}
+
+// IsRedirect returns true when this delete database by Id accepted response has a 3xx status code
+func (o *DeleteDatabaseByIDAccepted) IsRedirect() bool {
+	return false
+}
+
+// IsClientError returns true when this delete database by Id accepted response has a 4xx status code
+func (o *DeleteDatabaseByIDAccepted) IsClientError() bool {
+	return false
+}
+
+// IsServerError returns true when this delete database by Id accepted response has a 5xx status code
+func (o *DeleteDatabaseByIDAccepted) IsServerError() bool {
+	return false
+}
+
+// IsCode returns true when this delete database by Id accepted response a status code equal to that given
+func (o *DeleteDatabaseByIDAccepted) IsCode(code int) bool {
+	return code == 202
+}
+
 func (o *DeleteDatabaseByIDAccepted) Error() string {
+	return fmt.Sprintf("[DELETE /databases/{id}][%d] deleteDatabaseByIdAccepted ", 202)
+}
+
+func (o *DeleteDatabaseByIDAccepted) String() string {
 	return fmt.Sprintf("[DELETE /databases/{id}][%d] deleteDatabaseByIdAccepted ", 202)
 }
 
@@ -88,7 +117,36 @@ DeleteDatabaseByIDUnauthorized delete database by Id unauthorized
 type DeleteDatabaseByIDUnauthorized struct {
 }
 
+// IsSuccess returns true when this delete database by Id unauthorized response has a 2xx status code
+func (o *DeleteDatabaseByIDUnauthorized) IsSuccess() bool {
+	return false
+}
+
+// IsRedirect returns true when this delete database by Id unauthorized response has a 3xx status code
+func (o *DeleteDatabaseByIDUnauthorized) IsRedirect() bool {
+	return false
+}
+
+// IsClientError returns true when this delete database by Id unauthorized response has a 4xx status code
+func (o *DeleteDatabaseByIDUnauthorized) IsClientError() bool {
+	return true
+}
+
+// IsServerError returns true when this delete database by Id unauthorized response has a 5xx status code
+func (o *DeleteDatabaseByIDUnauthorized) IsServerError() bool {
+	return false
+}
+
+// IsCode returns true when this delete database by Id unauthorized response a status code equal to that given
+func (o *DeleteDatabaseByIDUnauthorized) IsCode(code int) bool {
+	return code == 401
+}
+
 func (o *DeleteDatabaseByIDUnauthorized) Error() string {
+	return fmt.Sprintf("[DELETE /databases/{id}][%d] deleteDatabaseByIdUnauthorized ", 401)
+}
+
+func (o *DeleteDatabaseByIDUnauthorized) String() string {
 	return fmt.Sprintf("[DELETE /databases/{id}][%d] deleteDatabaseByIdUnauthorized ", 401)
 }
 
@@ -109,7 +167,36 @@ DeleteDatabaseByIDForbidden delete database by Id forbidden
 type DeleteDatabaseByIDForbidden struct {
 }
 
+// IsSuccess returns true when this delete database by Id forbidden response has a 2xx status code
+func (o *DeleteDatabaseByIDForbidden) IsSuccess() bool {
+	return false
+}
+
+// IsRedirect returns true when this delete database by Id forbidden response has a 3xx status code
+func (o *DeleteDatabaseByIDForbidden) IsRedirect() bool {
+	return false
+}
+
+// IsClientError returns true when this delete database by Id forbidden response has a 4xx status code
+func (o *DeleteDatabaseByIDForbidden) IsClientError() bool {
+	return true
+}
+
+// IsServerError returns true when this delete database by Id forbidden response has a 5xx status code
+func (o *DeleteDatabaseByIDForbidden) IsServerError() bool {
+	return false
+}
+
+// IsCode returns true when this delete database by Id forbidden response a status code equal to that given
+func (o *DeleteDatabaseByIDForbidden) IsCode(code int) bool {
+	return code == 403
+}
+
 func (o *DeleteDatabaseByIDForbidden) Error() string {
+	return fmt.Sprintf("[DELETE /databases/{id}][%d] deleteDatabaseByIdForbidden ", 403)
+}
+
+func (o *DeleteDatabaseByIDForbidden) String() string {
 	return fmt.Sprintf("[DELETE /databases/{id}][%d] deleteDatabaseByIdForbidden ", 403)
 }
 
@@ -130,7 +217,36 @@ DeleteDatabaseByIDNotFound delete database by Id not found
 type DeleteDatabaseByIDNotFound struct {
 }
 
+// IsSuccess returns true when this delete database by Id not found response has a 2xx status code
+func (o *DeleteDatabaseByIDNotFound) IsSuccess() bool {
+	return false
+}
+
+// IsRedirect returns true when this delete database by Id not found response has a 3xx status code
+func (o *DeleteDatabaseByIDNotFound) IsRedirect() bool {
+	return false
+}
+
+// IsClientError returns true when this delete database by Id not found response has a 4xx status code
+func (o *DeleteDatabaseByIDNotFound) IsClientError() bool {
+	return true
+}
+
+// IsServerError returns true when this delete database by Id not found response has a 5xx status code
+func (o *DeleteDatabaseByIDNotFound) IsServerError() bool {
+	return false
+}
+
+// IsCode returns true when this delete database by Id not found response a status code equal to that given
+func (o *DeleteDatabaseByIDNotFound) IsCode(code int) bool {
+	return code == 404
+}
+
 func (o *DeleteDatabaseByIDNotFound) Error() string {
+	return fmt.Sprintf("[DELETE /databases/{id}][%d] deleteDatabaseByIdNotFound ", 404)
+}
+
+func (o *DeleteDatabaseByIDNotFound) String() string {
 	return fmt.Sprintf("[DELETE /databases/{id}][%d] deleteDatabaseByIdNotFound ", 404)
 }
 
@@ -151,7 +267,36 @@ DeleteDatabaseByIDUnsupportedMediaType delete database by Id unsupported media t
 type DeleteDatabaseByIDUnsupportedMediaType struct {
 }
 
+// IsSuccess returns true when this delete database by Id unsupported media type response has a 2xx status code
+func (o *DeleteDatabaseByIDUnsupportedMediaType) IsSuccess() bool {
+	return false
+}
+
+// IsRedirect returns true when this delete database by Id unsupported media type response has a 3xx status code
+func (o *DeleteDatabaseByIDUnsupportedMediaType) IsRedirect() bool {
+	return false
+}
+
+// IsClientError returns true when this delete database by Id unsupported media type response has a 4xx status code
+func (o *DeleteDatabaseByIDUnsupportedMediaType) IsClientError() bool {
+	return true
+}
+
+// IsServerError returns true when this delete database by Id unsupported media type response has a 5xx status code
+func (o *DeleteDatabaseByIDUnsupportedMediaType) IsServerError() bool {
+	return false
+}
+
+// IsCode returns true when this delete database by Id unsupported media type response a status code equal to that given
+func (o *DeleteDatabaseByIDUnsupportedMediaType) IsCode(code int) bool {
+	return code == 415
+}
+
 func (o *DeleteDatabaseByIDUnsupportedMediaType) Error() string {
+	return fmt.Sprintf("[DELETE /databases/{id}][%d] deleteDatabaseByIdUnsupportedMediaType ", 415)
+}
+
+func (o *DeleteDatabaseByIDUnsupportedMediaType) String() string {
 	return fmt.Sprintf("[DELETE /databases/{id}][%d] deleteDatabaseByIdUnsupportedMediaType ", 415)
 }
 

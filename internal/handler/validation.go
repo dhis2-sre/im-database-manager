@@ -2,9 +2,10 @@ package handler
 
 import (
 	"fmt"
+	"strings"
+
 	"github.com/gin-gonic/gin/binding"
 	"github.com/go-playground/validator/v10"
-	"strings"
 )
 
 func oneOf(fl validator.FieldLevel) bool {

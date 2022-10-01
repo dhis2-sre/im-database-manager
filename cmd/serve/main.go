@@ -27,6 +27,8 @@ package main
 
 import (
 	"fmt"
+	"os"
+
 	"github.com/dhis2-sre/im-database-manager/internal/handler"
 	"github.com/dhis2-sre/im-database-manager/internal/server"
 	"github.com/dhis2-sre/im-database-manager/pkg/config"
@@ -35,7 +37,6 @@ import (
 	jobClient "github.com/dhis2-sre/im-job/pkg/client"
 	instanceClient "github.com/dhis2-sre/im-manager/pkg/client"
 	userClient "github.com/dhis2-sre/im-user/pkg/client"
-	"os"
 )
 
 func main() {

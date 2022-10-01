@@ -7,31 +7,37 @@ import (
 	"strconv"
 	"time"
 
-	"github.com/google/uuid"
-
-	"github.com/dhis2-sre/im-database-manager/pkg/model"
-
 	"github.com/dhis2-sre/im-database-manager/internal/apperror"
 	"github.com/dhis2-sre/im-database-manager/internal/handler"
-	"github.com/dhis2-sre/im-user/swagger/sdk/models"
+	"github.com/dhis2-sre/im-database-manager/pkg/model"
+	instanceModels "github.com/dhis2-sre/im-manager/swagger/sdk/models"
+	userModels "github.com/dhis2-sre/im-user/swagger/sdk/models"
 	"github.com/gin-gonic/gin"
+	"github.com/google/uuid"
 )
 
 type Handler struct {
 	userClient      userClientHandler
+	instanceClient  instanceClientHandler
 	databaseService Service
 }
 
-func New(userClient userClientHandler, databaseService Service) Handler {
+func New(userClient userClientHandler, databaseService Service, instanceClient instanceClientHandler) Handler {
 	return Handler{
 		userClient,
+		instanceClient,
 		databaseService,
 	}
 }
 
 type userClientHandler interface {
-	FindGroupByName(token string, name string) (*models.Group, error)
-	FindUserById(token string, id uint) (*models.User, error)
+	FindGroupByName(token string, name string) (*userModels.Group, error)
+	FindUserById(token string, id uint) (*userModels.User, error)
+}
+
+type instanceClientHandler interface {
+	FindByIdDecrypted(token string, id uint) (*instanceModels.Instance, error)
+	FindStack(token string, name string) (*instanceModels.Stack, error)
 }
 
 type UploadDatabaseRequest struct {
@@ -104,6 +110,96 @@ func (h Handler) Upload(c *gin.Context) {
 	}(file)
 
 	save, err := h.databaseService.Upload(d, group, file)
+	if err != nil {
+		_ = c.Error(err)
+		return
+	}
+
+	c.JSON(http.StatusCreated, save)
+}
+
+type saveAsRequest struct {
+	// TODO: Add InstanceId here rather than as path param?
+	//	InstanceId uint   `json:"instanceId" binding:"required"`
+	Name string `json:"name" binding:"required"`
+	// TODO: Allow saving to another group, remember to ensure user is member of the other group
+	//	Group  string `json:"group"`
+	Format string `json:"format" binding:"required,oneOf=plain custom"`
+}
+
+// SaveAs database
+// swagger:route POST /databases/save-as/{instanceId} saveAsDatabase
+//
+// SaveAs database
+//
+// Security:
+//   oauth2:
+//
+// responses:
+//   201: Database
+//   401: Error
+//   403: Error
+//   404: Error
+//   415: Error
+func (h Handler) SaveAs(c *gin.Context) {
+	var request saveAsRequest
+	if err := handler.DataBinder(c, &request); err != nil {
+		_ = c.Error(err)
+		return
+	}
+
+	token, err := handler.GetTokenFromHttpAuthHeader(c)
+	if err != nil {
+		_ = c.Error(err)
+		return
+	}
+
+	instanceIdParam := c.Param("instanceId")
+	instanceId, err := strconv.ParseUint(instanceIdParam, 10, 64)
+	if err != nil {
+		badRequest := apperror.NewBadRequest("error parsing instanceId")
+		_ = c.Error(badRequest)
+		return
+	}
+
+	instance, err := h.instanceClient.FindByIdDecrypted(token, uint(instanceId))
+	if err != nil {
+		_ = c.Error(err)
+		return
+	}
+
+	stack, err := h.instanceClient.FindStack(token, instance.StackName)
+	if err != nil {
+		_ = c.Error(err)
+		return
+	}
+
+	databaseIdString, err := findParameter("DATABASE_ID", instance, stack)
+	if err != nil {
+		_ = c.Error(err)
+		return
+	}
+
+	databaseId, err := strconv.ParseUint(databaseIdString, 10, 64)
+	if err != nil {
+		badRequest := apperror.NewBadRequest("error parsing databaseId")
+		_ = c.Error(badRequest)
+		return
+	}
+
+	database, err := h.databaseService.FindById(uint(databaseId))
+	if err != nil {
+		_ = c.Error(err)
+		return
+	}
+
+	err = h.canAccess(c, database)
+	if err != nil {
+		_ = c.Error(err)
+		return
+	}
+
+	save, err := h.databaseService.SaveAs(token, database, instance, stack, request.Name, request.Format)
 	if err != nil {
 		_ = c.Error(err)
 		return
@@ -463,7 +559,7 @@ func (h Handler) List(c *gin.Context) {
 	c.JSON(http.StatusOK, h.groupsWithDatabases(user.Groups, d))
 }
 
-func (h Handler) groupsWithDatabases(groups []*models.Group, databases []*model.Database) []GroupsWithDatabases {
+func (h Handler) groupsWithDatabases(groups []*userModels.Group, databases []*model.Database) []GroupsWithDatabases {
 	groupsWithDatabases := make([]GroupsWithDatabases, len(groups))
 	for i, group := range groups {
 		groupsWithDatabases[i].Name = group.Name

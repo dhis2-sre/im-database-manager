@@ -67,7 +67,36 @@ UnlockDatabaseByIDAccepted unlock database by Id accepted
 type UnlockDatabaseByIDAccepted struct {
 }
 
+// IsSuccess returns true when this unlock database by Id accepted response has a 2xx status code
+func (o *UnlockDatabaseByIDAccepted) IsSuccess() bool {
+	return true
+}
+
+// IsRedirect returns true when this unlock database by Id accepted response has a 3xx status code
+func (o *UnlockDatabaseByIDAccepted) IsRedirect() bool {
+	return false
+}
+
+// IsClientError returns true when this unlock database by Id accepted response has a 4xx status code
+func (o *UnlockDatabaseByIDAccepted) IsClientError() bool {
+	return false
+}
+
+// IsServerError returns true when this unlock database by Id accepted response has a 5xx status code
+func (o *UnlockDatabaseByIDAccepted) IsServerError() bool {
+	return false
+}
+
+// IsCode returns true when this unlock database by Id accepted response a status code equal to that given
+func (o *UnlockDatabaseByIDAccepted) IsCode(code int) bool {
+	return code == 202
+}
+
 func (o *UnlockDatabaseByIDAccepted) Error() string {
+	return fmt.Sprintf("[DELETE /databases/{id}/lock][%d] unlockDatabaseByIdAccepted ", 202)
+}
+
+func (o *UnlockDatabaseByIDAccepted) String() string {
 	return fmt.Sprintf("[DELETE /databases/{id}/lock][%d] unlockDatabaseByIdAccepted ", 202)
 }
 
@@ -88,7 +117,36 @@ UnlockDatabaseByIDUnauthorized unlock database by Id unauthorized
 type UnlockDatabaseByIDUnauthorized struct {
 }
 
+// IsSuccess returns true when this unlock database by Id unauthorized response has a 2xx status code
+func (o *UnlockDatabaseByIDUnauthorized) IsSuccess() bool {
+	return false
+}
+
+// IsRedirect returns true when this unlock database by Id unauthorized response has a 3xx status code
+func (o *UnlockDatabaseByIDUnauthorized) IsRedirect() bool {
+	return false
+}
+
+// IsClientError returns true when this unlock database by Id unauthorized response has a 4xx status code
+func (o *UnlockDatabaseByIDUnauthorized) IsClientError() bool {
+	return true
+}
+
+// IsServerError returns true when this unlock database by Id unauthorized response has a 5xx status code
+func (o *UnlockDatabaseByIDUnauthorized) IsServerError() bool {
+	return false
+}
+
+// IsCode returns true when this unlock database by Id unauthorized response a status code equal to that given
+func (o *UnlockDatabaseByIDUnauthorized) IsCode(code int) bool {
+	return code == 401
+}
+
 func (o *UnlockDatabaseByIDUnauthorized) Error() string {
+	return fmt.Sprintf("[DELETE /databases/{id}/lock][%d] unlockDatabaseByIdUnauthorized ", 401)
+}
+
+func (o *UnlockDatabaseByIDUnauthorized) String() string {
 	return fmt.Sprintf("[DELETE /databases/{id}/lock][%d] unlockDatabaseByIdUnauthorized ", 401)
 }
 
@@ -109,7 +167,36 @@ UnlockDatabaseByIDForbidden unlock database by Id forbidden
 type UnlockDatabaseByIDForbidden struct {
 }
 
+// IsSuccess returns true when this unlock database by Id forbidden response has a 2xx status code
+func (o *UnlockDatabaseByIDForbidden) IsSuccess() bool {
+	return false
+}
+
+// IsRedirect returns true when this unlock database by Id forbidden response has a 3xx status code
+func (o *UnlockDatabaseByIDForbidden) IsRedirect() bool {
+	return false
+}
+
+// IsClientError returns true when this unlock database by Id forbidden response has a 4xx status code
+func (o *UnlockDatabaseByIDForbidden) IsClientError() bool {
+	return true
+}
+
+// IsServerError returns true when this unlock database by Id forbidden response has a 5xx status code
+func (o *UnlockDatabaseByIDForbidden) IsServerError() bool {
+	return false
+}
+
+// IsCode returns true when this unlock database by Id forbidden response a status code equal to that given
+func (o *UnlockDatabaseByIDForbidden) IsCode(code int) bool {
+	return code == 403
+}
+
 func (o *UnlockDatabaseByIDForbidden) Error() string {
+	return fmt.Sprintf("[DELETE /databases/{id}/lock][%d] unlockDatabaseByIdForbidden ", 403)
+}
+
+func (o *UnlockDatabaseByIDForbidden) String() string {
 	return fmt.Sprintf("[DELETE /databases/{id}/lock][%d] unlockDatabaseByIdForbidden ", 403)
 }
 
@@ -130,7 +217,36 @@ UnlockDatabaseByIDNotFound unlock database by Id not found
 type UnlockDatabaseByIDNotFound struct {
 }
 
+// IsSuccess returns true when this unlock database by Id not found response has a 2xx status code
+func (o *UnlockDatabaseByIDNotFound) IsSuccess() bool {
+	return false
+}
+
+// IsRedirect returns true when this unlock database by Id not found response has a 3xx status code
+func (o *UnlockDatabaseByIDNotFound) IsRedirect() bool {
+	return false
+}
+
+// IsClientError returns true when this unlock database by Id not found response has a 4xx status code
+func (o *UnlockDatabaseByIDNotFound) IsClientError() bool {
+	return true
+}
+
+// IsServerError returns true when this unlock database by Id not found response has a 5xx status code
+func (o *UnlockDatabaseByIDNotFound) IsServerError() bool {
+	return false
+}
+
+// IsCode returns true when this unlock database by Id not found response a status code equal to that given
+func (o *UnlockDatabaseByIDNotFound) IsCode(code int) bool {
+	return code == 404
+}
+
 func (o *UnlockDatabaseByIDNotFound) Error() string {
+	return fmt.Sprintf("[DELETE /databases/{id}/lock][%d] unlockDatabaseByIdNotFound ", 404)
+}
+
+func (o *UnlockDatabaseByIDNotFound) String() string {
 	return fmt.Sprintf("[DELETE /databases/{id}/lock][%d] unlockDatabaseByIdNotFound ", 404)
 }
 
@@ -151,7 +267,36 @@ UnlockDatabaseByIDUnsupportedMediaType unlock database by Id unsupported media t
 type UnlockDatabaseByIDUnsupportedMediaType struct {
 }
 
+// IsSuccess returns true when this unlock database by Id unsupported media type response has a 2xx status code
+func (o *UnlockDatabaseByIDUnsupportedMediaType) IsSuccess() bool {
+	return false
+}
+
+// IsRedirect returns true when this unlock database by Id unsupported media type response has a 3xx status code
+func (o *UnlockDatabaseByIDUnsupportedMediaType) IsRedirect() bool {
+	return false
+}
+
+// IsClientError returns true when this unlock database by Id unsupported media type response has a 4xx status code
+func (o *UnlockDatabaseByIDUnsupportedMediaType) IsClientError() bool {
+	return true
+}
+
+// IsServerError returns true when this unlock database by Id unsupported media type response has a 5xx status code
+func (o *UnlockDatabaseByIDUnsupportedMediaType) IsServerError() bool {
+	return false
+}
+
+// IsCode returns true when this unlock database by Id unsupported media type response a status code equal to that given
+func (o *UnlockDatabaseByIDUnsupportedMediaType) IsCode(code int) bool {
+	return code == 415
+}
+
 func (o *UnlockDatabaseByIDUnsupportedMediaType) Error() string {
+	return fmt.Sprintf("[DELETE /databases/{id}/lock][%d] unlockDatabaseByIdUnsupportedMediaType ", 415)
+}
+
+func (o *UnlockDatabaseByIDUnsupportedMediaType) String() string {
 	return fmt.Sprintf("[DELETE /databases/{id}/lock][%d] unlockDatabaseByIdUnsupportedMediaType ", 415)
 }
 

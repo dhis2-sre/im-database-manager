@@ -5,9 +5,10 @@ import (
 	"errors"
 	"strconv"
 
-	"github.com/dhis2-sre/im-database-manager/internal/apperror"
 	"github.com/dhis2-sre/im-database-manager/swagger/sdk/client/operations"
 	"github.com/dhis2-sre/im-database-manager/swagger/sdk/models"
+
+	"github.com/dhis2-sre/im-database-manager/internal/apperror"
 	httptransport "github.com/go-openapi/runtime/client"
 	"github.com/go-openapi/strfmt"
 )

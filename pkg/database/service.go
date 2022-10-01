@@ -189,9 +189,11 @@ func (s service) Delete(id uint) error {
 	}
 
 	key := strings.TrimPrefix(u.Path, "/")
-	err = s.s3Client.Delete(s.c.Bucket, key)
-	if err != nil {
-		return err
+	if key != "" {
+		err = s.s3Client.Delete(s.c.Bucket, key)
+		if err != nil {
+			return err
+		}
 	}
 
 	return s.repository.Delete(id)

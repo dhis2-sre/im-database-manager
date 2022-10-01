@@ -250,13 +250,13 @@ func (s service) SaveAs(token string, database *model.Database, instance *instan
 		return nil, err
 	}
 
-	d := &model.Database{
+	newDatabase := &model.Database{
 		Name: newName,
 		// TODO: For now, only saving to the same group is supported
 		GroupName: instance.GroupName,
 	}
 
-	err = s.repository.Save(d)
+	err = s.repository.Save(newDatabase)
 	if err != nil {
 		return nil, err
 	}
@@ -332,14 +332,14 @@ func (s service) SaveAs(token string, database *model.Database, instance *instan
 			defer removeTempFile(file)
 		}
 
-		_, err = s.Upload(d, group, file)
+		_, err = s.Upload(newDatabase, group, file)
 		if err != nil {
 			logError(err)
 			return
 		}
 	}()
 
-	return d, nil
+	return newDatabase, nil
 }
 
 func logError(err error) {

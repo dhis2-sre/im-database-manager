@@ -27,11 +27,6 @@ package main
 
 import (
 	"fmt"
-	"github.com/gin-gonic/gin/binding"
-	"github.com/go-playground/validator/v10"
-	"os"
-	"strings"
-
 	"github.com/dhis2-sre/im-database-manager/internal/handler"
 	"github.com/dhis2-sre/im-database-manager/internal/server"
 	"github.com/dhis2-sre/im-database-manager/pkg/config"
@@ -40,6 +35,7 @@ import (
 	jobClient "github.com/dhis2-sre/im-job/pkg/client"
 	instanceClient "github.com/dhis2-sre/im-manager/pkg/client"
 	userClient "github.com/dhis2-sre/im-user/pkg/client"
+	"os"
 )
 
 func main() {
@@ -79,28 +75,11 @@ func run() error {
 		return err
 	}
 
-	err = registerValidation()
+	err = handler.RegisterValidation()
 	if err != nil {
 		return err
 	}
 
 	r := server.GetEngine(cfg.BasePath, dbHandler, authMiddleware)
 	return r.Run()
-}
-
-// Inspiration: https://blog.logrocket.com/gin-binding-in-go-a-tutorial-with-examples/
-func registerValidation() error {
-	if v, ok := binding.Validator.Engine().(*validator.Validate); ok {
-		return v.RegisterValidation("oneOf", func(fl validator.FieldLevel) bool {
-			matches := strings.Split(fl.Param(), " ")
-			value := fl.Field().String()
-			for _, match := range matches {
-				if match == value {
-					return true
-				}
-			}
-			return false
-		})
-	}
-	return fmt.Errorf("error getting validation engine")
 }

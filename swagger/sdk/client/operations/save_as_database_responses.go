@@ -71,9 +71,39 @@ type SaveAsDatabaseCreated struct {
 	Payload *models.Database
 }
 
+// IsSuccess returns true when this save as database created response has a 2xx status code
+func (o *SaveAsDatabaseCreated) IsSuccess() bool {
+	return true
+}
+
+// IsRedirect returns true when this save as database created response has a 3xx status code
+func (o *SaveAsDatabaseCreated) IsRedirect() bool {
+	return false
+}
+
+// IsClientError returns true when this save as database created response has a 4xx status code
+func (o *SaveAsDatabaseCreated) IsClientError() bool {
+	return false
+}
+
+// IsServerError returns true when this save as database created response has a 5xx status code
+func (o *SaveAsDatabaseCreated) IsServerError() bool {
+	return false
+}
+
+// IsCode returns true when this save as database created response a status code equal to that given
+func (o *SaveAsDatabaseCreated) IsCode(code int) bool {
+	return code == 201
+}
+
 func (o *SaveAsDatabaseCreated) Error() string {
 	return fmt.Sprintf("[POST /databases/save-as/{instanceId}][%d] saveAsDatabaseCreated  %+v", 201, o.Payload)
 }
+
+func (o *SaveAsDatabaseCreated) String() string {
+	return fmt.Sprintf("[POST /databases/save-as/{instanceId}][%d] saveAsDatabaseCreated  %+v", 201, o.Payload)
+}
+
 func (o *SaveAsDatabaseCreated) GetPayload() *models.Database {
 	return o.Payload
 }
@@ -102,7 +132,36 @@ SaveAsDatabaseUnauthorized save as database unauthorized
 type SaveAsDatabaseUnauthorized struct {
 }
 
+// IsSuccess returns true when this save as database unauthorized response has a 2xx status code
+func (o *SaveAsDatabaseUnauthorized) IsSuccess() bool {
+	return false
+}
+
+// IsRedirect returns true when this save as database unauthorized response has a 3xx status code
+func (o *SaveAsDatabaseUnauthorized) IsRedirect() bool {
+	return false
+}
+
+// IsClientError returns true when this save as database unauthorized response has a 4xx status code
+func (o *SaveAsDatabaseUnauthorized) IsClientError() bool {
+	return true
+}
+
+// IsServerError returns true when this save as database unauthorized response has a 5xx status code
+func (o *SaveAsDatabaseUnauthorized) IsServerError() bool {
+	return false
+}
+
+// IsCode returns true when this save as database unauthorized response a status code equal to that given
+func (o *SaveAsDatabaseUnauthorized) IsCode(code int) bool {
+	return code == 401
+}
+
 func (o *SaveAsDatabaseUnauthorized) Error() string {
+	return fmt.Sprintf("[POST /databases/save-as/{instanceId}][%d] saveAsDatabaseUnauthorized ", 401)
+}
+
+func (o *SaveAsDatabaseUnauthorized) String() string {
 	return fmt.Sprintf("[POST /databases/save-as/{instanceId}][%d] saveAsDatabaseUnauthorized ", 401)
 }
 
@@ -123,7 +182,36 @@ SaveAsDatabaseForbidden save as database forbidden
 type SaveAsDatabaseForbidden struct {
 }
 
+// IsSuccess returns true when this save as database forbidden response has a 2xx status code
+func (o *SaveAsDatabaseForbidden) IsSuccess() bool {
+	return false
+}
+
+// IsRedirect returns true when this save as database forbidden response has a 3xx status code
+func (o *SaveAsDatabaseForbidden) IsRedirect() bool {
+	return false
+}
+
+// IsClientError returns true when this save as database forbidden response has a 4xx status code
+func (o *SaveAsDatabaseForbidden) IsClientError() bool {
+	return true
+}
+
+// IsServerError returns true when this save as database forbidden response has a 5xx status code
+func (o *SaveAsDatabaseForbidden) IsServerError() bool {
+	return false
+}
+
+// IsCode returns true when this save as database forbidden response a status code equal to that given
+func (o *SaveAsDatabaseForbidden) IsCode(code int) bool {
+	return code == 403
+}
+
 func (o *SaveAsDatabaseForbidden) Error() string {
+	return fmt.Sprintf("[POST /databases/save-as/{instanceId}][%d] saveAsDatabaseForbidden ", 403)
+}
+
+func (o *SaveAsDatabaseForbidden) String() string {
 	return fmt.Sprintf("[POST /databases/save-as/{instanceId}][%d] saveAsDatabaseForbidden ", 403)
 }
 
@@ -144,7 +232,36 @@ SaveAsDatabaseNotFound save as database not found
 type SaveAsDatabaseNotFound struct {
 }
 
+// IsSuccess returns true when this save as database not found response has a 2xx status code
+func (o *SaveAsDatabaseNotFound) IsSuccess() bool {
+	return false
+}
+
+// IsRedirect returns true when this save as database not found response has a 3xx status code
+func (o *SaveAsDatabaseNotFound) IsRedirect() bool {
+	return false
+}
+
+// IsClientError returns true when this save as database not found response has a 4xx status code
+func (o *SaveAsDatabaseNotFound) IsClientError() bool {
+	return true
+}
+
+// IsServerError returns true when this save as database not found response has a 5xx status code
+func (o *SaveAsDatabaseNotFound) IsServerError() bool {
+	return false
+}
+
+// IsCode returns true when this save as database not found response a status code equal to that given
+func (o *SaveAsDatabaseNotFound) IsCode(code int) bool {
+	return code == 404
+}
+
 func (o *SaveAsDatabaseNotFound) Error() string {
+	return fmt.Sprintf("[POST /databases/save-as/{instanceId}][%d] saveAsDatabaseNotFound ", 404)
+}
+
+func (o *SaveAsDatabaseNotFound) String() string {
 	return fmt.Sprintf("[POST /databases/save-as/{instanceId}][%d] saveAsDatabaseNotFound ", 404)
 }
 
@@ -165,7 +282,36 @@ SaveAsDatabaseUnsupportedMediaType save as database unsupported media type
 type SaveAsDatabaseUnsupportedMediaType struct {
 }
 
+// IsSuccess returns true when this save as database unsupported media type response has a 2xx status code
+func (o *SaveAsDatabaseUnsupportedMediaType) IsSuccess() bool {
+	return false
+}
+
+// IsRedirect returns true when this save as database unsupported media type response has a 3xx status code
+func (o *SaveAsDatabaseUnsupportedMediaType) IsRedirect() bool {
+	return false
+}
+
+// IsClientError returns true when this save as database unsupported media type response has a 4xx status code
+func (o *SaveAsDatabaseUnsupportedMediaType) IsClientError() bool {
+	return true
+}
+
+// IsServerError returns true when this save as database unsupported media type response has a 5xx status code
+func (o *SaveAsDatabaseUnsupportedMediaType) IsServerError() bool {
+	return false
+}
+
+// IsCode returns true when this save as database unsupported media type response a status code equal to that given
+func (o *SaveAsDatabaseUnsupportedMediaType) IsCode(code int) bool {
+	return code == 415
+}
+
 func (o *SaveAsDatabaseUnsupportedMediaType) Error() string {
+	return fmt.Sprintf("[POST /databases/save-as/{instanceId}][%d] saveAsDatabaseUnsupportedMediaType ", 415)
+}
+
+func (o *SaveAsDatabaseUnsupportedMediaType) String() string {
 	return fmt.Sprintf("[POST /databases/save-as/{instanceId}][%d] saveAsDatabaseUnsupportedMediaType ", 415)
 }
 

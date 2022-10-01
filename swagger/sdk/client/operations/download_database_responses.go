@@ -67,7 +67,36 @@ DownloadDatabaseOK download database o k
 type DownloadDatabaseOK struct {
 }
 
+// IsSuccess returns true when this download database o k response has a 2xx status code
+func (o *DownloadDatabaseOK) IsSuccess() bool {
+	return true
+}
+
+// IsRedirect returns true when this download database o k response has a 3xx status code
+func (o *DownloadDatabaseOK) IsRedirect() bool {
+	return false
+}
+
+// IsClientError returns true when this download database o k response has a 4xx status code
+func (o *DownloadDatabaseOK) IsClientError() bool {
+	return false
+}
+
+// IsServerError returns true when this download database o k response has a 5xx status code
+func (o *DownloadDatabaseOK) IsServerError() bool {
+	return false
+}
+
+// IsCode returns true when this download database o k response a status code equal to that given
+func (o *DownloadDatabaseOK) IsCode(code int) bool {
+	return code == 200
+}
+
 func (o *DownloadDatabaseOK) Error() string {
+	return fmt.Sprintf("[GET /databases/{id}/download][%d] downloadDatabaseOK ", 200)
+}
+
+func (o *DownloadDatabaseOK) String() string {
 	return fmt.Sprintf("[GET /databases/{id}/download][%d] downloadDatabaseOK ", 200)
 }
 
@@ -88,7 +117,36 @@ DownloadDatabaseUnauthorized download database unauthorized
 type DownloadDatabaseUnauthorized struct {
 }
 
+// IsSuccess returns true when this download database unauthorized response has a 2xx status code
+func (o *DownloadDatabaseUnauthorized) IsSuccess() bool {
+	return false
+}
+
+// IsRedirect returns true when this download database unauthorized response has a 3xx status code
+func (o *DownloadDatabaseUnauthorized) IsRedirect() bool {
+	return false
+}
+
+// IsClientError returns true when this download database unauthorized response has a 4xx status code
+func (o *DownloadDatabaseUnauthorized) IsClientError() bool {
+	return true
+}
+
+// IsServerError returns true when this download database unauthorized response has a 5xx status code
+func (o *DownloadDatabaseUnauthorized) IsServerError() bool {
+	return false
+}
+
+// IsCode returns true when this download database unauthorized response a status code equal to that given
+func (o *DownloadDatabaseUnauthorized) IsCode(code int) bool {
+	return code == 401
+}
+
 func (o *DownloadDatabaseUnauthorized) Error() string {
+	return fmt.Sprintf("[GET /databases/{id}/download][%d] downloadDatabaseUnauthorized ", 401)
+}
+
+func (o *DownloadDatabaseUnauthorized) String() string {
 	return fmt.Sprintf("[GET /databases/{id}/download][%d] downloadDatabaseUnauthorized ", 401)
 }
 
@@ -109,7 +167,36 @@ DownloadDatabaseForbidden download database forbidden
 type DownloadDatabaseForbidden struct {
 }
 
+// IsSuccess returns true when this download database forbidden response has a 2xx status code
+func (o *DownloadDatabaseForbidden) IsSuccess() bool {
+	return false
+}
+
+// IsRedirect returns true when this download database forbidden response has a 3xx status code
+func (o *DownloadDatabaseForbidden) IsRedirect() bool {
+	return false
+}
+
+// IsClientError returns true when this download database forbidden response has a 4xx status code
+func (o *DownloadDatabaseForbidden) IsClientError() bool {
+	return true
+}
+
+// IsServerError returns true when this download database forbidden response has a 5xx status code
+func (o *DownloadDatabaseForbidden) IsServerError() bool {
+	return false
+}
+
+// IsCode returns true when this download database forbidden response a status code equal to that given
+func (o *DownloadDatabaseForbidden) IsCode(code int) bool {
+	return code == 403
+}
+
 func (o *DownloadDatabaseForbidden) Error() string {
+	return fmt.Sprintf("[GET /databases/{id}/download][%d] downloadDatabaseForbidden ", 403)
+}
+
+func (o *DownloadDatabaseForbidden) String() string {
 	return fmt.Sprintf("[GET /databases/{id}/download][%d] downloadDatabaseForbidden ", 403)
 }
 
@@ -130,7 +217,36 @@ DownloadDatabaseNotFound download database not found
 type DownloadDatabaseNotFound struct {
 }
 
+// IsSuccess returns true when this download database not found response has a 2xx status code
+func (o *DownloadDatabaseNotFound) IsSuccess() bool {
+	return false
+}
+
+// IsRedirect returns true when this download database not found response has a 3xx status code
+func (o *DownloadDatabaseNotFound) IsRedirect() bool {
+	return false
+}
+
+// IsClientError returns true when this download database not found response has a 4xx status code
+func (o *DownloadDatabaseNotFound) IsClientError() bool {
+	return true
+}
+
+// IsServerError returns true when this download database not found response has a 5xx status code
+func (o *DownloadDatabaseNotFound) IsServerError() bool {
+	return false
+}
+
+// IsCode returns true when this download database not found response a status code equal to that given
+func (o *DownloadDatabaseNotFound) IsCode(code int) bool {
+	return code == 404
+}
+
 func (o *DownloadDatabaseNotFound) Error() string {
+	return fmt.Sprintf("[GET /databases/{id}/download][%d] downloadDatabaseNotFound ", 404)
+}
+
+func (o *DownloadDatabaseNotFound) String() string {
 	return fmt.Sprintf("[GET /databases/{id}/download][%d] downloadDatabaseNotFound ", 404)
 }
 
@@ -151,7 +267,36 @@ DownloadDatabaseUnsupportedMediaType download database unsupported media type
 type DownloadDatabaseUnsupportedMediaType struct {
 }
 
+// IsSuccess returns true when this download database unsupported media type response has a 2xx status code
+func (o *DownloadDatabaseUnsupportedMediaType) IsSuccess() bool {
+	return false
+}
+
+// IsRedirect returns true when this download database unsupported media type response has a 3xx status code
+func (o *DownloadDatabaseUnsupportedMediaType) IsRedirect() bool {
+	return false
+}
+
+// IsClientError returns true when this download database unsupported media type response has a 4xx status code
+func (o *DownloadDatabaseUnsupportedMediaType) IsClientError() bool {
+	return true
+}
+
+// IsServerError returns true when this download database unsupported media type response has a 5xx status code
+func (o *DownloadDatabaseUnsupportedMediaType) IsServerError() bool {
+	return false
+}
+
+// IsCode returns true when this download database unsupported media type response a status code equal to that given
+func (o *DownloadDatabaseUnsupportedMediaType) IsCode(code int) bool {
+	return code == 415
+}
+
 func (o *DownloadDatabaseUnsupportedMediaType) Error() string {
+	return fmt.Sprintf("[GET /databases/{id}/download][%d] downloadDatabaseUnsupportedMediaType ", 415)
+}
+
+func (o *DownloadDatabaseUnsupportedMediaType) String() string {
 	return fmt.Sprintf("[GET /databases/{id}/download][%d] downloadDatabaseUnsupportedMediaType ", 415)
 }
 

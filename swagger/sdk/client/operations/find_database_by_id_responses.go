@@ -77,9 +77,39 @@ type FindDatabaseByIDOK struct {
 	Payload *models.Database
 }
 
+// IsSuccess returns true when this find database by Id o k response has a 2xx status code
+func (o *FindDatabaseByIDOK) IsSuccess() bool {
+	return true
+}
+
+// IsRedirect returns true when this find database by Id o k response has a 3xx status code
+func (o *FindDatabaseByIDOK) IsRedirect() bool {
+	return false
+}
+
+// IsClientError returns true when this find database by Id o k response has a 4xx status code
+func (o *FindDatabaseByIDOK) IsClientError() bool {
+	return false
+}
+
+// IsServerError returns true when this find database by Id o k response has a 5xx status code
+func (o *FindDatabaseByIDOK) IsServerError() bool {
+	return false
+}
+
+// IsCode returns true when this find database by Id o k response a status code equal to that given
+func (o *FindDatabaseByIDOK) IsCode(code int) bool {
+	return code == 200
+}
+
 func (o *FindDatabaseByIDOK) Error() string {
 	return fmt.Sprintf("[GET /databases/{id}][%d] findDatabaseByIdOK  %+v", 200, o.Payload)
 }
+
+func (o *FindDatabaseByIDOK) String() string {
+	return fmt.Sprintf("[GET /databases/{id}][%d] findDatabaseByIdOK  %+v", 200, o.Payload)
+}
+
 func (o *FindDatabaseByIDOK) GetPayload() *models.Database {
 	return o.Payload
 }
@@ -108,7 +138,36 @@ FindDatabaseByIDBadRequest find database by Id bad request
 type FindDatabaseByIDBadRequest struct {
 }
 
+// IsSuccess returns true when this find database by Id bad request response has a 2xx status code
+func (o *FindDatabaseByIDBadRequest) IsSuccess() bool {
+	return false
+}
+
+// IsRedirect returns true when this find database by Id bad request response has a 3xx status code
+func (o *FindDatabaseByIDBadRequest) IsRedirect() bool {
+	return false
+}
+
+// IsClientError returns true when this find database by Id bad request response has a 4xx status code
+func (o *FindDatabaseByIDBadRequest) IsClientError() bool {
+	return true
+}
+
+// IsServerError returns true when this find database by Id bad request response has a 5xx status code
+func (o *FindDatabaseByIDBadRequest) IsServerError() bool {
+	return false
+}
+
+// IsCode returns true when this find database by Id bad request response a status code equal to that given
+func (o *FindDatabaseByIDBadRequest) IsCode(code int) bool {
+	return code == 400
+}
+
 func (o *FindDatabaseByIDBadRequest) Error() string {
+	return fmt.Sprintf("[GET /databases/{id}][%d] findDatabaseByIdBadRequest ", 400)
+}
+
+func (o *FindDatabaseByIDBadRequest) String() string {
 	return fmt.Sprintf("[GET /databases/{id}][%d] findDatabaseByIdBadRequest ", 400)
 }
 
@@ -129,7 +188,36 @@ FindDatabaseByIDUnauthorized find database by Id unauthorized
 type FindDatabaseByIDUnauthorized struct {
 }
 
+// IsSuccess returns true when this find database by Id unauthorized response has a 2xx status code
+func (o *FindDatabaseByIDUnauthorized) IsSuccess() bool {
+	return false
+}
+
+// IsRedirect returns true when this find database by Id unauthorized response has a 3xx status code
+func (o *FindDatabaseByIDUnauthorized) IsRedirect() bool {
+	return false
+}
+
+// IsClientError returns true when this find database by Id unauthorized response has a 4xx status code
+func (o *FindDatabaseByIDUnauthorized) IsClientError() bool {
+	return true
+}
+
+// IsServerError returns true when this find database by Id unauthorized response has a 5xx status code
+func (o *FindDatabaseByIDUnauthorized) IsServerError() bool {
+	return false
+}
+
+// IsCode returns true when this find database by Id unauthorized response a status code equal to that given
+func (o *FindDatabaseByIDUnauthorized) IsCode(code int) bool {
+	return code == 401
+}
+
 func (o *FindDatabaseByIDUnauthorized) Error() string {
+	return fmt.Sprintf("[GET /databases/{id}][%d] findDatabaseByIdUnauthorized ", 401)
+}
+
+func (o *FindDatabaseByIDUnauthorized) String() string {
 	return fmt.Sprintf("[GET /databases/{id}][%d] findDatabaseByIdUnauthorized ", 401)
 }
 
@@ -150,7 +238,36 @@ FindDatabaseByIDForbidden find database by Id forbidden
 type FindDatabaseByIDForbidden struct {
 }
 
+// IsSuccess returns true when this find database by Id forbidden response has a 2xx status code
+func (o *FindDatabaseByIDForbidden) IsSuccess() bool {
+	return false
+}
+
+// IsRedirect returns true when this find database by Id forbidden response has a 3xx status code
+func (o *FindDatabaseByIDForbidden) IsRedirect() bool {
+	return false
+}
+
+// IsClientError returns true when this find database by Id forbidden response has a 4xx status code
+func (o *FindDatabaseByIDForbidden) IsClientError() bool {
+	return true
+}
+
+// IsServerError returns true when this find database by Id forbidden response has a 5xx status code
+func (o *FindDatabaseByIDForbidden) IsServerError() bool {
+	return false
+}
+
+// IsCode returns true when this find database by Id forbidden response a status code equal to that given
+func (o *FindDatabaseByIDForbidden) IsCode(code int) bool {
+	return code == 403
+}
+
 func (o *FindDatabaseByIDForbidden) Error() string {
+	return fmt.Sprintf("[GET /databases/{id}][%d] findDatabaseByIdForbidden ", 403)
+}
+
+func (o *FindDatabaseByIDForbidden) String() string {
 	return fmt.Sprintf("[GET /databases/{id}][%d] findDatabaseByIdForbidden ", 403)
 }
 
@@ -171,7 +288,36 @@ FindDatabaseByIDNotFound find database by Id not found
 type FindDatabaseByIDNotFound struct {
 }
 
+// IsSuccess returns true when this find database by Id not found response has a 2xx status code
+func (o *FindDatabaseByIDNotFound) IsSuccess() bool {
+	return false
+}
+
+// IsRedirect returns true when this find database by Id not found response has a 3xx status code
+func (o *FindDatabaseByIDNotFound) IsRedirect() bool {
+	return false
+}
+
+// IsClientError returns true when this find database by Id not found response has a 4xx status code
+func (o *FindDatabaseByIDNotFound) IsClientError() bool {
+	return true
+}
+
+// IsServerError returns true when this find database by Id not found response has a 5xx status code
+func (o *FindDatabaseByIDNotFound) IsServerError() bool {
+	return false
+}
+
+// IsCode returns true when this find database by Id not found response a status code equal to that given
+func (o *FindDatabaseByIDNotFound) IsCode(code int) bool {
+	return code == 404
+}
+
 func (o *FindDatabaseByIDNotFound) Error() string {
+	return fmt.Sprintf("[GET /databases/{id}][%d] findDatabaseByIdNotFound ", 404)
+}
+
+func (o *FindDatabaseByIDNotFound) String() string {
 	return fmt.Sprintf("[GET /databases/{id}][%d] findDatabaseByIdNotFound ", 404)
 }
 
@@ -192,7 +338,36 @@ FindDatabaseByIDUnsupportedMediaType find database by Id unsupported media type
 type FindDatabaseByIDUnsupportedMediaType struct {
 }
 
+// IsSuccess returns true when this find database by Id unsupported media type response has a 2xx status code
+func (o *FindDatabaseByIDUnsupportedMediaType) IsSuccess() bool {
+	return false
+}
+
+// IsRedirect returns true when this find database by Id unsupported media type response has a 3xx status code
+func (o *FindDatabaseByIDUnsupportedMediaType) IsRedirect() bool {
+	return false
+}
+
+// IsClientError returns true when this find database by Id unsupported media type response has a 4xx status code
+func (o *FindDatabaseByIDUnsupportedMediaType) IsClientError() bool {
+	return true
+}
+
+// IsServerError returns true when this find database by Id unsupported media type response has a 5xx status code
+func (o *FindDatabaseByIDUnsupportedMediaType) IsServerError() bool {
+	return false
+}
+
+// IsCode returns true when this find database by Id unsupported media type response a status code equal to that given
+func (o *FindDatabaseByIDUnsupportedMediaType) IsCode(code int) bool {
+	return code == 415
+}
+
 func (o *FindDatabaseByIDUnsupportedMediaType) Error() string {
+	return fmt.Sprintf("[GET /databases/{id}][%d] findDatabaseByIdUnsupportedMediaType ", 415)
+}
+
+func (o *FindDatabaseByIDUnsupportedMediaType) String() string {
 	return fmt.Sprintf("[GET /databases/{id}][%d] findDatabaseByIdUnsupportedMediaType ", 415)
 }
 

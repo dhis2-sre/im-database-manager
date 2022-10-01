@@ -2,6 +2,8 @@
 
 set -euo pipefail
 
+source ./auth.sh
+
 DATABASE=$1
 NAME=$2
 

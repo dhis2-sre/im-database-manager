@@ -2,6 +2,8 @@
 
 set -euo pipefail
 
+source ./auth.sh
+
 DATABASE_ID=$1
 INSTANCE_ID=$2
 

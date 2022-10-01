@@ -250,42 +250,6 @@ func (s service) SaveAs(token string, database *model.Database, instance *instan
 		return nil, err
 	}
 
-	var ret *forwarder.Result
-	if len(group.ClusterConfiguration.KubernetesConfiguration) > 0 {
-		hostname := fmt.Sprintf(stack.HostnamePattern, instance.Name, instance.GroupName)
-		serviceName := strings.Split(hostname, ".")[0]
-		options := []*forwarder.Option{
-			{
-				RemotePort:  5432,
-				ServiceName: serviceName,
-				Namespace:   instance.GroupName,
-			},
-		}
-
-		kubeConfig, err := decryptYaml(group.ClusterConfiguration.KubernetesConfiguration)
-		if err != nil {
-			return nil, err
-		}
-
-		ret, err = forwarder.WithForwardersEmbedConfig(context.Background(), options, kubeConfig)
-		if err != nil {
-			return nil, err
-		}
-
-		ports, err := ret.Ready()
-		if err != nil {
-			return nil, err
-		}
-
-		dump.Host = "localhost"
-		dump.Port = int(ports[0][0].Local)
-	}
-
-	dump.SetPath(dumpPath)
-	fileId := uuid.New().String()
-	dump.SetFileName(fileId + ".dump")
-	dump.SetupFormat(format)
-
 	d := &model.Database{
 		Name: newName,
 		// TODO: For now, only saving to the same group is supported
@@ -298,6 +262,46 @@ func (s service) SaveAs(token string, database *model.Database, instance *instan
 	}
 
 	go func() {
+		var ret *forwarder.Result
+		if len(group.ClusterConfiguration.KubernetesConfiguration) > 0 {
+			hostname := fmt.Sprintf(stack.HostnamePattern, instance.Name, instance.GroupName)
+			serviceName := strings.Split(hostname, ".")[0]
+			options := []*forwarder.Option{
+				{
+					RemotePort:  5432,
+					ServiceName: serviceName,
+					Namespace:   instance.GroupName,
+				},
+			}
+
+			kubeConfig, err := decryptYaml(group.ClusterConfiguration.KubernetesConfiguration)
+			if err != nil {
+				logError(err)
+				return
+			}
+
+			ret, err = forwarder.WithForwardersEmbedConfig(context.Background(), options, kubeConfig)
+			if err != nil {
+				logError(err)
+				return
+			}
+			defer ret.Close()
+
+			ports, err := ret.Ready()
+			if err != nil {
+				logError(err)
+				return
+			}
+
+			dump.Host = "localhost"
+			dump.Port = int(ports[0][0].Local)
+		}
+
+		dump.SetPath(dumpPath)
+		fileId := uuid.New().String()
+		dump.SetFileName(fileId + ".dump")
+		dump.SetupFormat(format)
+
 		// TODO: Remove... Or at least make configurable
 		dump.EnableVerbose()
 
@@ -305,61 +309,50 @@ func (s service) SaveAs(token string, database *model.Database, instance *instan
 		if dumpExec.Error != nil {
 			log.Println(dumpExec.Error.Err)
 			log.Println(dumpExec.Output)
-			//			return nil, dumpExec.Error.Err
-			log.Println(err)
+			logError(dumpExec.Error.Err)
 			return
 		}
 
 		dumpFile := dumpPath + dumpExec.File
 		file, err := os.Open(dumpFile)
 		if err != nil {
-			//			return nil, err
-			log.Println(err)
+			logError(err)
 			return
 		}
+		defer removeTempFile(file)
 
 		if format == "plain" {
-			gzFile := dumpPath + fileId + ".gz"
-			file, err = gz(gzFile, database, file)
+			gzFileName := dumpPath + fileId + ".gz"
+			file, err = gz(gzFileName, database, file)
 			if err != nil {
-				//			return nil, err
-				log.Println(err)
+				logError(err)
 				return
 			}
 
-			defer func() {
-				err = os.Remove(gzFile)
-				if err != nil {
-					log.Println(err)
-				}
-			}()
+			defer removeTempFile(file)
 		}
 
 		_, err = s.Upload(d, group, file)
 		if err != nil {
-			//			return nil, err
-			log.Println(err)
+			logError(err)
 			return
 		}
-
-		err = file.Close()
-		if err != nil {
-			//			return nil, err
-			log.Println(err)
-			return
-		}
-
-		err = os.Remove(dumpFile)
-		if err != nil {
-			//			return nil, err
-			log.Println(err)
-			return
-		}
-
-		ret.Close()
 	}()
 
 	return d, nil
+}
+
+func logError(err error) {
+	// TODO: Persist error message
+	log.Println(err)
+}
+
+func removeTempFile(fd *os.File) {
+	for _, err := range [...]error{fd.Close(), os.Remove(fd.Name())} {
+		if err != nil {
+			log.Println("failed to remove temp file:", err)
+		}
+	}
 }
 
 func gz(gzFile string, database *model.Database, src *os.File) (*os.File, error) {
@@ -371,27 +364,26 @@ func gz(gzFile string, database *model.Database, src *os.File) (*os.File, error)
 	zw := gzip.NewWriter(outFile)
 	zw.Name = strings.TrimSuffix(database.Name, ".gz")
 
+	defer func(zw *gzip.Writer) {
+		err := zw.Close()
+		if err != nil {
+			log.Println(err)
+		}
+	}(zw)
+
 	_, err = io.Copy(zw, src)
 	if err != nil {
 		return nil, err
 	}
 
-	err = zw.Close()
-	if err != nil {
-		return nil, err
-	}
+	defer func(src *os.File) {
+		err := src.Close()
+		if err != nil {
+			log.Println(err)
+		}
+	}(src)
 
-	err = src.Close()
-	if err != nil {
-		return nil, err
-	}
-
-	src, err = os.Open(gzFile)
-	if err != nil {
-		return nil, err
-	}
-
-	return src, nil
+	return outFile, nil
 }
 
 func newPgDumpConfig(instance *instanceModels.Instance, stack *instanceModels.Stack) (*pg.Dump, error) {

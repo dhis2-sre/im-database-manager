@@ -12,6 +12,10 @@ userService:
   host: im-user-feature.instance-manager-feature.svc:8080
   basePath: /skaffold
 
+instanceService:
+  host: im-manager-feature.instance-manager-feature.svc:8080
+  basePath: /
+
 jobService:
   host: im-job-feature.instance-manager-feature.svc:8080
   basePath: /skaffold

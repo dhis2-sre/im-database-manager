@@ -10,6 +10,10 @@ userService:
   host: im-user-dev.instance-manager-dev.svc:8080
   basePath: /
 
+instanceService:
+  host: im-manager-dev.instance-manager-dev.svc:8080
+  basePath: /
+
 jobService:
   host: im-job-dev.instance-manager-dev.svc:8080
   basePath: /

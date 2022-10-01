@@ -9,6 +9,10 @@ userService:
   host: im-user-prod.instance-manager-prod.svc:8080
   basePath: /
 
+instanceService:
+  host: im-manager-prod.instance-manager-prod.svc:8080
+  basePath: /
+
 jobService:
   host: im-job-prod.instance-manager-prod.svc:8080
   basePath: /

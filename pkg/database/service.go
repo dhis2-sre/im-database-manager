@@ -14,6 +14,8 @@ import (
 	"strings"
 	"time"
 
+	"github.com/anthhub/forwarder"
+
 	instanceModels "github.com/dhis2-sre/im-manager/swagger/sdk/models"
 	pg "github.com/habx/pg-commands"
 
@@ -28,8 +30,6 @@ import (
 	"github.com/dhis2-sre/im-database-manager/pkg/storage"
 	jobClient "github.com/dhis2-sre/im-job/pkg/client"
 	"github.com/dhis2-sre/im-user/swagger/sdk/models"
-
-	"github.com/anthhub/forwarder"
 )
 
 type Service interface {

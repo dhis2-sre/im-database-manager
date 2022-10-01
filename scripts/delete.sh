@@ -2,6 +2,8 @@
 
 set -euo pipefail
 
+source ./auth.sh
+
 DATABASES=$*
 
 echo "Database(s): $DATABASES"

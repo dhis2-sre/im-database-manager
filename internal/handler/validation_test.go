@@ -8,8 +8,8 @@ import (
 	"testing"
 )
 
-type TestRequest struct {
-	OneOf string `binding:"required,oneOf=one of"`
+type Payload struct {
+	Field string `binding:"required,oneOf=one two"`
 }
 
 func TestRegisterValidation(t *testing.T) {
@@ -19,17 +19,17 @@ func TestRegisterValidation(t *testing.T) {
 	w := httptest.NewRecorder()
 	ctx, _ := gin.CreateTestContext(w)
 
-	dummyRequest, err := http.NewRequest("GET", "/", nil)
+	request, err := http.NewRequest("GET", "/", nil)
 	assert.NoError(t, err)
-	ctx.Request = dummyRequest
+	ctx.Request = request
 
-	err = ctx.ShouldBind(&TestRequest{OneOf: "one"})
-	assert.NoError(t, err)
-
-	err = ctx.ShouldBind(&TestRequest{OneOf: "of"})
+	err = ctx.ShouldBind(&Payload{Field: "one"})
 	assert.NoError(t, err)
 
-	err = ctx.ShouldBind(&TestRequest{OneOf: "oh no"})
+	err = ctx.ShouldBind(&Payload{Field: "two"})
+	assert.NoError(t, err)
+
+	err = ctx.ShouldBind(&Payload{Field: "oh no"})
 	assert.Error(t, err)
-	assert.Equal(t, "Key: 'TestRequest.OneOf' Error:Field validation for 'OneOf' failed on the 'oneOf' tag", err.Error())
+	assert.Equal(t, "Key: 'Payload.Field' Error:Field validation for 'Field' failed on the 'oneOf' tag", err.Error())
 }

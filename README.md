@@ -26,3 +26,17 @@ dataSizeLimit seems to have no effect and the mounted disk doesn't seem to be a 
 * Don't implement the endpoint on the database manager. Rather implement /instances/:id/save-as on the manager and let that produce an event which will be consumed by the database manager
 * Introduce some sort of status property on the database model... dumped, zipped... ready?
 * Store the dump log on the database model as well. The output from `dump.EnableVerbose()` and... ? gzip output?
+* 
+
+
+# TODO
+
+*         - name: data
+          emptyDir:
+            sizeLimit: {{ .Values.dataSizeLimit }}
+dataSizeLimit seems to have no effect and the mounted disk doesn't seem to be a volume... But it is writable
+
+* Timeout... Eventually we'll need to run the export etc. in a background thread. Should we just return 202 or an id or something else?
+* Don't implement the endpoint on the database manager. Rather implement /instances/:id/save-as on the manager and let that produce an event which will be consumed by the database manager
+* Introduce some sort of status property on the database model... dumped, zipped... ready?
+* Store the dump log on the database model as well. The output from `dump.EnableVerbose()` and... ? gzip output?

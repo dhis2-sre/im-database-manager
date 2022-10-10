@@ -21,7 +21,7 @@ require (
 	github.com/go-playground/validator/v10 v10.11.1
 	github.com/gofrs/uuid v4.3.0+incompatible
 	github.com/google/uuid v1.3.0
-	github.com/habx/pg-commands v0.3.0
+	github.com/habx/pg-commands v0.4.0
 	github.com/lestrrat-go/jwx v1.2.25
 	github.com/stretchr/testify v1.8.0
 	go.mozilla.org/sops/v3 v3.7.3

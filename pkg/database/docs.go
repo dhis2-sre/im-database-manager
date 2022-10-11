@@ -21,6 +21,11 @@ type _ struct {
 	// in: path
 	// required: true
 	InstanceID uint `json:"instanceId"`
+
+	// SaveAs database request body parameter
+	// in: body
+	// required: true
+	Body saveAsRequest
 }
 
 // swagger:parameters copyDatabase

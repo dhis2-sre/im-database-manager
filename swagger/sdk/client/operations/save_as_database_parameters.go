@@ -15,6 +15,8 @@ import (
 	cr "github.com/go-openapi/runtime/client"
 	"github.com/go-openapi/strfmt"
 	"github.com/go-openapi/swag"
+
+	"github.com/dhis2-sre/im-database-manager/swagger/sdk/models"
 )
 
 // NewSaveAsDatabaseParams creates a new SaveAsDatabaseParams object,
@@ -59,6 +61,12 @@ func NewSaveAsDatabaseParamsWithHTTPClient(client *http.Client) *SaveAsDatabaseP
    Typically these are written to a http.Request.
 */
 type SaveAsDatabaseParams struct {
+
+	/* Body.
+
+	   SaveAs database request body parameter
+	*/
+	Body *models.SaveAsRequest
 
 	// InstanceID.
 	//
@@ -118,6 +126,17 @@ func (o *SaveAsDatabaseParams) SetHTTPClient(client *http.Client) {
 	o.HTTPClient = client
 }
 
+// WithBody adds the body to the save as database params
+func (o *SaveAsDatabaseParams) WithBody(body *models.SaveAsRequest) *SaveAsDatabaseParams {
+	o.SetBody(body)
+	return o
+}
+
+// SetBody adds the body to the save as database params
+func (o *SaveAsDatabaseParams) SetBody(body *models.SaveAsRequest) {
+	o.Body = body
+}
+
 // WithInstanceID adds the instanceID to the save as database params
 func (o *SaveAsDatabaseParams) WithInstanceID(instanceID uint64) *SaveAsDatabaseParams {
 	o.SetInstanceID(instanceID)
@@ -136,6 +155,11 @@ func (o *SaveAsDatabaseParams) WriteToRequest(r runtime.ClientRequest, reg strfm
 		return err
 	}
 	var res []error
+	if o.Body != nil {
+		if err := r.SetBodyParam(o.Body); err != nil {
+			return err
+		}
+	}
 
 	// path param instanceId
 	if err := r.SetPathParam("instanceId", swag.FormatUint64(o.InstanceID)); err != nil {

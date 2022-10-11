@@ -137,6 +137,22 @@ definitions:
                 x-go-name: Name
         type: object
         x-go-package: github.com/dhis2-sre/im-database-manager/pkg/database
+    saveAsRequest:
+        properties:
+            format:
+                description: |-
+                    TODO: Allow saving to another group, remember to ensure user is member of the other group
+                    Group  string `json:"group"`
+                type: string
+                x-go-name: Format
+            name:
+                description: |-
+                    TODO: Add InstanceId here rather than as path param?
+                    InstanceId uint   `json:"instanceId" binding:"required"`
+                type: string
+                x-go-name: Name
+        type: object
+        x-go-package: github.com/dhis2-sre/im-database-manager/pkg/database
 info:
     contact:
         email: info@dhis2.org
@@ -448,6 +464,12 @@ paths:
                   required: true
                   type: integer
                   x-go-name: InstanceID
+                - description: SaveAs database request body parameter
+                  in: body
+                  name: Body
+                  required: true
+                  schema:
+                    $ref: '#/definitions/saveAsRequest'
             responses:
                 "201":
                     description: Database

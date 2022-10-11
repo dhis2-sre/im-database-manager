@@ -140,15 +140,11 @@ definitions:
     saveAsRequest:
         properties:
             format:
-                description: |-
-                    TODO: Allow saving to another group, remember to ensure user is member of the other group
-                    Group  string `json:"group"`
+                description: Database dump format. Currently plain and custom are support, please see https://www.postgresql.org/docs/current/app-pgdump.html
                 type: string
                 x-go-name: Format
             name:
-                description: |-
-                    TODO: Add InstanceId here rather than as path param?
-                    InstanceId uint   `json:"instanceId" binding:"required"`
+                description: Name of the new database
                 type: string
                 x-go-name: Name
         type: object

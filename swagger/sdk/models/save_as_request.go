@@ -17,12 +17,10 @@ import (
 // swagger:model saveAsRequest
 type SaveAsRequest struct {
 
-	// TODO: Allow saving to another group, remember to ensure user is member of the other group
-	// Group  string `json:"group"`
+	// Database dump format. Currently plain and custom are support, please see https://www.postgresql.org/docs/current/app-pgdump.html
 	Format string `json:"format,omitempty"`
 
-	// TODO: Add InstanceId here rather than as path param?
-	// InstanceId uint   `json:"instanceId" binding:"required"`
+	// Name of the new database
 	Name string `json:"name,omitempty"`
 }
 

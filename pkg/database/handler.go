@@ -119,12 +119,14 @@ func (h Handler) Upload(c *gin.Context) {
 }
 
 type saveAsRequest struct {
+	// Name of the new database
+	Name string `json:"name" binding:"required"`
+	// Database dump format. Currently plain and custom are support, please see https://www.postgresql.org/docs/current/app-pgdump.html
+	Format string `json:"format" binding:"required,oneOf=plain custom"`
 	// TODO: Add InstanceId here rather than as path param?
 	//	InstanceId uint   `json:"instanceId" binding:"required"`
-	Name string `json:"name" binding:"required"`
 	// TODO: Allow saving to another group, remember to ensure user is member of the other group
 	//	Group  string `json:"group"`
-	Format string `json:"format" binding:"required,oneOf=plain custom"`
 }
 
 // SaveAs database

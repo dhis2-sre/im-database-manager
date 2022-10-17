@@ -404,13 +404,16 @@ func newPgDumpConfig(instance *instanceModels.Instance, stack *instanceModels.St
 		return nil, err
 	}
 
-	dump := pg.NewDump(&pg.Postgres{
+	dump, err := pg.NewDump(&pg.Postgres{
 		Host:     fmt.Sprintf(stack.HostnamePattern, instance.Name, instance.GroupName),
 		Port:     5432,
 		DB:       databaseName,
 		Username: databaseUsername,
 		Password: databasePassword,
 	})
+	if err != nil {
+		return nil, err
+	}
 
 	return dump, nil
 }

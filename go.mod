@@ -6,8 +6,8 @@ require (
 	github.com/anthhub/forwarder v1.1.0
 	github.com/aws/aws-sdk-go-v2 v1.16.16
 	github.com/aws/aws-sdk-go-v2/config v1.17.8
-	github.com/aws/aws-sdk-go-v2/feature/s3/manager v1.11.34
-	github.com/aws/aws-sdk-go-v2/service/s3 v1.27.11
+	github.com/aws/aws-sdk-go-v2/feature/s3/manager v1.11.35
+	github.com/aws/aws-sdk-go-v2/service/s3 v1.28.0
 	github.com/dhis2-sre/im-job v0.1.1-0.20220420070627-2f61080ebddd
 	github.com/dhis2-sre/im-manager v0.9.0
 	github.com/dhis2-sre/im-user v0.9.0

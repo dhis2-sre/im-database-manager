@@ -10,7 +10,7 @@ function createDatabase() {
   #curl "$2" -o "$HOME/Downloads/$1.sql.gz"
 
   echo "Login..."
-  export ACCESS_TOKEN="" && eval $(./login.sh) && echo "$ACCESS_TOKEN"
+  source ./auth.sh
 
   echo "Uploading database...$1"
   ./upload.sh "$GROUP" "$HOME/Downloads/$1.sql.gz"

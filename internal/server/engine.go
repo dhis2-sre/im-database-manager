@@ -12,6 +12,13 @@ import (
 
 func GetEngine(basePath string, dbHandler database.Handler, authMiddleware handler.AuthenticationMiddleware) *gin.Engine {
 	r := gin.Default()
+
+	corsConfig := cors.DefaultConfig()
+	corsConfig.AllowAllOrigins = true
+	corsConfig.AllowCredentials = true
+	corsConfig.AddAllowHeaders("authorization")
+	r.Use(cors.New(corsConfig))
+
 	r.Use(cors.Default())
 	r.Use(middleware.ErrorHandler())
 

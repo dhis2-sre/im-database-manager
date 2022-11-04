@@ -1,0 +1,43 @@
+image:
+  repository: dhis2/im-manager
+  pullPolicy: Always
+
+serviceAccount:
+  annotations:
+    eks.amazonaws.com/role-arn: arn:aws:iam::767224633206:role/instance-cluster-test-im-database-manager-radnov
+
+userService:
+  host: im-user-radnov.instance-manager-radnov.svc:8080
+  basePath: /
+
+instanceService:
+  host: im-manager-radnov.instance-manager-radnov.svc:8080
+  basePath: /
+
+jobService:
+  host: im-job-radnov.instance-manager-radnov.svc:8080
+  basePath: /
+
+database:
+  host: im-database-manager-postgresql-radnov.instance-manager-radnov.svc
+  port: 5432
+  name: im-database-manager
+
+jwks:
+  host: http://im-user-radnov.instance-manager-radnov.svc:8080/jwks
+  index: 0
+  minimumRefreshInterval: 960 # 15 minutes
+
+s3Bucket: test-db-manager-bucket
+
+rabbitMq:
+  host: im-rabbitmq-radnov.instance-manager-radnov.svc
+  port: 5672
+
+resources:
+  limits:
+    cpu: 200m
+    memory: 512Mi
+  requests:
+    cpu: 100m
+    memory: 64Mi

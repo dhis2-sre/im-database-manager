@@ -4,4 +4,4 @@ set -euo pipefail
 
 source ./auth.sh
 
-$HTTP "$INSTANCE_HOST/databases" "Authorization: Bearer $ACCESS_TOKEN"
+$HTTP get "$INSTANCE_HOST/databases" "Authorization: Bearer $ACCESS_TOKEN"

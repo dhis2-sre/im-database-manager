@@ -9,4 +9,4 @@ INSTANCE_ID=$2
 
 echo "{
   \"instanceId\": $INSTANCE_ID
-}" | $HTTP "$INSTANCE_HOST/databases/$DATABASE_ID/lock" "Authorization: Bearer $ACCESS_TOKEN"
+}" | $HTTP post "$INSTANCE_HOST/databases/$DATABASE_ID/lock" "Authorization: Bearer $ACCESS_TOKEN"

@@ -2,7 +2,7 @@ apiVersion: skaffold/v2beta25
 kind: Config
 build:
   artifacts:
-    - image: dhis2/instance-database-manager
+    - image: dhis2/im-database-manager
   tagPolicy:
     inputDigest: { }
 deploy:
@@ -34,7 +34,7 @@ deploy:
         createNamespace: true
         chartPath: helm/chart
         artifactOverrides:
-          image: dhis2/instance-database-manager
+          image: dhis2/im-database-manager
         imageStrategy:
           helm: { }
         useHelmSecrets: true

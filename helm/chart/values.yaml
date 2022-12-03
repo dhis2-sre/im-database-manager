@@ -46,7 +46,7 @@ jobService:
 s3Bucket: nameOfBucket
 
 image:
-  repository: dhis2/instance-database-manager
+  repository: dhis2/im-database-manager
   pullPolicy: IfNotPresent
   # Overrides the image tag whose default is the chart appVersion.
   tag: ""

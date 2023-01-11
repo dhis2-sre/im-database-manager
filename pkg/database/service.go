@@ -28,7 +28,6 @@ import (
 	"github.com/dhis2-sre/im-database-manager/internal/apperror"
 	"github.com/dhis2-sre/im-database-manager/pkg/config"
 	"github.com/dhis2-sre/im-database-manager/pkg/storage"
-	jobClient "github.com/dhis2-sre/im-job/pkg/client"
 	"github.com/dhis2-sre/im-user/swagger/sdk/models"
 )
 
@@ -52,12 +51,11 @@ type service struct {
 	c          config.Config
 	userClient userClientHandler
 	s3Client   storage.S3Client
-	jobClient  jobClient.Client
 	repository Repository
 }
 
-func NewService(c config.Config, userClient userClientHandler, s3Client storage.S3Client, jobClient jobClient.Client, repository Repository) *service {
-	return &service{c, userClient, s3Client, jobClient, repository}
+func NewService(c config.Config, userClient userClientHandler, s3Client storage.S3Client, repository Repository) *service {
+	return &service{c, userClient, s3Client, repository}
 }
 
 func (s service) Create(d *model.Database) error {

@@ -34,7 +34,6 @@ import (
 	"github.com/dhis2-sre/im-database-manager/pkg/config"
 	"github.com/dhis2-sre/im-database-manager/pkg/database"
 	"github.com/dhis2-sre/im-database-manager/pkg/storage"
-	jobClient "github.com/dhis2-sre/im-job/pkg/client"
 	instanceClient "github.com/dhis2-sre/im-manager/pkg/client"
 	userClient "github.com/dhis2-sre/im-user/pkg/client"
 )
@@ -60,14 +59,12 @@ func run() error {
 		return err
 	}
 
-	jobSvc := jobClient.ProvideClient(cfg.JobService.Host, cfg.JobService.BasePath)
-
 	db, err := storage.NewDatabase(cfg)
 	if err != nil {
 		return err
 	}
 	dbRepo := database.NewRepository(db)
-	dbSvc := database.NewService(cfg, usrSvc, s3Client, jobSvc, dbRepo)
+	dbSvc := database.NewService(cfg, usrSvc, s3Client, dbRepo)
 
 	dbHandler := database.New(usrSvc, dbSvc, instanceSvc)
 

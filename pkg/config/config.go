@@ -9,7 +9,6 @@ import (
 type Config struct {
 	BasePath        string
 	UserService     service
-	JobService      service
 	InstanceService service
 	Postgresql      postgresql
 	RabbitMqURL     rabbitmq
@@ -29,11 +28,6 @@ func New() (Config, error) {
 	}
 
 	instanceSvc, err := newInstanceService()
-	if err != nil {
-		return Config{}, err
-	}
-
-	jobSvc, err := newJobService()
 	if err != nil {
 		return Config{}, err
 	}
@@ -62,7 +56,6 @@ func New() (Config, error) {
 		BasePath:        basePath,
 		UserService:     usrSvc,
 		InstanceService: instanceSvc,
-		JobService:      jobSvc,
 		Postgresql:      pg,
 		RabbitMqURL:     rb,
 		Authentication:  auth,
@@ -100,22 +93,6 @@ func newInstanceService() (service, error) {
 	}
 
 	basePath, err := requireEnv("INSTANCE_SERVICE_BASE_PATH")
-	if err != nil {
-		return service{}, err
-	}
-
-	return service{
-		Host:     host,
-		BasePath: basePath,
-	}, nil
-}
-
-func newJobService() (service, error) {
-	host, err := requireEnv("JOB_SERVICE_HOST")
-	if err != nil {
-		return service{}, err
-	}
-	basePath, err := requireEnv("JOB_SERVICE_BASE_PATH")
 	if err != nil {
 		return service{}, err
 	}

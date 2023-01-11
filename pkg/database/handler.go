@@ -558,22 +558,22 @@ func (h Handler) List(c *gin.Context) {
 		return
 	}
 
-	c.JSON(http.StatusOK, h.groupsWithDatabases(user.Groups, d))
+	c.JSON(http.StatusOK, groupsWithDatabases(user.Groups, d))
 }
 
-func (h Handler) groupsWithDatabases(groups []*userModels.Group, databases []*model.Database) []GroupsWithDatabases {
+func groupsWithDatabases(groups []*userModels.Group, databases []*model.Database) []GroupsWithDatabases {
 	groupsWithDatabases := make([]GroupsWithDatabases, len(groups))
 	for i, group := range groups {
 		groupsWithDatabases[i].Name = group.Name
 		groupsWithDatabases[i].Hostname = group.Hostname
-		groupsWithDatabases[i].Databases = h.filterByGroupId(databases, func(instance *model.Database) bool {
+		groupsWithDatabases[i].Databases = filterByGroupId(databases, func(instance *model.Database) bool {
 			return instance.GroupName == group.Name
 		})
 	}
 	return groupsWithDatabases
 }
 
-func (h Handler) filterByGroupId(databases []*model.Database, test func(instance *model.Database) bool) (ret []*model.Database) {
+func filterByGroupId(databases []*model.Database, test func(instance *model.Database) bool) (ret []*model.Database) {
 	for _, database := range databases {
 		if test(database) {
 			ret = append(ret, database)

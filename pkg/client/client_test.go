@@ -1,35 +1,126 @@
 package client
 
 import (
+	"encoding/json"
+	"fmt"
+	"github.com/dhis2-sre/im-database-manager/internal/handler"
+	"github.com/dhis2-sre/im-database-manager/internal/middleware"
+	"github.com/dhis2-sre/im-database-manager/pkg/database"
+	"github.com/dhis2-sre/im-database-manager/pkg/model"
+	instanceModels "github.com/dhis2-sre/im-manager/swagger/sdk/models"
+	"github.com/dhis2-sre/im-user/swagger/sdk/models"
+	"github.com/gin-gonic/gin"
+	"github.com/google/uuid"
+	"github.com/stretchr/testify/assert"
+	"github.com/stretchr/testify/mock"
+	"github.com/stretchr/testify/require"
+	"gorm.io/gorm"
+	"io"
+	"net/http"
+	"net/http/httptest"
 	"testing"
+	"time"
 )
 
-const AccessToken = "eyJhbGciOiJSUzI1NiIsInR5cCI6IkpXVCJ9.eyJleHAiOjQ3OTYzODQwNzcsImlhdCI6MTY0MDY5MTQ3NywidXNlciI6eyJJRCI6NCwiQ3JlYXRlZEF0IjoiMjAyMS0xMi0yOFQxMDo0NjoxNi44NTEzMzlaIiwiVXBkYXRlZEF0IjoiMjAyMS0xMi0yOFQxMDo0NjoxNi44NTEzMzlaIiwiRGVsZXRlZEF0IjpudWxsLCJFbWFpbCI6InNvbWVvbmVAc29tZXRoaW5nLm9yZyIsIkdyb3VwcyI6bnVsbCwiQWRtaW5Hcm91cHMiOm51bGx9fQ.FnPIu36kV1T-Jix5Wy-HsZeqxQI6Q_7HQ14C1DWKHETIBSk-vLQ_sCMHVPKA42utEDFI3Xpmf6Gyzv9aPU_Cvg-JDazRprfrZBqn4LzSmT6K3HGoKoQ0b5G8exxz0Ote8NQDB1NBZmYvD1gpVVisCvzaewJTRAvRA3DS0n_O4kU5QENdLNPfWFo0rXOC83sLBsEIe2Ce4TiRrepOCSQKE-_rwQQSA3w30MhFmhAY7Ozcd9i69mtfcvqjORdNJ-zREgiw8B2g9oh7byE1h2oxjvoKC3WRfPeSYoRY6GuMHSSWJdzFKIswlZHdWU1GicPJASBbkKGbP5n5O6FXyeo0bw"
-
 func TestFindDatabaseById(t *testing.T) {
-	// TODO: fix test... im-user is needed
-	return
-	/*
-		environment := di.GetEnvironment()
-		r := server.GetEngine(environment)
-		ts := httptest.NewServer(r)
-		defer ts.Close()
+	var id uint = 1
+	d := &model.Database{
+		Model: gorm.Model{ID: id},
+	}
+	databaseService := &mockDatabaseService{}
+	databaseService.
+		On("FindById", id).
+		Return(d, nil)
 
-		parsedUrl, err := url.Parse(ts.URL)
-		assert.NoError(t, err)
-		host := fmt.Sprintf("%s:%s", parsedUrl.Hostname(), parsedUrl.Port())
-		c := New(host, environment.Config.BasePath)
+	path := fmt.Sprintf("/databases/%d", id)
+	req, err := http.NewRequest(http.MethodGet, path, nil)
+	require.NoError(t, err)
+	req.Header.Set("Content-Type", "application/json; charset=UTF-8")
 
-		create, err := c.Create(AccessToken, &models.CreateDatabaseRequest{
-			GroupID: 1,
-			Name:    "whatever",
-		})
-		assert.NoError(t, err)
+	r := gin.Default()
+	user := &models.User{
+		Groups: []*models.Group{
+			{Name: handler.AdministratorGroupName},
+		},
+	}
+	r.Use(middleware.ErrorHandler(), mockTokenAuthentication(user))
+	h := database.New(nil, databaseService, nil)
+	r.GET("/databases/:id", h.FindById)
 
-		db, err := c.FindById(AccessToken, uint(create.ID))
-		log.Printf("%+v", db)
-		//	assert.NoError(t, err)
+	w := httptest.NewRecorder()
+	r.ServeHTTP(w, req)
 
-		//	assert.Equal(t, uint64(1), u.ID)
-	*/
+	assert.Equal(t, http.StatusOK, w.Code)
+
+	marshal, err := json.Marshal(d)
+	require.NoError(t, err)
+	assert.Equal(t, marshal, w.Body.Bytes())
+
+	databaseService.AssertExpectations(t)
+}
+
+type mockDatabaseService struct{ mock.Mock }
+
+func (m *mockDatabaseService) Create(d *model.Database) error {
+	panic("implement me")
+}
+
+func (m *mockDatabaseService) Copy(id uint, d *model.Database, group *models.Group) error {
+	panic("implement me")
+}
+
+func (m *mockDatabaseService) FindById(id uint) (*model.Database, error) {
+	called := m.Called(id)
+	d, ok := called.Get(0).(*model.Database)
+	if ok {
+		return d, nil
+	} else {
+		return nil, called.Error(1)
+	}
+}
+
+func (m *mockDatabaseService) Lock(id uint, instanceId uint, userId uint) (*model.Lock, error) {
+	panic("implement me")
+}
+
+func (m *mockDatabaseService) Unlock(id uint) error {
+	panic("implement me")
+}
+
+func (m *mockDatabaseService) Upload(d *model.Database, group *models.Group, file io.Reader) (*model.Database, error) {
+	panic("implement me")
+}
+
+func (m *mockDatabaseService) Download(id uint, dst io.Writer, headers func(contentLength int64)) error {
+	panic("implement me")
+}
+
+func (m *mockDatabaseService) Delete(id uint) error {
+	panic("implement me")
+}
+
+func (m *mockDatabaseService) List(groups []*models.Group) ([]*model.Database, error) {
+	panic("implement me")
+}
+
+func (m *mockDatabaseService) Update(d *model.Database) error {
+	panic("implement me")
+}
+
+func (m *mockDatabaseService) CreateExternalDownload(databaseID uint, expiration time.Time) (model.ExternalDownload, error) {
+	panic("implement me")
+}
+
+func (m *mockDatabaseService) FindExternalDownload(uuid uuid.UUID) (model.ExternalDownload, error) {
+	panic("implement me")
+}
+
+func (m *mockDatabaseService) SaveAs(token string, database *model.Database, instance *instanceModels.Instance, stack *instanceModels.Stack, newName string, format string) (*model.Database, error) {
+	panic("implement me")
+}
+
+func mockTokenAuthentication(user *models.User) func(c *gin.Context) {
+	return func(c *gin.Context) {
+		c.Set("user", user)
+	}
 }

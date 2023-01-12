@@ -11,17 +11,16 @@ import (
 )
 
 func Test_service_Create(t *testing.T) {
-	cfg, err := config.New()
-	require.NoError(t, err)
+	c := config.Config{}
 
 	database := &model.Database{}
 	repository := &mockRepository{}
 	repository.
 		On("Create", database).
 		Return(nil)
-	service := NewService(cfg, nil, nil, repository)
+	service := NewService(c, nil, nil, repository)
 
-	err = service.Create(database)
+	err := service.Create(database)
 
 	require.NoError(t, err)
 

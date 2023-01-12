@@ -27,10 +27,9 @@ func TestHandler_List(t *testing.T) {
 		},
 	}
 
-	var databaseId uint = 1
 	databases := []*model.Database{
 		{
-			Model:     gorm.Model{ID: databaseId},
+			Model:     gorm.Model{ID: 1},
 			Name:      "some name",
 			GroupName: groups[0].Name,
 			Url:       "",

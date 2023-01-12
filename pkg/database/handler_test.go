@@ -20,12 +20,10 @@ import (
 )
 
 func TestHandler_List(t *testing.T) {
-	name := "name"
-	hostname := "hostname"
 	groups := []*models.Group{
 		{
-			Name:     name,
-			Hostname: hostname,
+			Name:     "name",
+			Hostname: "hostname",
 		},
 	}
 
@@ -63,12 +61,10 @@ func TestHandler_List(t *testing.T) {
 }
 
 func TestHandler_List_ServiceError(t *testing.T) {
-	name := "name"
-	hostname := "hostname"
 	groups := []*models.Group{
 		{
-			Name:     name,
-			Hostname: hostname,
+			Name:     "name",
+			Hostname: "hostname",
 		},
 	}
 

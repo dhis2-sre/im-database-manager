@@ -3,8 +3,8 @@ package database
 import (
 	"encoding/json"
 	"errors"
+	"github.com/dhis2-sre/im-database-manager/pkg/config"
 	"github.com/dhis2-sre/im-database-manager/pkg/model"
-	instanceModels "github.com/dhis2-sre/im-manager/swagger/sdk/models"
 	"github.com/dhis2-sre/im-user/swagger/sdk/models"
 	"github.com/gin-gonic/gin"
 	"github.com/google/uuid"
@@ -12,7 +12,6 @@ import (
 	"github.com/stretchr/testify/mock"
 	"github.com/stretchr/testify/require"
 	"gorm.io/gorm"
-	"io"
 	"net/http"
 	"net/http/httptest"
 	"testing"
@@ -36,11 +35,11 @@ func TestHandler_List(t *testing.T) {
 		},
 	}
 
-	service := &mockDatabaseService{}
-	service.
-		On("List", groups).
+	repository := &mockRepository{}
+	repository.
+		On("FindByGroupNames", []string{groups[0].Name}).
 		Return(databases, nil)
-
+	service := NewService(config.Config{}, nil, nil, repository)
 	handler := New(nil, service, nil)
 
 	w := httptest.NewRecorder()
@@ -56,10 +55,10 @@ func TestHandler_List(t *testing.T) {
 	require.NoError(t, err)
 	assert.Equal(t, groupsWithDatabases(groups, databases), body)
 
-	service.AssertExpectations(t)
+	repository.AssertExpectations(t)
 }
 
-func TestHandler_List_ServiceError(t *testing.T) {
+func TestHandler_List_RepositoryError(t *testing.T) {
 	groups := []*models.Group{
 		{
 			Name:     "name",
@@ -67,12 +66,13 @@ func TestHandler_List_ServiceError(t *testing.T) {
 		},
 	}
 
-	service := &mockDatabaseService{}
 	errorMessage := "some error"
-	service.
-		On("List", groups).
-		Return(nil, errors.New(errorMessage))
 
+	repository := &mockRepository{}
+	repository.
+		On("FindByGroupNames", []string{groups[0].Name}).
+		Return(nil, errors.New(errorMessage))
+	service := NewService(config.Config{}, nil, nil, repository)
 	handler := New(nil, service, nil)
 
 	w := httptest.NewRecorder()
@@ -83,66 +83,58 @@ func TestHandler_List_ServiceError(t *testing.T) {
 
 	assert.Empty(t, w.Body.Bytes())
 	assert.NotEmpty(t, c.Errors)
+	assert.Len(t, c.Errors, 1)
 
-	service.AssertExpectations(t)
+	repository.AssertExpectations(t)
 }
 
-type mockDatabaseService struct{ mock.Mock }
+type mockRepository struct{ mock.Mock }
 
-func (m *mockDatabaseService) Create(d *model.Database) error {
+func (m *mockRepository) Create(d *model.Database) error {
 	panic("implement me")
 }
 
-func (m *mockDatabaseService) Copy(id uint, d *model.Database, group *models.Group) error {
+func (m *mockRepository) Save(d *model.Database) error {
 	panic("implement me")
 }
 
-func (m *mockDatabaseService) FindById(id uint) (*model.Database, error) {
+func (m *mockRepository) FindById(id uint) (*model.Database, error) {
 	panic("implement me")
 }
 
-func (m *mockDatabaseService) Lock(id uint, instanceId uint, userId uint) (*model.Lock, error) {
+func (m *mockRepository) Lock(id, instanceId, userId uint) (*model.Lock, error) {
 	panic("implement me")
 }
 
-func (m *mockDatabaseService) Unlock(id uint) error {
+func (m *mockRepository) Unlock(id uint) error {
 	panic("implement me")
 }
 
-func (m *mockDatabaseService) Upload(d *model.Database, group *models.Group, file io.Reader) (*model.Database, error) {
+func (m *mockRepository) Delete(id uint) error {
 	panic("implement me")
 }
 
-func (m *mockDatabaseService) Download(id uint, dst io.Writer, headers func(contentLength int64)) error {
-	panic("implement me")
-}
-
-func (m *mockDatabaseService) Delete(id uint) error {
-	panic("implement me")
-}
-
-func (m *mockDatabaseService) List(groups []*models.Group) ([]*model.Database, error) {
-	called := m.Called(groups)
+func (m *mockRepository) FindByGroupNames(names []string) ([]*model.Database, error) {
+	called := m.Called(names)
 	databases, ok := called.Get(0).([]*model.Database)
 	if ok {
 		return databases, nil
-	} else {
-		return nil, called.Error(1)
 	}
+	return nil, called.Error(1)
 }
 
-func (m *mockDatabaseService) Update(d *model.Database) error {
+func (m *mockRepository) Update(d *model.Database) error {
 	panic("implement me")
 }
 
-func (m *mockDatabaseService) CreateExternalDownload(databaseID uint, expiration time.Time) (model.ExternalDownload, error) {
+func (m *mockRepository) CreateExternalDownload(databaseID uint, expiration time.Time) (model.ExternalDownload, error) {
 	panic("implement me")
 }
 
-func (m *mockDatabaseService) FindExternalDownload(uuid uuid.UUID) (model.ExternalDownload, error) {
+func (m *mockRepository) FindExternalDownload(uuid uuid.UUID) (model.ExternalDownload, error) {
 	panic("implement me")
 }
 
-func (m *mockDatabaseService) SaveAs(token string, database *model.Database, instance *instanceModels.Instance, stack *instanceModels.Stack, newName string, format string) (*model.Database, error) {
+func (m *mockRepository) PurgeExternalDownload() error {
 	panic("implement me")
 }

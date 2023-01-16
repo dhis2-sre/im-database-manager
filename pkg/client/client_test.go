@@ -1,8 +1,7 @@
 package client
 
 import (
-	"encoding/json"
-	"fmt"
+	"context"
 	"github.com/dhis2-sre/im-database-manager/internal/handler"
 	"github.com/dhis2-sre/im-database-manager/internal/middleware"
 	"github.com/dhis2-sre/im-database-manager/pkg/database"
@@ -16,8 +15,8 @@ import (
 	"github.com/stretchr/testify/require"
 	"gorm.io/gorm"
 	"io"
+	"log"
 	"net/http"
-	"net/http/httptest"
 	"testing"
 	"time"
 )
@@ -32,11 +31,6 @@ func TestFindDatabaseById(t *testing.T) {
 		On("FindById", id).
 		Return(d, nil)
 
-	path := fmt.Sprintf("/databases/%d", id)
-	req, err := http.NewRequest(http.MethodGet, path, nil)
-	require.NoError(t, err)
-	req.Header.Set("Content-Type", "application/json; charset=UTF-8")
-
 	r := gin.Default()
 	user := &models.User{
 		Groups: []*models.Group{
@@ -47,16 +41,27 @@ func TestFindDatabaseById(t *testing.T) {
 	h := database.New(nil, databaseService, nil)
 	r.GET("/databases/:id", h.FindById)
 
-	w := httptest.NewRecorder()
-	r.ServeHTTP(w, req)
+	srv := &http.Server{
+		Addr:    ":9876",
+		Handler: r,
+	}
 
-	assert.Equal(t, http.StatusOK, w.Code)
+	go func() {
+		if err := srv.ListenAndServe(); err != nil && err != http.ErrServerClosed {
+			log.Fatalf("listen: %s\n", err)
+		}
+	}()
 
-	marshal, err := json.Marshal(d)
+	cli := New("localhost:9876", "")
+	db, err := cli.FindById("token", id)
 	require.NoError(t, err)
-	assert.Equal(t, marshal, w.Body.Bytes())
+
+	assert.Equal(t, id, uint(db.ID))
 
 	databaseService.AssertExpectations(t)
+
+	err = srv.Shutdown(context.TODO())
+	require.NoError(t, err)
 }
 
 type mockDatabaseService struct{ mock.Mock }

@@ -92,6 +92,11 @@ func (o *DownloadDatabaseOK) IsCode(code int) bool {
 	return code == 200
 }
 
+// Code gets the status code for the download database o k response
+func (o *DownloadDatabaseOK) Code() int {
+	return 200
+}
+
 func (o *DownloadDatabaseOK) Error() string {
 	return fmt.Sprintf("[GET /databases/{id}/download][%d] downloadDatabaseOK ", 200)
 }
@@ -140,6 +145,11 @@ func (o *DownloadDatabaseUnauthorized) IsServerError() bool {
 // IsCode returns true when this download database unauthorized response a status code equal to that given
 func (o *DownloadDatabaseUnauthorized) IsCode(code int) bool {
 	return code == 401
+}
+
+// Code gets the status code for the download database unauthorized response
+func (o *DownloadDatabaseUnauthorized) Code() int {
+	return 401
 }
 
 func (o *DownloadDatabaseUnauthorized) Error() string {
@@ -192,6 +202,11 @@ func (o *DownloadDatabaseForbidden) IsCode(code int) bool {
 	return code == 403
 }
 
+// Code gets the status code for the download database forbidden response
+func (o *DownloadDatabaseForbidden) Code() int {
+	return 403
+}
+
 func (o *DownloadDatabaseForbidden) Error() string {
 	return fmt.Sprintf("[GET /databases/{id}/download][%d] downloadDatabaseForbidden ", 403)
 }
@@ -242,6 +257,11 @@ func (o *DownloadDatabaseNotFound) IsCode(code int) bool {
 	return code == 404
 }
 
+// Code gets the status code for the download database not found response
+func (o *DownloadDatabaseNotFound) Code() int {
+	return 404
+}
+
 func (o *DownloadDatabaseNotFound) Error() string {
 	return fmt.Sprintf("[GET /databases/{id}/download][%d] downloadDatabaseNotFound ", 404)
 }
@@ -290,6 +310,11 @@ func (o *DownloadDatabaseUnsupportedMediaType) IsServerError() bool {
 // IsCode returns true when this download database unsupported media type response a status code equal to that given
 func (o *DownloadDatabaseUnsupportedMediaType) IsCode(code int) bool {
 	return code == 415
+}
+
+// Code gets the status code for the download database unsupported media type response
+func (o *DownloadDatabaseUnsupportedMediaType) Code() int {
+	return 415
 }
 
 func (o *DownloadDatabaseUnsupportedMediaType) Error() string {

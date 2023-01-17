@@ -92,6 +92,11 @@ func (o *ExternalDownloadDatabaseOK) IsCode(code int) bool {
 	return code == 200
 }
 
+// Code gets the status code for the external download database o k response
+func (o *ExternalDownloadDatabaseOK) Code() int {
+	return 200
+}
+
 func (o *ExternalDownloadDatabaseOK) Error() string {
 	return fmt.Sprintf("[GET /databases/external/{uuid}][%d] externalDownloadDatabaseOK ", 200)
 }
@@ -140,6 +145,11 @@ func (o *ExternalDownloadDatabaseUnauthorized) IsServerError() bool {
 // IsCode returns true when this external download database unauthorized response a status code equal to that given
 func (o *ExternalDownloadDatabaseUnauthorized) IsCode(code int) bool {
 	return code == 401
+}
+
+// Code gets the status code for the external download database unauthorized response
+func (o *ExternalDownloadDatabaseUnauthorized) Code() int {
+	return 401
 }
 
 func (o *ExternalDownloadDatabaseUnauthorized) Error() string {
@@ -192,6 +202,11 @@ func (o *ExternalDownloadDatabaseForbidden) IsCode(code int) bool {
 	return code == 403
 }
 
+// Code gets the status code for the external download database forbidden response
+func (o *ExternalDownloadDatabaseForbidden) Code() int {
+	return 403
+}
+
 func (o *ExternalDownloadDatabaseForbidden) Error() string {
 	return fmt.Sprintf("[GET /databases/external/{uuid}][%d] externalDownloadDatabaseForbidden ", 403)
 }
@@ -242,6 +257,11 @@ func (o *ExternalDownloadDatabaseNotFound) IsCode(code int) bool {
 	return code == 404
 }
 
+// Code gets the status code for the external download database not found response
+func (o *ExternalDownloadDatabaseNotFound) Code() int {
+	return 404
+}
+
 func (o *ExternalDownloadDatabaseNotFound) Error() string {
 	return fmt.Sprintf("[GET /databases/external/{uuid}][%d] externalDownloadDatabaseNotFound ", 404)
 }
@@ -290,6 +310,11 @@ func (o *ExternalDownloadDatabaseUnsupportedMediaType) IsServerError() bool {
 // IsCode returns true when this external download database unsupported media type response a status code equal to that given
 func (o *ExternalDownloadDatabaseUnsupportedMediaType) IsCode(code int) bool {
 	return code == 415
+}
+
+// Code gets the status code for the external download database unsupported media type response
+func (o *ExternalDownloadDatabaseUnsupportedMediaType) Code() int {
+	return 415
 }
 
 func (o *ExternalDownloadDatabaseUnsupportedMediaType) Error() string {

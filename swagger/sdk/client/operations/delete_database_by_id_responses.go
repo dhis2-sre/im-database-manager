@@ -92,6 +92,11 @@ func (o *DeleteDatabaseByIDAccepted) IsCode(code int) bool {
 	return code == 202
 }
 
+// Code gets the status code for the delete database by Id accepted response
+func (o *DeleteDatabaseByIDAccepted) Code() int {
+	return 202
+}
+
 func (o *DeleteDatabaseByIDAccepted) Error() string {
 	return fmt.Sprintf("[DELETE /databases/{id}][%d] deleteDatabaseByIdAccepted ", 202)
 }
@@ -140,6 +145,11 @@ func (o *DeleteDatabaseByIDUnauthorized) IsServerError() bool {
 // IsCode returns true when this delete database by Id unauthorized response a status code equal to that given
 func (o *DeleteDatabaseByIDUnauthorized) IsCode(code int) bool {
 	return code == 401
+}
+
+// Code gets the status code for the delete database by Id unauthorized response
+func (o *DeleteDatabaseByIDUnauthorized) Code() int {
+	return 401
 }
 
 func (o *DeleteDatabaseByIDUnauthorized) Error() string {
@@ -192,6 +202,11 @@ func (o *DeleteDatabaseByIDForbidden) IsCode(code int) bool {
 	return code == 403
 }
 
+// Code gets the status code for the delete database by Id forbidden response
+func (o *DeleteDatabaseByIDForbidden) Code() int {
+	return 403
+}
+
 func (o *DeleteDatabaseByIDForbidden) Error() string {
 	return fmt.Sprintf("[DELETE /databases/{id}][%d] deleteDatabaseByIdForbidden ", 403)
 }
@@ -242,6 +257,11 @@ func (o *DeleteDatabaseByIDNotFound) IsCode(code int) bool {
 	return code == 404
 }
 
+// Code gets the status code for the delete database by Id not found response
+func (o *DeleteDatabaseByIDNotFound) Code() int {
+	return 404
+}
+
 func (o *DeleteDatabaseByIDNotFound) Error() string {
 	return fmt.Sprintf("[DELETE /databases/{id}][%d] deleteDatabaseByIdNotFound ", 404)
 }
@@ -290,6 +310,11 @@ func (o *DeleteDatabaseByIDUnsupportedMediaType) IsServerError() bool {
 // IsCode returns true when this delete database by Id unsupported media type response a status code equal to that given
 func (o *DeleteDatabaseByIDUnsupportedMediaType) IsCode(code int) bool {
 	return code == 415
+}
+
+// Code gets the status code for the delete database by Id unsupported media type response
+func (o *DeleteDatabaseByIDUnsupportedMediaType) Code() int {
+	return 415
 }
 
 func (o *DeleteDatabaseByIDUnsupportedMediaType) Error() string {

@@ -96,6 +96,11 @@ func (o *SaveAsDatabaseCreated) IsCode(code int) bool {
 	return code == 201
 }
 
+// Code gets the status code for the save as database created response
+func (o *SaveAsDatabaseCreated) Code() int {
+	return 201
+}
+
 func (o *SaveAsDatabaseCreated) Error() string {
 	return fmt.Sprintf("[POST /databases/save-as/{instanceId}][%d] saveAsDatabaseCreated  %+v", 201, o.Payload)
 }
@@ -157,6 +162,11 @@ func (o *SaveAsDatabaseUnauthorized) IsCode(code int) bool {
 	return code == 401
 }
 
+// Code gets the status code for the save as database unauthorized response
+func (o *SaveAsDatabaseUnauthorized) Code() int {
+	return 401
+}
+
 func (o *SaveAsDatabaseUnauthorized) Error() string {
 	return fmt.Sprintf("[POST /databases/save-as/{instanceId}][%d] saveAsDatabaseUnauthorized ", 401)
 }
@@ -205,6 +215,11 @@ func (o *SaveAsDatabaseForbidden) IsServerError() bool {
 // IsCode returns true when this save as database forbidden response a status code equal to that given
 func (o *SaveAsDatabaseForbidden) IsCode(code int) bool {
 	return code == 403
+}
+
+// Code gets the status code for the save as database forbidden response
+func (o *SaveAsDatabaseForbidden) Code() int {
+	return 403
 }
 
 func (o *SaveAsDatabaseForbidden) Error() string {
@@ -257,6 +272,11 @@ func (o *SaveAsDatabaseNotFound) IsCode(code int) bool {
 	return code == 404
 }
 
+// Code gets the status code for the save as database not found response
+func (o *SaveAsDatabaseNotFound) Code() int {
+	return 404
+}
+
 func (o *SaveAsDatabaseNotFound) Error() string {
 	return fmt.Sprintf("[POST /databases/save-as/{instanceId}][%d] saveAsDatabaseNotFound ", 404)
 }
@@ -305,6 +325,11 @@ func (o *SaveAsDatabaseUnsupportedMediaType) IsServerError() bool {
 // IsCode returns true when this save as database unsupported media type response a status code equal to that given
 func (o *SaveAsDatabaseUnsupportedMediaType) IsCode(code int) bool {
 	return code == 415
+}
+
+// Code gets the status code for the save as database unsupported media type response
+func (o *SaveAsDatabaseUnsupportedMediaType) Code() int {
+	return 415
 }
 
 func (o *SaveAsDatabaseUnsupportedMediaType) Error() string {

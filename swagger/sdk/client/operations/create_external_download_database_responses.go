@@ -96,6 +96,11 @@ func (o *CreateExternalDownloadDatabaseOK) IsCode(code int) bool {
 	return code == 200
 }
 
+// Code gets the status code for the create external download database o k response
+func (o *CreateExternalDownloadDatabaseOK) Code() int {
+	return 200
+}
+
 func (o *CreateExternalDownloadDatabaseOK) Error() string {
 	return fmt.Sprintf("[POST /databases/{id}/external][%d] createExternalDownloadDatabaseOK  %+v", 200, o.Payload)
 }
@@ -157,6 +162,11 @@ func (o *CreateExternalDownloadDatabaseUnauthorized) IsCode(code int) bool {
 	return code == 401
 }
 
+// Code gets the status code for the create external download database unauthorized response
+func (o *CreateExternalDownloadDatabaseUnauthorized) Code() int {
+	return 401
+}
+
 func (o *CreateExternalDownloadDatabaseUnauthorized) Error() string {
 	return fmt.Sprintf("[POST /databases/{id}/external][%d] createExternalDownloadDatabaseUnauthorized ", 401)
 }
@@ -205,6 +215,11 @@ func (o *CreateExternalDownloadDatabaseForbidden) IsServerError() bool {
 // IsCode returns true when this create external download database forbidden response a status code equal to that given
 func (o *CreateExternalDownloadDatabaseForbidden) IsCode(code int) bool {
 	return code == 403
+}
+
+// Code gets the status code for the create external download database forbidden response
+func (o *CreateExternalDownloadDatabaseForbidden) Code() int {
+	return 403
 }
 
 func (o *CreateExternalDownloadDatabaseForbidden) Error() string {
@@ -257,6 +272,11 @@ func (o *CreateExternalDownloadDatabaseNotFound) IsCode(code int) bool {
 	return code == 404
 }
 
+// Code gets the status code for the create external download database not found response
+func (o *CreateExternalDownloadDatabaseNotFound) Code() int {
+	return 404
+}
+
 func (o *CreateExternalDownloadDatabaseNotFound) Error() string {
 	return fmt.Sprintf("[POST /databases/{id}/external][%d] createExternalDownloadDatabaseNotFound ", 404)
 }
@@ -305,6 +325,11 @@ func (o *CreateExternalDownloadDatabaseUnsupportedMediaType) IsServerError() boo
 // IsCode returns true when this create external download database unsupported media type response a status code equal to that given
 func (o *CreateExternalDownloadDatabaseUnsupportedMediaType) IsCode(code int) bool {
 	return code == 415
+}
+
+// Code gets the status code for the create external download database unsupported media type response
+func (o *CreateExternalDownloadDatabaseUnsupportedMediaType) Code() int {
+	return 415
 }
 
 func (o *CreateExternalDownloadDatabaseUnsupportedMediaType) Error() string {

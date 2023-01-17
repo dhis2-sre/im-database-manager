@@ -102,6 +102,11 @@ func (o *FindDatabaseByIDOK) IsCode(code int) bool {
 	return code == 200
 }
 
+// Code gets the status code for the find database by Id o k response
+func (o *FindDatabaseByIDOK) Code() int {
+	return 200
+}
+
 func (o *FindDatabaseByIDOK) Error() string {
 	return fmt.Sprintf("[GET /databases/{id}][%d] findDatabaseByIdOK  %+v", 200, o.Payload)
 }
@@ -163,6 +168,11 @@ func (o *FindDatabaseByIDBadRequest) IsCode(code int) bool {
 	return code == 400
 }
 
+// Code gets the status code for the find database by Id bad request response
+func (o *FindDatabaseByIDBadRequest) Code() int {
+	return 400
+}
+
 func (o *FindDatabaseByIDBadRequest) Error() string {
 	return fmt.Sprintf("[GET /databases/{id}][%d] findDatabaseByIdBadRequest ", 400)
 }
@@ -211,6 +221,11 @@ func (o *FindDatabaseByIDUnauthorized) IsServerError() bool {
 // IsCode returns true when this find database by Id unauthorized response a status code equal to that given
 func (o *FindDatabaseByIDUnauthorized) IsCode(code int) bool {
 	return code == 401
+}
+
+// Code gets the status code for the find database by Id unauthorized response
+func (o *FindDatabaseByIDUnauthorized) Code() int {
+	return 401
 }
 
 func (o *FindDatabaseByIDUnauthorized) Error() string {
@@ -263,6 +278,11 @@ func (o *FindDatabaseByIDForbidden) IsCode(code int) bool {
 	return code == 403
 }
 
+// Code gets the status code for the find database by Id forbidden response
+func (o *FindDatabaseByIDForbidden) Code() int {
+	return 403
+}
+
 func (o *FindDatabaseByIDForbidden) Error() string {
 	return fmt.Sprintf("[GET /databases/{id}][%d] findDatabaseByIdForbidden ", 403)
 }
@@ -313,6 +333,11 @@ func (o *FindDatabaseByIDNotFound) IsCode(code int) bool {
 	return code == 404
 }
 
+// Code gets the status code for the find database by Id not found response
+func (o *FindDatabaseByIDNotFound) Code() int {
+	return 404
+}
+
 func (o *FindDatabaseByIDNotFound) Error() string {
 	return fmt.Sprintf("[GET /databases/{id}][%d] findDatabaseByIdNotFound ", 404)
 }
@@ -361,6 +386,11 @@ func (o *FindDatabaseByIDUnsupportedMediaType) IsServerError() bool {
 // IsCode returns true when this find database by Id unsupported media type response a status code equal to that given
 func (o *FindDatabaseByIDUnsupportedMediaType) IsCode(code int) bool {
 	return code == 415
+}
+
+// Code gets the status code for the find database by Id unsupported media type response
+func (o *FindDatabaseByIDUnsupportedMediaType) Code() int {
+	return 415
 }
 
 func (o *FindDatabaseByIDUnsupportedMediaType) Error() string {

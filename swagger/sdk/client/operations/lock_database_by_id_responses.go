@@ -102,6 +102,11 @@ func (o *LockDatabaseByIDOK) IsCode(code int) bool {
 	return code == 200
 }
 
+// Code gets the status code for the lock database by Id o k response
+func (o *LockDatabaseByIDOK) Code() int {
+	return 200
+}
+
 func (o *LockDatabaseByIDOK) Error() string {
 	return fmt.Sprintf("[POST /databases/{id}/lock][%d] lockDatabaseByIdOK  %+v", 200, o.Payload)
 }
@@ -163,6 +168,11 @@ func (o *LockDatabaseByIDUnauthorized) IsCode(code int) bool {
 	return code == 401
 }
 
+// Code gets the status code for the lock database by Id unauthorized response
+func (o *LockDatabaseByIDUnauthorized) Code() int {
+	return 401
+}
+
 func (o *LockDatabaseByIDUnauthorized) Error() string {
 	return fmt.Sprintf("[POST /databases/{id}/lock][%d] lockDatabaseByIdUnauthorized ", 401)
 }
@@ -211,6 +221,11 @@ func (o *LockDatabaseByIDForbidden) IsServerError() bool {
 // IsCode returns true when this lock database by Id forbidden response a status code equal to that given
 func (o *LockDatabaseByIDForbidden) IsCode(code int) bool {
 	return code == 403
+}
+
+// Code gets the status code for the lock database by Id forbidden response
+func (o *LockDatabaseByIDForbidden) Code() int {
+	return 403
 }
 
 func (o *LockDatabaseByIDForbidden) Error() string {
@@ -263,6 +278,11 @@ func (o *LockDatabaseByIDNotFound) IsCode(code int) bool {
 	return code == 404
 }
 
+// Code gets the status code for the lock database by Id not found response
+func (o *LockDatabaseByIDNotFound) Code() int {
+	return 404
+}
+
 func (o *LockDatabaseByIDNotFound) Error() string {
 	return fmt.Sprintf("[POST /databases/{id}/lock][%d] lockDatabaseByIdNotFound ", 404)
 }
@@ -313,6 +333,11 @@ func (o *LockDatabaseByIDConflict) IsCode(code int) bool {
 	return code == 409
 }
 
+// Code gets the status code for the lock database by Id conflict response
+func (o *LockDatabaseByIDConflict) Code() int {
+	return 409
+}
+
 func (o *LockDatabaseByIDConflict) Error() string {
 	return fmt.Sprintf("[POST /databases/{id}/lock][%d] lockDatabaseByIdConflict ", 409)
 }
@@ -361,6 +386,11 @@ func (o *LockDatabaseByIDUnsupportedMediaType) IsServerError() bool {
 // IsCode returns true when this lock database by Id unsupported media type response a status code equal to that given
 func (o *LockDatabaseByIDUnsupportedMediaType) IsCode(code int) bool {
 	return code == 415
+}
+
+// Code gets the status code for the lock database by Id unsupported media type response
+func (o *LockDatabaseByIDUnsupportedMediaType) Code() int {
+	return 415
 }
 
 func (o *LockDatabaseByIDUnsupportedMediaType) Error() string {

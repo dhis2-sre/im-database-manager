@@ -90,6 +90,11 @@ func (o *CopyDatabaseAccepted) IsCode(code int) bool {
 	return code == 202
 }
 
+// Code gets the status code for the copy database accepted response
+func (o *CopyDatabaseAccepted) Code() int {
+	return 202
+}
+
 func (o *CopyDatabaseAccepted) Error() string {
 	return fmt.Sprintf("[POST /databases/{id}/copy][%d] copyDatabaseAccepted  %+v", 202, o.Payload)
 }
@@ -151,6 +156,11 @@ func (o *CopyDatabaseUnauthorized) IsCode(code int) bool {
 	return code == 401
 }
 
+// Code gets the status code for the copy database unauthorized response
+func (o *CopyDatabaseUnauthorized) Code() int {
+	return 401
+}
+
 func (o *CopyDatabaseUnauthorized) Error() string {
 	return fmt.Sprintf("[POST /databases/{id}/copy][%d] copyDatabaseUnauthorized ", 401)
 }
@@ -201,6 +211,11 @@ func (o *CopyDatabaseForbidden) IsCode(code int) bool {
 	return code == 403
 }
 
+// Code gets the status code for the copy database forbidden response
+func (o *CopyDatabaseForbidden) Code() int {
+	return 403
+}
+
 func (o *CopyDatabaseForbidden) Error() string {
 	return fmt.Sprintf("[POST /databases/{id}/copy][%d] copyDatabaseForbidden ", 403)
 }
@@ -249,6 +264,11 @@ func (o *CopyDatabaseUnsupportedMediaType) IsServerError() bool {
 // IsCode returns true when this copy database unsupported media type response a status code equal to that given
 func (o *CopyDatabaseUnsupportedMediaType) IsCode(code int) bool {
 	return code == 415
+}
+
+// Code gets the status code for the copy database unsupported media type response
+func (o *CopyDatabaseUnsupportedMediaType) Code() int {
+	return 415
 }
 
 func (o *CopyDatabaseUnsupportedMediaType) Error() string {

@@ -92,6 +92,11 @@ func (o *UnlockDatabaseByIDAccepted) IsCode(code int) bool {
 	return code == 202
 }
 
+// Code gets the status code for the unlock database by Id accepted response
+func (o *UnlockDatabaseByIDAccepted) Code() int {
+	return 202
+}
+
 func (o *UnlockDatabaseByIDAccepted) Error() string {
 	return fmt.Sprintf("[DELETE /databases/{id}/lock][%d] unlockDatabaseByIdAccepted ", 202)
 }
@@ -140,6 +145,11 @@ func (o *UnlockDatabaseByIDUnauthorized) IsServerError() bool {
 // IsCode returns true when this unlock database by Id unauthorized response a status code equal to that given
 func (o *UnlockDatabaseByIDUnauthorized) IsCode(code int) bool {
 	return code == 401
+}
+
+// Code gets the status code for the unlock database by Id unauthorized response
+func (o *UnlockDatabaseByIDUnauthorized) Code() int {
+	return 401
 }
 
 func (o *UnlockDatabaseByIDUnauthorized) Error() string {
@@ -192,6 +202,11 @@ func (o *UnlockDatabaseByIDForbidden) IsCode(code int) bool {
 	return code == 403
 }
 
+// Code gets the status code for the unlock database by Id forbidden response
+func (o *UnlockDatabaseByIDForbidden) Code() int {
+	return 403
+}
+
 func (o *UnlockDatabaseByIDForbidden) Error() string {
 	return fmt.Sprintf("[DELETE /databases/{id}/lock][%d] unlockDatabaseByIdForbidden ", 403)
 }
@@ -242,6 +257,11 @@ func (o *UnlockDatabaseByIDNotFound) IsCode(code int) bool {
 	return code == 404
 }
 
+// Code gets the status code for the unlock database by Id not found response
+func (o *UnlockDatabaseByIDNotFound) Code() int {
+	return 404
+}
+
 func (o *UnlockDatabaseByIDNotFound) Error() string {
 	return fmt.Sprintf("[DELETE /databases/{id}/lock][%d] unlockDatabaseByIdNotFound ", 404)
 }
@@ -290,6 +310,11 @@ func (o *UnlockDatabaseByIDUnsupportedMediaType) IsServerError() bool {
 // IsCode returns true when this unlock database by Id unsupported media type response a status code equal to that given
 func (o *UnlockDatabaseByIDUnsupportedMediaType) IsCode(code int) bool {
 	return code == 415
+}
+
+// Code gets the status code for the unlock database by Id unsupported media type response
+func (o *UnlockDatabaseByIDUnsupportedMediaType) Code() int {
+	return 415
 }
 
 func (o *UnlockDatabaseByIDUnsupportedMediaType) Error() string {

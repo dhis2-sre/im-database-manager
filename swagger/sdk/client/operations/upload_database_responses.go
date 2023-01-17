@@ -96,6 +96,11 @@ func (o *UploadDatabaseCreated) IsCode(code int) bool {
 	return code == 201
 }
 
+// Code gets the status code for the upload database created response
+func (o *UploadDatabaseCreated) Code() int {
+	return 201
+}
+
 func (o *UploadDatabaseCreated) Error() string {
 	return fmt.Sprintf("[POST /databases][%d] uploadDatabaseCreated  %+v", 201, o.Payload)
 }
@@ -157,6 +162,11 @@ func (o *UploadDatabaseUnauthorized) IsCode(code int) bool {
 	return code == 401
 }
 
+// Code gets the status code for the upload database unauthorized response
+func (o *UploadDatabaseUnauthorized) Code() int {
+	return 401
+}
+
 func (o *UploadDatabaseUnauthorized) Error() string {
 	return fmt.Sprintf("[POST /databases][%d] uploadDatabaseUnauthorized ", 401)
 }
@@ -205,6 +215,11 @@ func (o *UploadDatabaseForbidden) IsServerError() bool {
 // IsCode returns true when this upload database forbidden response a status code equal to that given
 func (o *UploadDatabaseForbidden) IsCode(code int) bool {
 	return code == 403
+}
+
+// Code gets the status code for the upload database forbidden response
+func (o *UploadDatabaseForbidden) Code() int {
+	return 403
 }
 
 func (o *UploadDatabaseForbidden) Error() string {
@@ -257,6 +272,11 @@ func (o *UploadDatabaseNotFound) IsCode(code int) bool {
 	return code == 404
 }
 
+// Code gets the status code for the upload database not found response
+func (o *UploadDatabaseNotFound) Code() int {
+	return 404
+}
+
 func (o *UploadDatabaseNotFound) Error() string {
 	return fmt.Sprintf("[POST /databases][%d] uploadDatabaseNotFound ", 404)
 }
@@ -305,6 +325,11 @@ func (o *UploadDatabaseUnsupportedMediaType) IsServerError() bool {
 // IsCode returns true when this upload database unsupported media type response a status code equal to that given
 func (o *UploadDatabaseUnsupportedMediaType) IsCode(code int) bool {
 	return code == 415
+}
+
+// Code gets the status code for the upload database unsupported media type response
+func (o *UploadDatabaseUnsupportedMediaType) Code() int {
+	return 415
 }
 
 func (o *UploadDatabaseUnsupportedMediaType) Error() string {

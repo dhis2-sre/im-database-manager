@@ -90,6 +90,11 @@ func (o *ListDatabasesOK) IsCode(code int) bool {
 	return code == 200
 }
 
+// Code gets the status code for the list databases o k response
+func (o *ListDatabasesOK) Code() int {
+	return 200
+}
+
 func (o *ListDatabasesOK) Error() string {
 	return fmt.Sprintf("[GET /databases][%d] listDatabasesOK  %+v", 200, o.Payload)
 }
@@ -149,6 +154,11 @@ func (o *ListDatabasesUnauthorized) IsCode(code int) bool {
 	return code == 401
 }
 
+// Code gets the status code for the list databases unauthorized response
+func (o *ListDatabasesUnauthorized) Code() int {
+	return 401
+}
+
 func (o *ListDatabasesUnauthorized) Error() string {
 	return fmt.Sprintf("[GET /databases][%d] listDatabasesUnauthorized ", 401)
 }
@@ -199,6 +209,11 @@ func (o *ListDatabasesForbidden) IsCode(code int) bool {
 	return code == 403
 }
 
+// Code gets the status code for the list databases forbidden response
+func (o *ListDatabasesForbidden) Code() int {
+	return 403
+}
+
 func (o *ListDatabasesForbidden) Error() string {
 	return fmt.Sprintf("[GET /databases][%d] listDatabasesForbidden ", 403)
 }
@@ -247,6 +262,11 @@ func (o *ListDatabasesUnsupportedMediaType) IsServerError() bool {
 // IsCode returns true when this list databases unsupported media type response a status code equal to that given
 func (o *ListDatabasesUnsupportedMediaType) IsCode(code int) bool {
 	return code == 415
+}
+
+// Code gets the status code for the list databases unsupported media type response
+func (o *ListDatabasesUnsupportedMediaType) Code() int {
+	return 415
 }
 
 func (o *ListDatabasesUnsupportedMediaType) Error() string {

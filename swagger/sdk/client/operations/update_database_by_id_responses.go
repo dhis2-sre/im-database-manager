@@ -86,6 +86,11 @@ func (o *UpdateDatabaseByIDOK) IsCode(code int) bool {
 	return code == 200
 }
 
+// Code gets the status code for the update database by Id o k response
+func (o *UpdateDatabaseByIDOK) Code() int {
+	return 200
+}
+
 func (o *UpdateDatabaseByIDOK) Error() string {
 	return fmt.Sprintf("[PUT /databases/{id}][%d] updateDatabaseByIdOK ", 200)
 }
@@ -134,6 +139,11 @@ func (o *UpdateDatabaseByIDUnauthorized) IsServerError() bool {
 // IsCode returns true when this update database by Id unauthorized response a status code equal to that given
 func (o *UpdateDatabaseByIDUnauthorized) IsCode(code int) bool {
 	return code == 401
+}
+
+// Code gets the status code for the update database by Id unauthorized response
+func (o *UpdateDatabaseByIDUnauthorized) Code() int {
+	return 401
 }
 
 func (o *UpdateDatabaseByIDUnauthorized) Error() string {
@@ -186,6 +196,11 @@ func (o *UpdateDatabaseByIDForbidden) IsCode(code int) bool {
 	return code == 403
 }
 
+// Code gets the status code for the update database by Id forbidden response
+func (o *UpdateDatabaseByIDForbidden) Code() int {
+	return 403
+}
+
 func (o *UpdateDatabaseByIDForbidden) Error() string {
 	return fmt.Sprintf("[PUT /databases/{id}][%d] updateDatabaseByIdForbidden ", 403)
 }
@@ -234,6 +249,11 @@ func (o *UpdateDatabaseByIDUnsupportedMediaType) IsServerError() bool {
 // IsCode returns true when this update database by Id unsupported media type response a status code equal to that given
 func (o *UpdateDatabaseByIDUnsupportedMediaType) IsCode(code int) bool {
 	return code == 415
+}
+
+// Code gets the status code for the update database by Id unsupported media type response
+func (o *UpdateDatabaseByIDUnsupportedMediaType) Code() int {
+	return 415
 }
 
 func (o *UpdateDatabaseByIDUnsupportedMediaType) Error() string {

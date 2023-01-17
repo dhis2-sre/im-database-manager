@@ -9,7 +9,7 @@ require (
 	github.com/aws/aws-sdk-go-v2/feature/s3/manager v1.11.47
 	github.com/aws/aws-sdk-go-v2/service/s3 v1.30.0
 	github.com/dhis2-sre/im-manager v0.9.0
-	github.com/dhis2-sre/im-user v0.9.0
+	github.com/dhis2-sre/im-user v0.10.0
 	github.com/gin-contrib/cors v1.4.0
 	github.com/gin-gonic/gin v1.8.2
 	github.com/go-openapi/errors v0.20.3

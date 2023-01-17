@@ -222,8 +222,8 @@ github.com/dgrijalva/jwt-go v3.2.0+incompatible/go.mod h1:E3ru+11k8xSBh+hMPgOLZm
 github.com/dgryski/go-sip13 v0.0.0-20181026042036-e10d5fee7954/go.mod h1:vAd38F8PWV+bWy6jNmig1y/TA+kYO4g3RSRF0IAv0no=
 github.com/dhis2-sre/im-manager v0.9.0 h1:ZtoEyAXvsB/MwIeWwS3nqKDFSC/kXf5G+kwpZ5ic1M4=
 github.com/dhis2-sre/im-manager v0.9.0/go.mod h1:xCXZVzPr0CFyWh3PHOGT7UBBCQ7vFHWDD4ZmIEtpeGA=
-github.com/dhis2-sre/im-user v0.9.0 h1:8k7p970dJkiSWZGBGOvweuzy32+MOoW0lx6EhpmcagY=
-github.com/dhis2-sre/im-user v0.9.0/go.mod h1:XHBG5Y7Wq/C45TE+DnGGxIkauxuckkYJe6zxin/DyXQ=
+github.com/dhis2-sre/im-user v0.10.0 h1:p2VmfVv+1Jm37AZK48vi9x13Fu8dVhJoDqw38VdTbE0=
+github.com/dhis2-sre/im-user v0.10.0/go.mod h1:ECvHnm41xyF/n0gLJ2FvgpaJFpyHm59rlXSVLTAtrrE=
 github.com/dimchansky/utfbom v1.1.1 h1:vV6w1AhK4VMnhBno/TPVCoK9U/LP0PkLCS9tbxHdi/U=
 github.com/dimchansky/utfbom v1.1.1/go.mod h1:SxdoEBH5qIqFocHMyGOXVAybYJdr71b1Q/j0mACtrfE=
 github.com/docker/go-connections v0.4.0 h1:El9xVISelRB7BuFusrZozjnkIM5YnzCViNKohAFqRJQ=

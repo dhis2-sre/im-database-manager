@@ -1,7 +1,6 @@
 package client
 
 import (
-	"context"
 	"github.com/dhis2-sre/im-database-manager/internal/handler"
 	"github.com/dhis2-sre/im-database-manager/internal/middleware"
 	"github.com/dhis2-sre/im-database-manager/pkg/database"
@@ -15,8 +14,8 @@ import (
 	"github.com/stretchr/testify/require"
 	"gorm.io/gorm"
 	"io"
-	"log"
-	"net/http"
+	"net/http/httptest"
+	"strings"
 	"testing"
 	"time"
 )
@@ -41,18 +40,10 @@ func TestFindDatabaseById(t *testing.T) {
 	h := database.New(nil, databaseService, nil)
 	r.GET("/databases/:id", h.FindById)
 
-	srv := &http.Server{
-		Addr:    ":9876",
-		Handler: r,
-	}
+	srv := httptest.NewServer(r)
+	host := strings.Replace(srv.URL, "http://", "", 1)
+	cli := New(host, "")
 
-	go func() {
-		if err := srv.ListenAndServe(); err != nil && err != http.ErrServerClosed {
-			log.Fatalf("listen: %s\n", err)
-		}
-	}()
-
-	cli := New("localhost:9876", "")
 	db, err := cli.FindById("token", id)
 	require.NoError(t, err)
 
@@ -60,8 +51,8 @@ func TestFindDatabaseById(t *testing.T) {
 
 	databaseService.AssertExpectations(t)
 
-	err = srv.Shutdown(context.TODO())
-	require.NoError(t, err)
+	// TODO: Since it's recommended to call Close all of this should probably run in a test suite with a tear down function calling Close
+	srv.Close()
 }
 
 type mockDatabaseService struct{ mock.Mock }

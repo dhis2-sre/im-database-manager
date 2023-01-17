@@ -21,8 +21,7 @@ import (
 func TestHandler_List(t *testing.T) {
 	groups := []*models.Group{
 		{
-			Name:     "name",
-			Hostname: "hostname",
+			Name: "name",
 		},
 	}
 
@@ -61,8 +60,7 @@ func TestHandler_List(t *testing.T) {
 func TestHandler_List_RepositoryError(t *testing.T) {
 	groups := []*models.Group{
 		{
-			Name:     "name",
-			Hostname: "hostname",
+			Name: "name",
 		},
 	}
 

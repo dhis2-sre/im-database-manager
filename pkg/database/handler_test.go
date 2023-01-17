@@ -19,9 +19,11 @@ import (
 )
 
 func TestHandler_List(t *testing.T) {
+	name := "name"
+
 	groups := []*models.Group{
 		{
-			Name: "name",
+			Name: name,
 		},
 	}
 
@@ -29,14 +31,14 @@ func TestHandler_List(t *testing.T) {
 		{
 			Model:     gorm.Model{ID: 1},
 			Name:      "some name",
-			GroupName: groups[0].Name,
+			GroupName: name,
 			Url:       "",
 		},
 	}
 
 	repository := &mockRepository{}
 	repository.
-		On("FindByGroupNames", []string{groups[0].Name}).
+		On("FindByGroupNames", []string{name}).
 		Return(databases, nil)
 	service := NewService(config.Config{}, nil, nil, repository)
 	handler := New(nil, service, nil)
@@ -49,11 +51,16 @@ func TestHandler_List(t *testing.T) {
 
 	assert.Empty(t, c.Errors)
 	assert.Equal(t, http.StatusOK, w.Code)
-	var body []GroupsWithDatabases
-	err := json.Unmarshal(w.Body.Bytes(), &body)
+	expectedBody := []GroupsWithDatabases{
+		{
+			Name:      name,
+			Databases: databases,
+		},
+	}
+	var actualBody []GroupsWithDatabases
+	err := json.Unmarshal(w.Body.Bytes(), &actualBody)
 	require.NoError(t, err)
-	assert.Equal(t, groupsWithDatabases(groups, databases), body)
-
+	assert.Equal(t, expectedBody, actualBody)
 	repository.AssertExpectations(t)
 }
 

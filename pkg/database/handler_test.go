@@ -80,7 +80,6 @@ func TestHandler_List_RepositoryError(t *testing.T) {
 	handler.List(c)
 
 	assert.Empty(t, w.Body.Bytes())
-	assert.NotEmpty(t, c.Errors)
 	assert.Len(t, c.Errors, 1)
 	assert.Equal(t, errorMessage, c.Errors[0].Error())
 

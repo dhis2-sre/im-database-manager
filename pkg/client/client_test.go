@@ -51,7 +51,6 @@ func TestFindDatabaseById(t *testing.T) {
 
 	databaseService.AssertExpectations(t)
 
-	// TODO: Since it's recommended to call Close all of this should probably run in a test suite with a tear down function calling Close
 	srv.Close()
 }
 

@@ -8,8 +8,8 @@ require (
 	github.com/aws/aws-sdk-go-v2/config v1.18.8
 	github.com/aws/aws-sdk-go-v2/feature/s3/manager v1.11.47
 	github.com/aws/aws-sdk-go-v2/service/s3 v1.30.0
-	github.com/dhis2-sre/im-manager v0.9.0
-	github.com/dhis2-sre/im-user v0.9.0
+	github.com/dhis2-sre/im-manager v0.12.0
+	github.com/dhis2-sre/im-user v0.10.0
 	github.com/gin-contrib/cors v1.4.0
 	github.com/gin-gonic/gin v1.8.2
 	github.com/go-openapi/errors v0.20.3
@@ -89,6 +89,7 @@ require (
 	github.com/golang/snappy v0.0.4 // indirect
 	github.com/google/btree v1.1.2 // indirect
 	github.com/google/gnostic v0.6.9 // indirect
+	github.com/google/go-cmp v0.5.9 // indirect
 	github.com/google/gofuzz v1.2.0 // indirect
 	github.com/google/shlex v0.0.0-20191202100458-e7afc7fbc510 // indirect
 	github.com/googleapis/enterprise-certificate-proxy v0.2.0 // indirect
@@ -185,13 +186,13 @@ require (
 	gopkg.in/urfave/cli.v1 v1.20.0 // indirect
 	gopkg.in/yaml.v2 v2.4.0 // indirect
 	gopkg.in/yaml.v3 v3.0.1 // indirect
-	k8s.io/api v0.26.0-alpha.1 // indirect
-	k8s.io/apimachinery v0.26.0-alpha.1 // indirect
+	k8s.io/api v0.27.0-alpha.0 // indirect
+	k8s.io/apimachinery v0.27.0-alpha.0 // indirect
 	k8s.io/cli-runtime v0.25.2 // indirect
-	k8s.io/client-go v0.26.0-alpha.1 // indirect
+	k8s.io/client-go v0.27.0-alpha.0 // indirect
 	k8s.io/klog/v2 v2.80.1 // indirect
-	k8s.io/kube-openapi v0.0.0-20220928191237-829ce0c27909 // indirect
-	k8s.io/utils v0.0.0-20220922133306-665eaaec4324 // indirect
+	k8s.io/kube-openapi v0.0.0-20221012153701-172d655c2280 // indirect
+	k8s.io/utils v0.0.0-20221107191617-1a15be271d1d // indirect
 	sigs.k8s.io/json v0.0.0-20220713155537-f223a00ba0e2 // indirect
 	sigs.k8s.io/kustomize/api v0.12.1 // indirect
 	sigs.k8s.io/kustomize/kyaml v0.13.9 // indirect

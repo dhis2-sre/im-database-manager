@@ -49,7 +49,6 @@ func TestFindDatabaseById(t *testing.T) {
 	require.NoError(t, err)
 
 	assert.Equal(t, id, uint(db.ID))
-
 	databaseService.AssertExpectations(t)
 }
 

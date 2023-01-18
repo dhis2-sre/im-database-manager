@@ -1,6 +1,7 @@
 package database
 
 import (
+	"bytes"
 	"encoding/json"
 	"errors"
 	"github.com/dhis2-sre/im-database-manager/pkg/config"
@@ -50,18 +51,28 @@ func TestHandler_List(t *testing.T) {
 	handler.List(c)
 
 	assert.Empty(t, c.Errors)
-	assert.Equal(t, http.StatusOK, w.Code)
-	expectedBody := []GroupsWithDatabases{
+
+	expectedBody := &[]GroupsWithDatabases{
 		{
 			Name:      name,
 			Databases: databases,
 		},
 	}
 	var actualBody []GroupsWithDatabases
-	err := json.Unmarshal(w.Body.Bytes(), &actualBody)
-	require.NoError(t, err)
-	assert.Equal(t, expectedBody, actualBody)
+	assertResponse(t, w, http.StatusOK, &actualBody, expectedBody)
+
 	repository.AssertExpectations(t)
+}
+
+func assertResponse(t *testing.T, rec *httptest.ResponseRecorder, expectedCode int, bodyType any, expectedBody any) {
+	assert.Equal(t, expectedCode, rec.Code, "HTTP status code does not match")
+	assertJSON(t, rec.Body, bodyType, expectedBody)
+}
+
+func assertJSON(t *testing.T, body *bytes.Buffer, v any, expected any) {
+	err := json.Unmarshal(body.Bytes(), v)
+	require.NoError(t, err)
+	assert.Equal(t, expected, v, "HTTP response body does not match")
 }
 
 func TestHandler_List_RepositoryError(t *testing.T) {

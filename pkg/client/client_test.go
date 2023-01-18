@@ -41,6 +41,7 @@ func TestFindDatabaseById(t *testing.T) {
 	r.GET("/databases/:id", h.FindById)
 
 	srv := httptest.NewServer(r)
+	defer srv.Close()
 	host := strings.Replace(srv.URL, "http://", "", 1)
 	cli := New(host, "")
 
@@ -50,8 +51,6 @@ func TestFindDatabaseById(t *testing.T) {
 	assert.Equal(t, id, uint(db.ID))
 
 	databaseService.AssertExpectations(t)
-
-	srv.Close()
 }
 
 type mockDatabaseService struct{ mock.Mock }

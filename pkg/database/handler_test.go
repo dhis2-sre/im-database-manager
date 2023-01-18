@@ -51,7 +51,6 @@ func TestHandler_List(t *testing.T) {
 	handler.List(c)
 
 	assert.Empty(t, c.Errors)
-
 	expectedBody := &[]GroupsWithDatabases{
 		{
 			Name:      name,
@@ -60,7 +59,6 @@ func TestHandler_List(t *testing.T) {
 	}
 	var actualBody []GroupsWithDatabases
 	assertResponse(t, w, http.StatusOK, &actualBody, expectedBody)
-
 	repository.AssertExpectations(t)
 }
 
@@ -100,7 +98,6 @@ func TestHandler_List_RepositoryError(t *testing.T) {
 	assert.Empty(t, w.Body.Bytes())
 	assert.Len(t, c.Errors, 1)
 	assert.ErrorContains(t, c.Errors[0].Err, errorMessage)
-
 	repository.AssertExpectations(t)
 }
 

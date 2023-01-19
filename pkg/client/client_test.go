@@ -1,6 +1,12 @@
 package client
 
 import (
+	"io"
+	"net/http/httptest"
+	"strings"
+	"testing"
+	"time"
+
 	"github.com/dhis2-sre/im-database-manager/internal/handler"
 	"github.com/dhis2-sre/im-database-manager/internal/middleware"
 	"github.com/dhis2-sre/im-database-manager/pkg/database"
@@ -13,11 +19,6 @@ import (
 	"github.com/stretchr/testify/mock"
 	"github.com/stretchr/testify/require"
 	"gorm.io/gorm"
-	"io"
-	"net/http/httptest"
-	"strings"
-	"testing"
-	"time"
 )
 
 func TestFindDatabaseById(t *testing.T) {

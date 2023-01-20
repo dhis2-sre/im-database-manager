@@ -23,10 +23,9 @@ import (
 )
 
 func TestHandler_FindById(t *testing.T) {
-	groupName := "name"
 	repository := &mockRepository{}
 	database := &model.Database{
-		GroupName: groupName,
+		GroupName: "name",
 	}
 	repository.
 		On("FindById", uint(1)).
@@ -39,7 +38,7 @@ func TestHandler_FindById(t *testing.T) {
 	c.AddParam("id", "1")
 	user := &models.User{
 		Groups: []*models.Group{
-			{Name: groupName},
+			{Name: "name"},
 		},
 	}
 	c.Set("user", user)
@@ -53,7 +52,6 @@ func TestHandler_FindById(t *testing.T) {
 }
 
 func TestHandler_Copy(t *testing.T) {
-	token := "token"
 	groupName := "name"
 	databaseName := "name"
 	group := &models.Group{
@@ -61,9 +59,8 @@ func TestHandler_Copy(t *testing.T) {
 	}
 	userClient := &mockUserClient{}
 	userClient.
-		On("FindGroupByName", token, groupName).
+		On("FindGroupByName", "token", "name").
 		Return(group, nil)
-
 	s3Client := &mockS3Client{}
 	s3Client.
 		On("Copy", mock.AnythingOfType("string"), "path", fmt.Sprintf("%s/%s", group.Name, databaseName)).

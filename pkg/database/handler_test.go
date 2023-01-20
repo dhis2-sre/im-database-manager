@@ -97,8 +97,7 @@ func TestHandler_Copy(t *testing.T) {
 		Name:  databaseName,
 		Group: groupName,
 	}
-	request := newRequest(t, http.MethodPost, "/groups", copyRequest)
-	request.Header.Set("Authorization", token)
+	request := newPost(t, "/groups", copyRequest)
 	c.Request = request
 
 	handler.Copy(c)
@@ -110,14 +109,15 @@ func TestHandler_Copy(t *testing.T) {
 	repository.AssertExpectations(t)
 }
 
-func newRequest(t *testing.T, method string, path string, request any) *http.Request {
+func newPost(t *testing.T, path string, request any) *http.Request {
 	body, err := json.Marshal(request)
 	require.NoError(t, err)
 
-	req, err := http.NewRequest(method, path, bytes.NewReader(body))
+	req, err := http.NewRequest(http.MethodPost, path, bytes.NewReader(body))
 	require.NoError(t, err)
 
 	req.Header.Set("Content-Type", "application/json; charset=UTF-8")
+	req.Header.Set("Authorization", "token")
 
 	return req
 }

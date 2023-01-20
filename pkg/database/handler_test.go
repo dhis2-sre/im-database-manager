@@ -75,7 +75,7 @@ func TestHandler_Copy(t *testing.T) {
 			Url: "/path",
 		}, nil)
 	repository.
-		On("Create", mock.Anything).
+		On("Create", mock.AnythingOfType("*model.Database")).
 		Return(nil)
 	service := NewService(config.Config{}, nil, s3Client, repository)
 	handler := New(userClient, service, nil)

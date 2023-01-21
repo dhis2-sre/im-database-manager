@@ -22,6 +22,43 @@ import (
 	"gorm.io/gorm"
 )
 
+func TestHandler_Delete(t *testing.T) {
+	s3Client := &mockS3Client{}
+	s3Client.
+		On("Delete", mock.AnythingOfType("string"), mock.AnythingOfType("string")).
+		Return(nil)
+	database := &model.Database{
+		GroupName: "group-name",
+		Url:       "/path",
+	}
+	repository := &mockRepository{}
+	repository.
+		On("FindById", uint(1)).
+		Return(database, nil)
+	repository.
+		On("Delete", uint(1)).
+		Return(nil)
+	service := NewService(config.Config{}, nil, s3Client, repository)
+	handler := New(nil, service, nil)
+
+	w := httptest.NewRecorder()
+	c, _ := gin.CreateTestContext(w)
+	c.AddParam("id", "1")
+	user := &models.User{
+		Groups: []*models.Group{
+			{Name: "group-name"},
+		},
+	}
+	c.Set("user", user)
+
+	handler.Delete(c)
+
+	assert.Empty(t, c.Errors)
+	assert.Equal(t, http.StatusAccepted, w.Code)
+	repository.AssertExpectations(t)
+	s3Client.AssertExpectations(t)
+}
+
 func TestHandler_FindById(t *testing.T) {
 	repository := &mockRepository{}
 	database := &model.Database{
@@ -225,7 +262,7 @@ func (m *mockRepository) Unlock(id uint) error {
 }
 
 func (m *mockRepository) Delete(id uint) error {
-	panic("implement me")
+	return m.Called(id).Error(0)
 }
 
 func (m *mockRepository) FindByGroupNames(names []string) ([]*model.Database, error) {
@@ -276,7 +313,7 @@ func (m *mockS3Client) Upload(bucket string, key string, body *bytes.Buffer) err
 }
 
 func (m *mockS3Client) Delete(bucket string, key string) error {
-	panic("implement me")
+	return m.Called(bucket, key).Error(0)
 }
 
 func (m *mockS3Client) Download(bucket string, key string, dst io.Writer, cb func(contentLength int64)) error {

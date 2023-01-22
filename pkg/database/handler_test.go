@@ -22,6 +22,41 @@ import (
 	"gorm.io/gorm"
 )
 
+func TestHandler_Update(t *testing.T) {
+	database := &model.Database{GroupName: "group-name"}
+	repository := &mockRepository{}
+	repository.
+		On("FindById", uint(1)).
+		Return(database, nil)
+	repository.
+		On("Update", database).
+		Return(nil)
+	service := NewService(config.Config{}, nil, nil, repository)
+	handler := New(nil, service, nil)
+
+	w := httptest.NewRecorder()
+	c, _ := gin.CreateTestContext(w)
+	c.AddParam("id", "1")
+	user := &models.User{
+		ID: uint64(1),
+		Groups: []*models.Group{
+			{Name: "group-name"},
+		},
+	}
+	c.Set("user", user)
+	updateDatabaseRequest := &UpdateDatabaseRequest{Name: "database-name"}
+	request := newPost(t, "/databases/1", updateDatabaseRequest)
+	c.Request = request
+
+	handler.Update(c)
+
+	assert.Empty(t, c.Errors)
+	assert.Empty(t, c.Errors)
+	var actualBody model.Database
+	assertResponse(t, w, http.StatusOK, &actualBody, database)
+	repository.AssertExpectations(t)
+}
+
 func TestHandler_FindById(t *testing.T) {
 	repository := &mockRepository{}
 	database := &model.Database{
@@ -238,7 +273,8 @@ func (m *mockRepository) FindByGroupNames(names []string) ([]*model.Database, er
 }
 
 func (m *mockRepository) Update(d *model.Database) error {
-	panic("implement me")
+	called := m.Called(d)
+	return called.Error(0)
 }
 
 func (m *mockRepository) CreateExternalDownload(databaseID uint, expiration time.Time) (model.ExternalDownload, error) {

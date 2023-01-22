@@ -26,6 +26,52 @@ import (
 	"gorm.io/gorm"
 )
 
+func TestHandler_CreateExternalDownload(t *testing.T) {
+	database := &model.Database{
+		Model:     gorm.Model{ID: 1},
+		GroupName: "group-name",
+	}
+	repository := &mockRepository{}
+	repository.
+		On("FindById", uint(1)).
+		Return(database, nil)
+	repository.
+		On("PurgeExternalDownload").
+		Return(nil)
+	expiration := time.Now().Add(time.Duration(1) * time.Hour).Round(time.Duration(1))
+	externalDownload := model.ExternalDownload{
+		UUID:       uuid.UUID{},
+		Expiration: expiration,
+		DatabaseID: 1,
+	}
+	repository.
+		On("CreateExternalDownload", uint(1), expiration).
+		Return(externalDownload, nil)
+	service := NewService(config.Config{}, nil, nil, repository)
+	handler := New(nil, service, nil)
+
+	w := httptest.NewRecorder()
+	c, _ := gin.CreateTestContext(w)
+	c.AddParam("id", "1")
+	user := &models.User{
+		ID: uint64(1),
+		Groups: []*models.Group{
+			{Name: "group-name"},
+		},
+	}
+	c.Set("user", user)
+	createExternalDatabaseRequest := &CreateExternalDatabaseRequest{Expiration: expiration}
+	request := newPost(t, "/databases/1/external", createExternalDatabaseRequest)
+	c.Request = request
+
+	handler.CreateExternalDownload(c)
+
+	require.Empty(t, c.Errors)
+	var actualBody model.ExternalDownload
+	assertResponse(t, w, http.StatusCreated, &actualBody, &externalDownload)
+	repository.AssertExpectations(t)
+}
+
 func TestHandler_Download(t *testing.T) {
 	awsS3Client := &mockAWSS3Client{}
 	awsS3Client.
@@ -460,7 +506,8 @@ func (m *mockRepository) Update(d *model.Database) error {
 }
 
 func (m *mockRepository) CreateExternalDownload(databaseID uint, expiration time.Time) (model.ExternalDownload, error) {
-	panic("implement me")
+	called := m.Called(databaseID, expiration)
+	return called.Get(0).(model.ExternalDownload), nil
 }
 
 func (m *mockRepository) FindExternalDownload(uuid uuid.UUID) (model.ExternalDownload, error) {
@@ -468,7 +515,7 @@ func (m *mockRepository) FindExternalDownload(uuid uuid.UUID) (model.ExternalDow
 }
 
 func (m *mockRepository) PurgeExternalDownload() error {
-	panic("implement me")
+	return m.Called().Error(0)
 }
 
 type mockUserClient struct{ mock.Mock }

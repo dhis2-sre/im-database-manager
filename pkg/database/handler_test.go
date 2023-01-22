@@ -22,6 +22,86 @@ import (
 	"gorm.io/gorm"
 )
 
+func TestHandler_Unlock(t *testing.T) {
+	database := &model.Database{
+		GroupName: "group-name",
+		Lock: &model.Lock{
+			DatabaseID: 1,
+			InstanceID: 1,
+			UserID:     1,
+		},
+	}
+	repository := &mockRepository{}
+	repository.
+		On("FindById", uint(1)).
+		Return(database, nil)
+	repository.
+		On("Unlock", uint(1)).
+		Return(nil)
+	service := NewService(config.Config{}, nil, nil, repository)
+	handler := New(nil, service, nil)
+
+	w := httptest.NewRecorder()
+	c, _ := gin.CreateTestContext(w)
+	c.AddParam("id", "1")
+	user := &models.User{
+		ID: uint64(1),
+		Groups: []*models.Group{
+			{Name: "name"},
+		},
+	}
+	c.Set("user", user)
+	request, err := http.NewRequest(http.MethodDelete, "/databases/1/unlock", nil)
+	require.NoError(t, err)
+	c.Request = request
+
+	handler.Unlock(c)
+
+	assert.Empty(t, c.Errors)
+	assert.Empty(t, w.Body)
+	assert.Equal(t, http.StatusAccepted, w.Code)
+	repository.AssertExpectations(t)
+}
+
+func TestHandler_Lock(t *testing.T) {
+	repository := &mockRepository{}
+	database := &model.Database{GroupName: "name"}
+	repository.
+		On("FindById", uint(1)).
+		Return(database, nil)
+	lock := &model.Lock{
+		DatabaseID: 1,
+		InstanceID: 1,
+		UserID:     1,
+	}
+	repository.
+		On("Lock", uint(1), uint(1), uint(1)).
+		Return(lock, nil)
+	service := NewService(config.Config{}, nil, nil, repository)
+	handler := New(nil, service, nil)
+
+	w := httptest.NewRecorder()
+	c, _ := gin.CreateTestContext(w)
+	c.AddParam("id", "1")
+	user := &models.User{
+		ID: uint64(1),
+		Groups: []*models.Group{
+			{Name: "name"},
+		},
+	}
+	c.Set("user", user)
+	lockDatabaseRequest := &LockDatabaseRequest{InstanceId: 1}
+	request := newPost(t, "/databases/1/lock", lockDatabaseRequest)
+	c.Request = request
+
+	handler.Lock(c)
+
+	assert.Empty(t, c.Errors)
+	var actualBody model.Lock
+	assertResponse(t, w, http.StatusCreated, &actualBody, lock)
+	repository.AssertExpectations(t)
+}
+
 func TestHandler_FindById(t *testing.T) {
 	repository := &mockRepository{}
 	database := &model.Database{
@@ -217,11 +297,13 @@ func (m *mockRepository) FindById(id uint) (*model.Database, error) {
 }
 
 func (m *mockRepository) Lock(id, instanceId, userId uint) (*model.Lock, error) {
-	panic("implement me")
+	called := m.Called(id, instanceId, userId)
+	return called.Get(0).(*model.Lock), nil
 }
 
 func (m *mockRepository) Unlock(id uint) error {
-	panic("implement me")
+	called := m.Called(id)
+	return called.Error(0)
 }
 
 func (m *mockRepository) Delete(id uint) error {

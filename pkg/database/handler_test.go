@@ -51,9 +51,6 @@ func TestHandler_Unlock(t *testing.T) {
 		},
 	}
 	c.Set("user", user)
-	request, err := http.NewRequest(http.MethodDelete, "/databases/1/unlock", nil)
-	require.NoError(t, err)
-	c.Request = request
 
 	handler.Unlock(c)
 

@@ -521,9 +521,7 @@ func (h Handler) Delete(c *gin.Context) {
 		return
 	}
 
-	// TODO: httptest.NewRecorder().Code is always 200 unless I use c.JSON... Why?!
-	//	c.Status(http.StatusAccepted)
-	c.JSON(http.StatusAccepted, nil)
+	c.AbortWithStatus(http.StatusAccepted)
 }
 
 // swagger:model GroupsWithDatabases

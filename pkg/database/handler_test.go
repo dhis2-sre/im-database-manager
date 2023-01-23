@@ -23,31 +23,29 @@ import (
 )
 
 func TestHandler_Unlock(t *testing.T) {
-	database := &model.Database{
-		GroupName: "group-name",
-		Lock: &model.Lock{
-			DatabaseID: 1,
-			InstanceID: 1,
-			UserID:     1,
-		},
-	}
 	repository := &mockRepository{}
 	repository.
 		On("FindById", uint(1)).
-		Return(database, nil)
+		Return(&model.Database{
+			GroupName: "group-name",
+			Lock: &model.Lock{
+				DatabaseID: 1,
+				InstanceID: 1,
+				UserID:     1,
+			},
+		}, nil)
 	repository.
 		On("Unlock", uint(1)).
 		Return(nil)
 	service := NewService(config.Config{}, nil, nil, repository)
 	handler := New(nil, service, nil)
-
 	w := httptest.NewRecorder()
 	c, _ := gin.CreateTestContext(w)
 	c.AddParam("id", "1")
 	user := &models.User{
 		ID: uint64(1),
 		Groups: []*models.Group{
-			{Name: "name"},
+			{Name: "group-name"},
 		},
 	}
 	c.Set("user", user)

@@ -22,15 +22,12 @@ import (
 )
 
 func TestFindDatabaseById(t *testing.T) {
-	var id uint = 1
-	d := &model.Database{
-		Model: gorm.Model{ID: id},
-	}
 	databaseService := &mockDatabaseService{}
 	databaseService.
-		On("FindById", id).
-		Return(d, nil)
-
+		On("FindById", uint(1)).
+		Return(&model.Database{
+			Model: gorm.Model{ID: 1},
+		}, nil)
 	r := gin.Default()
 	user := &models.User{
 		Groups: []*models.Group{
@@ -40,16 +37,15 @@ func TestFindDatabaseById(t *testing.T) {
 	r.Use(middleware.ErrorHandler(), mockTokenAuthentication(user))
 	h := database.New(nil, databaseService, nil)
 	r.GET("/databases/:id", h.FindById)
-
 	srv := httptest.NewServer(r)
 	defer srv.Close()
 	host := strings.Replace(srv.URL, "http://", "", 1)
 	cli := New(host, "")
 
-	db, err := cli.FindById("token", id)
-	require.NoError(t, err)
+	db, err := cli.FindById("token", 1)
 
-	assert.Equal(t, id, uint(db.ID))
+	require.NoError(t, err)
+	assert.Equal(t, 1, uint(db.ID))
 	databaseService.AssertExpectations(t)
 }
 

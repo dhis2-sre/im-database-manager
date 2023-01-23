@@ -11,6 +11,10 @@ import (
 	"testing"
 	"time"
 
+	h "github.com/dhis2-sre/im-database-manager/internal/handler"
+	instanceModels "github.com/dhis2-sre/im-manager/swagger/sdk/models"
+	userModels "github.com/dhis2-sre/im-user/swagger/sdk/models"
+
 	"github.com/dhis2-sre/im-database-manager/pkg/config"
 	"github.com/dhis2-sre/im-database-manager/pkg/model"
 	"github.com/dhis2-sre/im-user/swagger/sdk/models"
@@ -21,6 +25,102 @@ import (
 	"github.com/stretchr/testify/require"
 	"gorm.io/gorm"
 )
+
+func TestHandler_SaveAs(t *testing.T) {
+	err := h.RegisterValidation()
+	require.NoError(t, err)
+	userClient := &mockUserClient{}
+	userClient.
+		On("FindGroupByName", "token", "group-name").
+		Return(&userModels.Group{
+			Name:                 "group-name",
+			ClusterConfiguration: &models.ClusterConfiguration{KubernetesConfiguration: nil},
+		}, nil)
+	database := &model.Database{
+		Name:      "new-name",
+		GroupName: "group-name",
+	}
+	repository := &mockRepository{}
+	repository.
+		On("FindById", uint(1)).
+		Return(database, nil)
+	repository.
+		On("Save", database).
+		Return(nil)
+	service := NewService(config.Config{}, userClient, nil, repository)
+	instanceClient := &mockInstanceClient{}
+	instanceClient.
+		On("FindByIdDecrypted", "token", uint(1)).
+		Return(&instanceModels.Instance{
+			GroupName: "group-name",
+			ID:        1,
+			StackName: "stack-name",
+			UserID:    1,
+			RequiredParameters: []*instanceModels.InstanceRequiredParameter{
+				{
+					StackRequiredParameterID: "DATABASE_ID",
+					Value:                    "1",
+				},
+				{
+					StackRequiredParameterID: "DATABASE_NAME",
+					Value:                    "database-name",
+				},
+				{
+					StackRequiredParameterID: "DATABASE_USERNAME",
+					Value:                    "database-username",
+				},
+				{
+					StackRequiredParameterID: "DATABASE_PASSWORD",
+					Value:                    "database-password",
+				},
+			},
+		}, nil)
+	instanceClient.
+		On("FindStack", "token", "stack-name").
+		Return(&instanceModels.Stack{
+			Name: "stack-name",
+		}, nil)
+	handler := New(nil, service, instanceClient)
+
+	w := httptest.NewRecorder()
+	c, _ := gin.CreateTestContext(w)
+	c.AddParam("instanceId", "1")
+	user := &models.User{
+		Groups: []*models.Group{
+			{Name: "group-name"},
+		},
+	}
+	c.Set("user", user)
+
+	s := &saveAsRequest{
+		Name:   "new-name",
+		Format: "custom",
+	}
+	request := newPost(t, "/whatever", s)
+	request.Header.Set("Authorization", "token")
+	c.Request = request
+
+	handler.SaveAs(c)
+
+	assert.Empty(t, c.Errors)
+	var actualBody model.Database
+	assertResponse(t, w, http.StatusCreated, &actualBody, database)
+	repository.AssertExpectations(t)
+	userClient.AssertExpectations(t)
+	instanceClient.AssertExpectations(t)
+}
+
+type mockInstanceClient struct{ mock.Mock }
+
+func (m *mockInstanceClient) FindByIdDecrypted(token string, id uint) (*instanceModels.Instance, error) {
+	called := m.Called(token, id)
+	return called.Get(0).(*instanceModels.Instance), nil
+}
+
+func (m *mockInstanceClient) FindStack(token string, name string) (*instanceModels.Stack, error) {
+	called := m.Called(token, name)
+	return called.Get(0).(*instanceModels.Stack), nil
+}
 
 func TestHandler_FindById(t *testing.T) {
 	repository := &mockRepository{}
@@ -208,7 +308,8 @@ func (m *mockRepository) Create(d *model.Database) error {
 }
 
 func (m *mockRepository) Save(d *model.Database) error {
-	panic("implement me")
+	called := m.Called(d)
+	return called.Error(0)
 }
 
 func (m *mockRepository) FindById(id uint) (*model.Database, error) {

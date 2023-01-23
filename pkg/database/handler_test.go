@@ -36,6 +36,7 @@ func TestHandler_Download(t *testing.T) {
 		}, nil)
 	service := NewService(config.Config{}, nil, s3Client, repository)
 	handler := New(nil, service, nil)
+
 	w := httptest.NewRecorder()
 	c, _ := gin.CreateTestContext(w)
 	c.AddParam("id", "1")

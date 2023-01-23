@@ -48,6 +48,7 @@ func TestHandler_CreateExternalDownload(t *testing.T) {
 		Return(externalDownload, nil)
 	service := NewService(config.Config{}, nil, nil, repository)
 	handler := New(nil, service, nil)
+
 	w := httptest.NewRecorder()
 	c, _ := gin.CreateTestContext(w)
 	c.AddParam("id", "1")

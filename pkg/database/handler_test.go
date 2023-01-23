@@ -100,8 +100,8 @@ func TestHandler_Copy(t *testing.T) {
 	repository.AssertExpectations(t)
 }
 
-func newPost(t *testing.T, path string, request any) *http.Request {
-	body, err := json.Marshal(request)
+func newPost(t *testing.T, path string, jsonBody any) *http.Request {
+	body, err := json.Marshal(jsonBody)
 	require.NoError(t, err)
 
 	req, err := http.NewRequest(http.MethodPost, path, bytes.NewReader(body))

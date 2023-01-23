@@ -25,7 +25,7 @@ import (
 func TestHandler_Delete(t *testing.T) {
 	s3Client := &mockS3Client{}
 	s3Client.
-		On("Delete", mock.AnythingOfType("string"), mock.AnythingOfType("string")).
+		On("Delete", "", "path").
 		Return(nil)
 	database := &model.Database{
 		GroupName: "group-name",

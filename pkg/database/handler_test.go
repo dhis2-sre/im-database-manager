@@ -28,22 +28,20 @@ func TestHandler_Download(t *testing.T) {
 		On("Download", "", "", mock.AnythingOfType("*gin.responseWriter"), mock.AnythingOfType("func(int64)")).
 		Return(nil)
 	repository := &mockRepository{}
-	database := &model.Database{
-		GroupName: "name",
-		Url:       "s3://whatever",
-	}
 	repository.
 		On("FindById", uint(1)).
-		Return(database, nil)
+		Return(&model.Database{
+			GroupName: "group-name",
+			Url:       "s3://whatever",
+		}, nil)
 	service := NewService(config.Config{}, nil, s3Client, repository)
 	handler := New(nil, service, nil)
-
 	w := httptest.NewRecorder()
 	c, _ := gin.CreateTestContext(w)
 	c.AddParam("id", "1")
 	user := &models.User{
 		Groups: []*models.Group{
-			{Name: "name"},
+			{Name: "group-name"},
 		},
 	}
 	c.Set("user", user)
@@ -56,8 +54,7 @@ func TestHandler_Download(t *testing.T) {
 	assert.Equal(t, "File Transfer", headers.Get("Content-Description"))
 	assert.Equal(t, "binary", headers.Get("Content-Transfer-Encoding"))
 	assert.Equal(t, "application/octet-stream", headers.Get("Content-Type"))
-	// TODO: Is the below enough for asserting content length? If not, how to do better?
-	assert.Equal(t, "", headers.Get("Content-Length"))
+	assert.Equal(t, "123", headers.Get("Content-Length"))
 	repository.AssertExpectations(t)
 	s3Client.AssertExpectations(t)
 }
@@ -320,5 +317,6 @@ func (m *mockS3Client) Delete(bucket string, key string) error {
 }
 
 func (m *mockS3Client) Download(bucket string, key string, dst io.Writer, cb func(contentLength int64)) error {
+	cb(123)
 	return m.Called(bucket, key, dst, cb).Error(0)
 }

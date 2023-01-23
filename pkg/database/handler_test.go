@@ -31,6 +31,7 @@ func TestHandler_FindById(t *testing.T) {
 		Return(database, nil)
 	service := NewService(config.Config{}, nil, nil, repository)
 	handler := New(nil, service, nil)
+
 	w := httptest.NewRecorder()
 	c, _ := gin.CreateTestContext(w)
 	c.AddParam("id", "1")
@@ -71,6 +72,7 @@ func TestHandler_Copy(t *testing.T) {
 		Return(nil)
 	service := NewService(config.Config{}, nil, s3Client, repository)
 	handler := New(userClient, service, nil)
+
 	w := httptest.NewRecorder()
 	c, _ := gin.CreateTestContext(w)
 	c.AddParam("id", "1")
@@ -126,6 +128,7 @@ func TestHandler_List(t *testing.T) {
 		Return(databases, nil)
 	service := NewService(config.Config{}, nil, nil, repository)
 	handler := New(nil, service, nil)
+
 	w := httptest.NewRecorder()
 	c, _ := gin.CreateTestContext(w)
 	user := &models.User{
@@ -168,6 +171,7 @@ func TestHandler_List_RepositoryError(t *testing.T) {
 		Return(nil, errors.New("some error"))
 	service := NewService(config.Config{}, nil, nil, repository)
 	handler := New(nil, service, nil)
+
 	w := httptest.NewRecorder()
 	c, _ := gin.CreateTestContext(w)
 	user := &models.User{

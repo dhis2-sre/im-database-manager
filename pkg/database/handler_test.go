@@ -81,6 +81,7 @@ func TestHandler_SaveAs(t *testing.T) {
 			Name: "stack-name",
 		}, nil)
 	handler := New(nil, service, instanceClient)
+
 	w := httptest.NewRecorder()
 	c, _ := gin.CreateTestContext(w)
 	c.AddParam("instanceId", "1")

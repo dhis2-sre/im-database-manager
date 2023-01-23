@@ -23,14 +23,13 @@ import (
 )
 
 func TestHandler_CreateExternalDownload(t *testing.T) {
-	database := &model.Database{
-		Model:     gorm.Model{ID: 1},
-		GroupName: "group-name",
-	}
 	repository := &mockRepository{}
 	repository.
 		On("FindById", uint(1)).
-		Return(database, nil)
+		Return(&model.Database{
+			Model:     gorm.Model{ID: 1},
+			GroupName: "group-name",
+		}, nil)
 	repository.
 		On("PurgeExternalDownload").
 		Return(nil)
@@ -45,7 +44,6 @@ func TestHandler_CreateExternalDownload(t *testing.T) {
 		Return(externalDownload, nil)
 	service := NewService(config.Config{}, nil, nil, repository)
 	handler := New(nil, service, nil)
-
 	w := httptest.NewRecorder()
 	c, _ := gin.CreateTestContext(w)
 	c.AddParam("id", "1")

@@ -92,8 +92,7 @@ func TestHandler_Lock(t *testing.T) {
 	handler.Lock(c)
 
 	assert.Empty(t, c.Errors)
-	var actualBody model.Lock
-	assertResponse(t, w, http.StatusCreated, &actualBody, lock)
+	assertResponse(t, w, http.StatusCreated, lock)
 	repository.AssertExpectations(t)
 }
 
@@ -165,8 +164,7 @@ func TestHandler_FindById(t *testing.T) {
 	handler.FindById(c)
 
 	assert.Empty(t, c.Errors)
-	var actualBody model.Database
-	assertResponse(t, w, http.StatusOK, &actualBody, database)
+	assertResponse(t, w, http.StatusOK, database)
 	repository.AssertExpectations(t)
 }
 
@@ -268,22 +266,21 @@ func TestHandler_List(t *testing.T) {
 			Databases: databases,
 		},
 	}
-	var actualBody []GroupsWithDatabases
-	assertResponse(t, w, http.StatusOK, &actualBody, expectedBody)
+	assertResponse(t, w, http.StatusOK, expectedBody)
 	repository.AssertExpectations(t)
 }
 
-func assertResponse(t *testing.T, rec *httptest.ResponseRecorder, expectedCode int, bodyType any, expectedBody any) {
-	assert.Equal(t, expectedCode, rec.Code, "HTTP status code does not match")
-	assertJSON(t, rec.Body, bodyType, expectedBody)
+func assertResponse[V any](t *testing.T, rec *httptest.ResponseRecorder, expectedCode int, expectedBody V) {
+	require.Equal(t, expectedCode, rec.Code, "HTTP status code does not match")
+	assertJSON(t, rec.Body, expectedBody)
 }
 
-func assertJSON(t *testing.T, body *bytes.Buffer, v any, expected any) {
-	err := json.Unmarshal(body.Bytes(), v)
+func assertJSON[V any](t *testing.T, body *bytes.Buffer, expected V) {
+	actualBody := new(V)
+	err := json.Unmarshal(body.Bytes(), &actualBody)
 	require.NoError(t, err)
-	assert.Equal(t, expected, v, "HTTP response body does not match")
+	require.Equal(t, expected, *actualBody, "HTTP response body does not match")
 }
-
 func TestHandler_List_RepositoryError(t *testing.T) {
 	repository := &mockRepository{}
 	repository.

@@ -4,7 +4,6 @@ import (
 	"bytes"
 	"encoding/json"
 	"errors"
-	"fmt"
 	"io"
 	"net/http"
 	"net/http/httptest"
@@ -98,6 +97,50 @@ func TestHandler_Lock(t *testing.T) {
 	repository.AssertExpectations(t)
 }
 
+func TestHandler_Delete(t *testing.T) {
+	s3Client := &mockS3Client{}
+	s3Client.
+		On("Delete", "", "path").
+		Return(nil)
+	database := &model.Database{
+		GroupName: "group-name",
+		Url:       "/path",
+	}
+	repository := &mockRepository{}
+	repository.
+		On("FindById", uint(1)).
+		Return(database, nil)
+	repository.
+		On("Delete", uint(1)).
+		Return(nil)
+	service := NewService(config.Config{}, nil, s3Client, repository)
+	handler := New(nil, service, nil)
+
+	w := httptest.NewRecorder()
+	c := newContext(w, "group-name")
+	c.AddParam("id", "1")
+
+	handler.Delete(c)
+
+	assert.Empty(t, c.Errors)
+	assert.Empty(t, w.Body)
+	c.Writer.Flush()
+	assert.Equal(t, http.StatusAccepted, w.Code)
+	repository.AssertExpectations(t)
+	s3Client.AssertExpectations(t)
+}
+
+func newContext(w *httptest.ResponseRecorder, group string) *gin.Context {
+	user := &models.User{
+		Groups: []*models.Group{
+			{Name: group},
+		},
+	}
+	c, _ := gin.CreateTestContext(w)
+	c.Set("user", user)
+	return c
+}
+
 func TestHandler_FindById(t *testing.T) {
 	repository := &mockRepository{}
 	database := &model.Database{
@@ -128,18 +171,15 @@ func TestHandler_FindById(t *testing.T) {
 }
 
 func TestHandler_Copy(t *testing.T) {
-	groupName := "name"
-	databaseName := "name"
-	group := &models.Group{
-		Name: groupName,
-	}
 	userClient := &mockUserClient{}
 	userClient.
-		On("FindGroupByName", "token", "name").
-		Return(group, nil)
+		On("FindGroupByName", "token", "group-name").
+		Return(&models.Group{
+			Name: "group-name",
+		}, nil)
 	s3Client := &mockS3Client{}
 	s3Client.
-		On("Copy", mock.AnythingOfType("string"), "path", fmt.Sprintf("%s/%s", group.Name, databaseName)).
+		On("Copy", mock.AnythingOfType("string"), "path", "group-name/database-name").
 		Return(nil)
 	repository := &mockRepository{}
 	repository.
@@ -155,23 +195,21 @@ func TestHandler_Copy(t *testing.T) {
 
 	w := httptest.NewRecorder()
 	c, _ := gin.CreateTestContext(w)
-
 	c.AddParam("id", "1")
-
 	user := &models.User{
 		ID: 1,
 		Groups: []*models.Group{
-			group,
+			{
+				Name: "group-name",
+			},
 		},
 	}
 	c.Set("user", user)
-
 	copyRequest := &CopyDatabaseRequest{
-		Name:  databaseName,
-		Group: groupName,
+		Name:  "database-name",
+		Group: "group-name",
 	}
-	request := newPost(t, "/groups", copyRequest)
-	c.Request = request
+	c.Request = newPost(t, "/groups", copyRequest)
 
 	handler.Copy(c)
 
@@ -182,8 +220,8 @@ func TestHandler_Copy(t *testing.T) {
 	repository.AssertExpectations(t)
 }
 
-func newPost(t *testing.T, path string, request any) *http.Request {
-	body, err := json.Marshal(request)
+func newPost(t *testing.T, path string, jsonBody any) *http.Request {
+	body, err := json.Marshal(jsonBody)
 	require.NoError(t, err)
 
 	req, err := http.NewRequest(http.MethodPost, path, bytes.NewReader(body))
@@ -196,40 +234,37 @@ func newPost(t *testing.T, path string, request any) *http.Request {
 }
 
 func TestHandler_List(t *testing.T) {
-	name := "name"
-
-	groups := []*models.Group{
-		{
-			Name: name,
-		},
-	}
-
 	databases := []*model.Database{
 		{
 			Model:     gorm.Model{ID: 1},
 			Name:      "some name",
-			GroupName: name,
+			GroupName: "name",
 			Url:       "",
 		},
 	}
-
 	repository := &mockRepository{}
 	repository.
-		On("FindByGroupNames", []string{name}).
+		On("FindByGroupNames", []string{"name"}).
 		Return(databases, nil)
 	service := NewService(config.Config{}, nil, nil, repository)
 	handler := New(nil, service, nil)
 
 	w := httptest.NewRecorder()
 	c, _ := gin.CreateTestContext(w)
-	c.Set("user", &models.User{Groups: groups})
+	user := &models.User{
+		Groups: []*models.Group{
+			{
+				Name: "name",
+			},
+		}}
+	c.Set("user", user)
 
 	handler.List(c)
 
 	assert.Empty(t, c.Errors)
 	expectedBody := &[]GroupsWithDatabases{
 		{
-			Name:      name,
+			Name:      "name",
 			Databases: databases,
 		},
 	}
@@ -250,30 +285,28 @@ func assertJSON(t *testing.T, body *bytes.Buffer, v any, expected any) {
 }
 
 func TestHandler_List_RepositoryError(t *testing.T) {
-	groups := []*models.Group{
-		{
-			Name: "name",
-		},
-	}
-
-	errorMessage := "some error"
-
 	repository := &mockRepository{}
 	repository.
-		On("FindByGroupNames", []string{groups[0].Name}).
-		Return(nil, errors.New(errorMessage))
+		On("FindByGroupNames", []string{"group-name"}).
+		Return(nil, errors.New("some error"))
 	service := NewService(config.Config{}, nil, nil, repository)
 	handler := New(nil, service, nil)
 
 	w := httptest.NewRecorder()
 	c, _ := gin.CreateTestContext(w)
-	c.Set("user", &models.User{Groups: groups})
+	user := &models.User{
+		Groups: []*models.Group{
+			{
+				Name: "group-name",
+			},
+		}}
+	c.Set("user", user)
 
 	handler.List(c)
 
 	assert.Empty(t, w.Body.Bytes())
 	assert.Len(t, c.Errors, 1)
-	assert.ErrorContains(t, c.Errors[0].Err, errorMessage)
+	assert.ErrorContains(t, c.Errors[0].Err, "some error")
 	repository.AssertExpectations(t)
 }
 
@@ -303,7 +336,7 @@ func (m *mockRepository) Unlock(id uint) error {
 }
 
 func (m *mockRepository) Delete(id uint) error {
-	panic("implement me")
+	return m.Called(id).Error(0)
 }
 
 func (m *mockRepository) FindByGroupNames(names []string) ([]*model.Database, error) {
@@ -354,7 +387,7 @@ func (m *mockS3Client) Upload(bucket string, key string, body *bytes.Buffer) err
 }
 
 func (m *mockS3Client) Delete(bucket string, key string) error {
-	panic("implement me")
+	return m.Called(bucket, key).Error(0)
 }
 
 func (m *mockS3Client) Download(bucket string, key string, dst io.Writer, cb func(contentLength int64)) error {

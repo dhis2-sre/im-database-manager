@@ -42,14 +42,8 @@ func TestHandler_Delete(t *testing.T) {
 	handler := New(nil, service, nil)
 
 	w := httptest.NewRecorder()
-	c, _ := gin.CreateTestContext(w)
+	c := newContext(w, "group-name")
 	c.AddParam("id", "1")
-	user := &models.User{
-		Groups: []*models.Group{
-			{Name: "group-name"},
-		},
-	}
-	c.Set("user", user)
 
 	handler.Delete(c)
 
@@ -58,6 +52,17 @@ func TestHandler_Delete(t *testing.T) {
 	assert.Equal(t, http.StatusAccepted, w.Code)
 	repository.AssertExpectations(t)
 	s3Client.AssertExpectations(t)
+}
+
+func newContext(w *httptest.ResponseRecorder, group string) *gin.Context {
+	user := &models.User{
+		Groups: []*models.Group{
+			{Name: group},
+		},
+	}
+	c, _ := gin.CreateTestContext(w)
+	c.Set("user", user)
+	return c
 }
 
 func TestHandler_FindById(t *testing.T) {

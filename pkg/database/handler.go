@@ -427,7 +427,7 @@ func (h Handler) Unlock(c *gin.Context) {
 		return
 	}
 
-	c.AbortWithStatus(http.StatusAccepted)
+	c.Status(http.StatusAccepted)
 }
 
 // Download database

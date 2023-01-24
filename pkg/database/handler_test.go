@@ -88,8 +88,7 @@ func TestHandler_Lock(t *testing.T) {
 	}
 	c.Set("user", user)
 	lockDatabaseRequest := &LockDatabaseRequest{InstanceId: 1}
-	request := newPost(t, "/databases/1/lock", lockDatabaseRequest)
-	c.Request = request
+	c.Request = newPost(t, "/whatever", lockDatabaseRequest)
 
 	handler.Lock(c)
 

@@ -521,7 +521,7 @@ func (h Handler) Delete(c *gin.Context) {
 		return
 	}
 
-	c.AbortWithStatus(http.StatusAccepted)
+	c.Status(http.StatusAccepted)
 }
 
 // swagger:model GroupsWithDatabases

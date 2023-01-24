@@ -49,6 +49,7 @@ func TestHandler_Delete(t *testing.T) {
 
 	assert.Empty(t, c.Errors)
 	assert.Empty(t, w.Body)
+	c.Writer.Flush()
 	assert.Equal(t, http.StatusAccepted, w.Code)
 	repository.AssertExpectations(t)
 	s3Client.AssertExpectations(t)

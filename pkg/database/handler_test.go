@@ -122,9 +122,7 @@ func TestHandler_Copy(t *testing.T) {
 
 	w := httptest.NewRecorder()
 	c, _ := gin.CreateTestContext(w)
-
 	c.AddParam("id", "1")
-
 	user := &models.User{
 		ID: 1,
 		Groups: []*models.Group{
@@ -132,7 +130,6 @@ func TestHandler_Copy(t *testing.T) {
 		},
 	}
 	c.Set("user", user)
-
 	copyRequest := &CopyDatabaseRequest{
 		Name:  databaseName,
 		Group: groupName,

@@ -45,7 +45,7 @@ func TestFindDatabaseById(t *testing.T) {
 	db, err := cli.FindById("token", 1)
 
 	require.NoError(t, err)
-	assert.Equal(t, 1, uint(db.ID))
+	assert.Equal(t, uint64(1), db.ID)
 	databaseService.AssertExpectations(t)
 }
 

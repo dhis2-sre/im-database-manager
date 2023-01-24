@@ -134,8 +134,7 @@ func TestHandler_Copy(t *testing.T) {
 		Name:  databaseName,
 		Group: groupName,
 	}
-	request := newPost(t, "/groups", copyRequest)
-	c.Request = request
+	c.Request = newPost(t, "/groups", copyRequest)
 
 	handler.Copy(c)
 

@@ -44,8 +44,7 @@ func TestHandler_Update(t *testing.T) {
 	}
 	c.Set("user", user)
 	updateDatabaseRequest := &UpdateDatabaseRequest{Name: "database-name"}
-	request := newPost(t, "/databases/1", updateDatabaseRequest)
-	c.Request = request
+	c.Request = newPost(t, "/databases/1", updateDatabaseRequest)
 
 	handler.Update(c)
 

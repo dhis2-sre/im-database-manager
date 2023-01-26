@@ -12,8 +12,8 @@ import (
 	"github.com/aws/aws-sdk-go-v2/service/s3/types"
 )
 
-func NewS3Client(client AWSS3Client) (S3Client, error) {
-	return S3Client{client}, nil
+func NewS3Client(client AWSS3Client) (*S3Client, error) {
+	return &S3Client{client}, nil
 }
 
 type S3Client struct {

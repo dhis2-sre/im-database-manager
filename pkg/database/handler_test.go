@@ -49,7 +49,6 @@ func TestHandler_Update(t *testing.T) {
 	handler.Update(c)
 
 	assert.Empty(t, c.Errors)
-	assert.Empty(t, c.Errors)
 	assertResponse(t, w, http.StatusOK, database)
 	repository.AssertExpectations(t)
 }

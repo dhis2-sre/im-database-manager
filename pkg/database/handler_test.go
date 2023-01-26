@@ -32,7 +32,7 @@ func TestHandler_CreateExternalDownload(t *testing.T) {
 	repository.
 		On("PurgeExternalDownload").
 		Return(nil)
-	expiration := time.Now().Add(time.Duration(1) * time.Hour).Round(time.Duration(1))
+	expiration := time.Now().Add(time.Duration(1) * time.Hour).Round(time.Duration(1)).Local()
 	externalDownload := model.ExternalDownload{
 		UUID:       uuid.UUID{},
 		Expiration: expiration,

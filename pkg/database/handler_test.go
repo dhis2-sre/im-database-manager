@@ -45,18 +45,10 @@ func TestHandler_CreateExternalDownload(t *testing.T) {
 	handler := New(nil, service, nil)
 
 	w := httptest.NewRecorder()
-	c, _ := gin.CreateTestContext(w)
+	c := newContext(w, "group-name")
 	c.AddParam("id", "1")
-	user := &models.User{
-		ID: uint64(1),
-		Groups: []*models.Group{
-			{Name: "group-name"},
-		},
-	}
-	c.Set("user", user)
 	createExternalDatabaseRequest := &CreateExternalDatabaseRequest{Expiration: expiration}
-	request := newPost(t, "/databases/1/external", createExternalDatabaseRequest)
-	c.Request = request
+	c.Request = newPost(t, "/databases/1/external", createExternalDatabaseRequest)
 
 	handler.CreateExternalDownload(c)
 
@@ -84,15 +76,8 @@ func TestHandler_Unlock(t *testing.T) {
 	handler := New(nil, service, nil)
 
 	w := httptest.NewRecorder()
-	c, _ := gin.CreateTestContext(w)
+	c := newContext(w, "group-name")
 	c.AddParam("id", "1")
-	user := &models.User{
-		ID: uint64(1),
-		Groups: []*models.Group{
-			{Name: "group-name"},
-		},
-	}
-	c.Set("user", user)
 
 	handler.Unlock(c)
 
@@ -105,7 +90,7 @@ func TestHandler_Unlock(t *testing.T) {
 
 func TestHandler_Lock(t *testing.T) {
 	repository := &mockRepository{}
-	database := &model.Database{GroupName: "name"}
+	database := &model.Database{GroupName: "group-name"}
 	repository.
 		On("FindById", uint(1)).
 		Return(database, nil)
@@ -121,15 +106,8 @@ func TestHandler_Lock(t *testing.T) {
 	handler := New(nil, service, nil)
 
 	w := httptest.NewRecorder()
-	c, _ := gin.CreateTestContext(w)
+	c := newContext(w, "group-name")
 	c.AddParam("id", "1")
-	user := &models.User{
-		ID: uint64(1),
-		Groups: []*models.Group{
-			{Name: "name"},
-		},
-	}
-	c.Set("user", user)
 	lockDatabaseRequest := &LockDatabaseRequest{InstanceId: 1}
 	c.Request = newPost(t, "/whatever", lockDatabaseRequest)
 
@@ -175,6 +153,7 @@ func TestHandler_Delete(t *testing.T) {
 
 func newContext(w *httptest.ResponseRecorder, group string) *gin.Context {
 	user := &models.User{
+		ID: uint64(1),
 		Groups: []*models.Group{
 			{Name: group},
 		},
@@ -187,7 +166,7 @@ func newContext(w *httptest.ResponseRecorder, group string) *gin.Context {
 func TestHandler_FindById(t *testing.T) {
 	repository := &mockRepository{}
 	database := &model.Database{
-		GroupName: "name",
+		GroupName: "group-name",
 	}
 	repository.
 		On("FindById", uint(1)).
@@ -196,14 +175,8 @@ func TestHandler_FindById(t *testing.T) {
 	handler := New(nil, service, nil)
 
 	w := httptest.NewRecorder()
-	c, _ := gin.CreateTestContext(w)
+	c := newContext(w, "group-name")
 	c.AddParam("id", "1")
-	user := &models.User{
-		Groups: []*models.Group{
-			{Name: "name"},
-		},
-	}
-	c.Set("user", user)
 
 	handler.FindById(c)
 
@@ -236,17 +209,8 @@ func TestHandler_Copy(t *testing.T) {
 	handler := New(userClient, service, nil)
 
 	w := httptest.NewRecorder()
-	c, _ := gin.CreateTestContext(w)
+	c := newContext(w, "group-name")
 	c.AddParam("id", "1")
-	user := &models.User{
-		ID: 1,
-		Groups: []*models.Group{
-			{
-				Name: "group-name",
-			},
-		},
-	}
-	c.Set("user", user)
 	copyRequest := &CopyDatabaseRequest{
 		Name:  "database-name",
 		Group: "group-name",
@@ -280,33 +244,26 @@ func TestHandler_List(t *testing.T) {
 		{
 			Model:     gorm.Model{ID: 1},
 			Name:      "some name",
-			GroupName: "name",
+			GroupName: "group-name",
 			Url:       "",
 		},
 	}
 	repository := &mockRepository{}
 	repository.
-		On("FindByGroupNames", []string{"name"}).
+		On("FindByGroupNames", []string{"group-name"}).
 		Return(databases, nil)
 	service := NewService(config.Config{}, nil, nil, repository)
 	handler := New(nil, service, nil)
 
 	w := httptest.NewRecorder()
-	c, _ := gin.CreateTestContext(w)
-	user := &models.User{
-		Groups: []*models.Group{
-			{
-				Name: "name",
-			},
-		}}
-	c.Set("user", user)
+	c := newContext(w, "group-name")
 
 	handler.List(c)
 
 	assert.Empty(t, c.Errors)
 	expectedBody := &[]GroupsWithDatabases{
 		{
-			Name:      "name",
+			Name:      "group-name",
 			Databases: databases,
 		},
 	}
@@ -334,14 +291,7 @@ func TestHandler_List_RepositoryError(t *testing.T) {
 	handler := New(nil, service, nil)
 
 	w := httptest.NewRecorder()
-	c, _ := gin.CreateTestContext(w)
-	user := &models.User{
-		Groups: []*models.Group{
-			{
-				Name: "group-name",
-			},
-		}}
-	c.Set("user", user)
+	c := newContext(w, "group-name")
 
 	handler.List(c)
 

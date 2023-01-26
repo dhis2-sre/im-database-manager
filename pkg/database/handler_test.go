@@ -34,15 +34,8 @@ func TestHandler_Update(t *testing.T) {
 	handler := New(nil, service, nil)
 
 	w := httptest.NewRecorder()
-	c, _ := gin.CreateTestContext(w)
+	c := newContext(w, "group-name")
 	c.AddParam("id", "1")
-	user := &models.User{
-		ID: uint64(1),
-		Groups: []*models.Group{
-			{Name: "group-name"},
-		},
-	}
-	c.Set("user", user)
 	updateDatabaseRequest := &UpdateDatabaseRequest{Name: "database-name"}
 	c.Request = newPost(t, "/databases/1", updateDatabaseRequest)
 

@@ -2,14 +2,19 @@ package database
 
 import (
 	"bytes"
+	"context"
 	"encoding/json"
 	"errors"
 	"fmt"
 	"io"
 	"net/http"
 	"net/http/httptest"
+	"strings"
 	"testing"
 	"time"
+
+	"github.com/aws/aws-sdk-go-v2/service/s3"
+	"github.com/dhis2-sre/im-database-manager/pkg/storage"
 
 	"github.com/dhis2-sre/im-database-manager/pkg/config"
 	"github.com/dhis2-sre/im-database-manager/pkg/model"
@@ -23,10 +28,15 @@ import (
 )
 
 func TestHandler_Download(t *testing.T) {
-	s3Client := &mockS3Client{}
-	s3Client.
-		On("Download", "", "", mock.AnythingOfType("*gin.responseWriter"), mock.AnythingOfType("func(int64)")).
-		Return(nil)
+	awsS3Client := &mockAWSS3Client{}
+	awsS3Client.
+		On("GetObject", mock.AnythingOfType("*context.emptyCtx"), mock.AnythingOfType("*s3.GetObjectInput"), mock.AnythingOfType("[]func(*s3.Options)")).
+		Return(&s3.GetObjectOutput{
+			Body:          io.NopCloser(strings.NewReader("Hello, World!")),
+			ContentLength: 13,
+		}, nil)
+	s3Client, err := storage.NewS3Client(awsS3Client)
+	require.NoError(t, err)
 	repository := &mockRepository{}
 	repository.
 		On("FindById", uint(1)).
@@ -55,9 +65,45 @@ func TestHandler_Download(t *testing.T) {
 	assert.Equal(t, "File Transfer", headers.Get("Content-Description"))
 	assert.Equal(t, "binary", headers.Get("Content-Transfer-Encoding"))
 	assert.Equal(t, "application/octet-stream", headers.Get("Content-Type"))
-	assert.Equal(t, "123", headers.Get("Content-Length"))
+	assert.Equal(t, "13", headers.Get("Content-Length"))
+	assert.Equal(t, "Hello, World!", w.Body.String())
 	repository.AssertExpectations(t)
-	s3Client.AssertExpectations(t)
+	awsS3Client.AssertExpectations(t)
+}
+
+type mockAWSS3Client struct{ mock.Mock }
+
+func (m *mockAWSS3Client) CopyObject(ctx context.Context, params *s3.CopyObjectInput, optFns ...func(*s3.Options)) (*s3.CopyObjectOutput, error) {
+	panic("implement me")
+}
+
+func (m *mockAWSS3Client) DeleteObject(ctx context.Context, params *s3.DeleteObjectInput, optFns ...func(*s3.Options)) (*s3.DeleteObjectOutput, error) {
+	panic("implement me")
+}
+
+func (m *mockAWSS3Client) GetObject(ctx context.Context, params *s3.GetObjectInput, optFns ...func(*s3.Options)) (*s3.GetObjectOutput, error) {
+	called := m.Called(ctx, params, optFns)
+	return called.Get(0).(*s3.GetObjectOutput), nil
+}
+
+func (m *mockAWSS3Client) PutObject(ctx context.Context, input *s3.PutObjectInput, f ...func(*s3.Options)) (*s3.PutObjectOutput, error) {
+	panic("implement me")
+}
+
+func (m *mockAWSS3Client) UploadPart(ctx context.Context, input *s3.UploadPartInput, f ...func(*s3.Options)) (*s3.UploadPartOutput, error) {
+	panic("implement me")
+}
+
+func (m *mockAWSS3Client) CreateMultipartUpload(ctx context.Context, input *s3.CreateMultipartUploadInput, f ...func(*s3.Options)) (*s3.CreateMultipartUploadOutput, error) {
+	panic("implement me")
+}
+
+func (m *mockAWSS3Client) CompleteMultipartUpload(ctx context.Context, input *s3.CompleteMultipartUploadInput, f ...func(*s3.Options)) (*s3.CompleteMultipartUploadOutput, error) {
+	panic("implement me")
+}
+
+func (m *mockAWSS3Client) AbortMultipartUpload(ctx context.Context, input *s3.AbortMultipartUploadInput, f ...func(*s3.Options)) (*s3.AbortMultipartUploadOutput, error) {
+	panic("implement me")
 }
 
 func TestHandler_FindById(t *testing.T) {
@@ -318,6 +364,5 @@ func (m *mockS3Client) Delete(bucket string, key string) error {
 }
 
 func (m *mockS3Client) Download(bucket string, key string, dst io.Writer, cb func(contentLength int64)) error {
-	cb(123)
-	return m.Called(bucket, key, dst, cb).Error(0)
+	panic("implement me")
 }

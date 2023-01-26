@@ -26,8 +26,12 @@
 package main
 
 import (
+	"context"
 	"fmt"
 	"os"
+
+	s3config "github.com/aws/aws-sdk-go-v2/config"
+	"github.com/aws/aws-sdk-go-v2/service/s3"
 
 	"github.com/dhis2-sre/im-database-manager/internal/handler"
 	"github.com/dhis2-sre/im-database-manager/internal/server"
@@ -54,7 +58,11 @@ func run() error {
 	usrSvc := userClient.New(cfg.UserService.Host, cfg.UserService.BasePath)
 	instanceSvc := instanceClient.New(cfg.InstanceService.Host, cfg.InstanceService.BasePath)
 
-	s3Client, err := storage.NewS3Client()
+	s3Config, err := s3config.LoadDefaultConfig(context.TODO(), s3config.WithRegion("eu-west-1"))
+	if err != nil {
+		return err
+	}
+	s3Client, err := storage.NewS3Client(s3.NewFromConfig(s3Config))
 	if err != nil {
 		return err
 	}

@@ -62,7 +62,6 @@ func TestHandler_Upload(t *testing.T) {
 	c := newContext(w, "group-name")
 	c.Request = newPost(t, "", &buf)
 	c.Request.Header.Set("Content-Type", multipartWriter.FormDataContentType())
-	c.Request.Header.Set("Authorization", "token")
 
 	handler.Upload(c)
 

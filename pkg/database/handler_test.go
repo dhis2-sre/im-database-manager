@@ -5,6 +5,8 @@ import (
 	"encoding/json"
 	"errors"
 	"io"
+	"log"
+	"mime/multipart"
 	"net/http"
 	"net/http/httptest"
 	"testing"
@@ -20,6 +22,58 @@ import (
 	"github.com/stretchr/testify/require"
 	"gorm.io/gorm"
 )
+
+func TestHandler_Upload(t *testing.T) {
+	userClient := &mockUserClient{}
+	userClient.
+		On("FindGroupByName", "token", "group-name").
+		Return(&models.Group{
+			Name: "group-name",
+		}, nil)
+	repository := &mockRepository{}
+	// TODO: Don't use AnythingOfType... Unless avoidable
+	repository.
+		On("Save", mock.AnythingOfType("*model.Database")).
+		Return()
+	service := NewService(config.Config{}, nil, nil, repository)
+	handler := New(userClient, service, nil)
+
+	var buf bytes.Buffer
+	multipartWriter := multipart.NewWriter(&buf)
+	err := multipartWriter.WriteField("group", "group-name")
+	require.NoError(t, err)
+	//	defer multipartWriter.Close()
+	/*
+		field, err := multipartWriter.CreateFormField("group")
+		require.NoError(t, err)
+		_, err = field.Write([]byte("group-name"))
+		require.NoError(t, err)
+	*/
+
+	filePart, err := multipartWriter.CreateFormFile("database", "file.txt")
+	require.NoError(t, err)
+	_, err = filePart.Write([]byte("Hello, World!"))
+	require.NoError(t, err)
+
+	err = multipartWriter.Close()
+	require.NoError(t, err)
+
+	w := httptest.NewRecorder()
+	c := newContext(w, "group-name")
+	c.Request = newPost(t, "", &buf)
+	c.Request.Header.Set("Content-Type", multipartWriter.FormDataContentType())
+	c.Request.Header.Set("Authorization", "token")
+
+	handler.Upload(c)
+
+	require.Empty(t, c.Errors)
+	log.Println("c.Errors.Last().Error()")
+	log.Println(c.Errors.Last().Error())
+	require.NoError(t, c.Err())
+
+	repository.AssertExpectations(t)
+	userClient.AssertExpectations(t)
+}
 
 func TestHandler_Unlock(t *testing.T) {
 	repository := &mockRepository{}

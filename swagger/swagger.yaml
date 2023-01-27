@@ -185,6 +185,11 @@ paths:
             parameters:
                 - description: Upload database request body parameter
                   in: formData
+                  name: Group
+                  required: true
+                  type: string
+                - description: Upload database request body parameter
+                  in: formData
                   name: File
                   required: true
                   type: file

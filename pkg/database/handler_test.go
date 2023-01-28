@@ -35,7 +35,7 @@ func TestHandler_Download(t *testing.T) {
 			Body:          io.NopCloser(strings.NewReader("Hello, World!")),
 			ContentLength: 13,
 		}, nil)
-	s3Client, err := storage.NewS3Client(awsS3Client)
+	s3Client, err := storage.NewS3Client(awsS3Client, nil)
 	require.NoError(t, err)
 	repository := &mockRepository{}
 	repository.

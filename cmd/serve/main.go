@@ -30,6 +30,8 @@ import (
 	"fmt"
 	"os"
 
+	"github.com/aws/aws-sdk-go-v2/feature/s3/manager"
+
 	s3config "github.com/aws/aws-sdk-go-v2/config"
 	"github.com/aws/aws-sdk-go-v2/service/s3"
 
@@ -62,7 +64,9 @@ func run() error {
 	if err != nil {
 		return err
 	}
-	s3Client, err := storage.NewS3Client(s3.NewFromConfig(s3Config))
+	s3AWSClient := s3.NewFromConfig(s3Config)
+	uploader := manager.NewUploader(s3AWSClient)
+	s3Client, err := storage.NewS3Client(s3AWSClient, uploader)
 	if err != nil {
 		return err
 	}

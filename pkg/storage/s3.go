@@ -6,30 +6,30 @@ import (
 	"fmt"
 	"io"
 
-	"github.com/aws/aws-sdk-go-v2/aws"
 	"github.com/aws/aws-sdk-go-v2/feature/s3/manager"
+
+	"github.com/aws/aws-sdk-go-v2/aws"
 	"github.com/aws/aws-sdk-go-v2/service/s3"
 	"github.com/aws/aws-sdk-go-v2/service/s3/types"
 )
 
-func NewS3Client(client AWSS3Client) (*S3Client, error) {
-	return &S3Client{client}, nil
-}
-
-type S3Client struct {
-	client AWSS3Client
+func NewS3Client(client AWSS3Client, uploader AWSS3Uploader) (*S3Client, error) {
+	return &S3Client{client, uploader}, nil
 }
 
 type AWSS3Client interface {
 	CopyObject(ctx context.Context, params *s3.CopyObjectInput, optFns ...func(*s3.Options)) (*s3.CopyObjectOutput, error)
 	DeleteObject(ctx context.Context, params *s3.DeleteObjectInput, optFns ...func(*s3.Options)) (*s3.DeleteObjectOutput, error)
 	GetObject(ctx context.Context, params *s3.GetObjectInput, optFns ...func(*s3.Options)) (*s3.GetObjectOutput, error)
+}
 
-	PutObject(context.Context, *s3.PutObjectInput, ...func(*s3.Options)) (*s3.PutObjectOutput, error)
-	UploadPart(context.Context, *s3.UploadPartInput, ...func(*s3.Options)) (*s3.UploadPartOutput, error)
-	CreateMultipartUpload(context.Context, *s3.CreateMultipartUploadInput, ...func(*s3.Options)) (*s3.CreateMultipartUploadOutput, error)
-	CompleteMultipartUpload(context.Context, *s3.CompleteMultipartUploadInput, ...func(*s3.Options)) (*s3.CompleteMultipartUploadOutput, error)
-	AbortMultipartUpload(context.Context, *s3.AbortMultipartUploadInput, ...func(*s3.Options)) (*s3.AbortMultipartUploadOutput, error)
+type AWSS3Uploader interface {
+	Upload(ctx context.Context, input *s3.PutObjectInput, opts ...func(*manager.Uploader)) (*manager.UploadOutput, error)
+}
+
+type S3Client struct {
+	client   AWSS3Client
+	uploader AWSS3Uploader
 }
 
 func (s S3Client) Copy(bucket string, source string, destination string) error {
@@ -47,14 +47,12 @@ func (s S3Client) Copy(bucket string, source string, destination string) error {
 }
 
 func (s S3Client) Upload(bucket string, key string, body *bytes.Buffer) error {
-	uploader := manager.NewUploader(s.client)
-
-	_, err := uploader.Upload(context.TODO(), &s3.PutObjectInput{
+	_, err := s.uploader.Upload(context.TODO(), &s3.PutObjectInput{
 		Bucket: aws.String(bucket),
 		Key:    aws.String(key),
 		Body:   bytes.NewReader(body.Bytes()),
 		ACL:    types.ObjectCannedACLPrivate,
-	})
+	}, nil)
 
 	if err != nil {
 		return fmt.Errorf("error uploading object to bucket %q using key %q: %s", bucket, key, err)

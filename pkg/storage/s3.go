@@ -17,6 +17,11 @@ func NewS3Client(client AWSS3Client, uploader AWSS3Uploader) (*S3Client, error) 
 	return &S3Client{client, uploader}, nil
 }
 
+type S3Client struct {
+	client   AWSS3Client
+	uploader AWSS3Uploader
+}
+
 type AWSS3Client interface {
 	CopyObject(ctx context.Context, params *s3.CopyObjectInput, optFns ...func(*s3.Options)) (*s3.CopyObjectOutput, error)
 	DeleteObject(ctx context.Context, params *s3.DeleteObjectInput, optFns ...func(*s3.Options)) (*s3.DeleteObjectOutput, error)
@@ -25,11 +30,6 @@ type AWSS3Client interface {
 
 type AWSS3Uploader interface {
 	Upload(ctx context.Context, input *s3.PutObjectInput, opts ...func(*manager.Uploader)) (*manager.UploadOutput, error)
-}
-
-type S3Client struct {
-	client   AWSS3Client
-	uploader AWSS3Uploader
 }
 
 func (s S3Client) Copy(bucket string, source string, destination string) error {

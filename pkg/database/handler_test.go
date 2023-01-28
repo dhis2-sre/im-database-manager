@@ -58,8 +58,7 @@ func TestHandler_CreateExternalDownload(t *testing.T) {
 	handler.CreateExternalDownload(c)
 
 	require.Empty(t, c.Errors)
-	var actualBody model.ExternalDownload
-	assertResponse(t, w, http.StatusCreated, &actualBody, &externalDownload)
+	assertResponse(t, w, http.StatusCreated, &externalDownload)
 	repository.AssertExpectations(t)
 }
 

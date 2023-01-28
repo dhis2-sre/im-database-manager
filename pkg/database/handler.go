@@ -1,7 +1,6 @@
 package database
 
 import (
-	"errors"
 	"io"
 	"mime/multipart"
 	"net/http"
@@ -427,7 +426,7 @@ func (h Handler) Unlock(c *gin.Context) {
 	}
 
 	if d.Lock == nil {
-		_ = c.AbortWithError(http.StatusNoContent, errors.New("database not locked"))
+		c.String(http.StatusNoContent, "database not locked")
 		return
 	}
 
@@ -437,6 +436,7 @@ func (h Handler) Unlock(c *gin.Context) {
 		_ = c.Error(forbidden)
 		return
 	}
+
 	err = h.databaseService.Unlock(uint(id))
 	if err != nil {
 		_ = c.Error(err)

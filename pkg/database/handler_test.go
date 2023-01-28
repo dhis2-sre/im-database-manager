@@ -2,14 +2,19 @@ package database
 
 import (
 	"bytes"
+	"context"
 	"encoding/json"
 	"errors"
 	"io"
 	"mime/multipart"
 	"net/http"
 	"net/http/httptest"
+	"strings"
 	"testing"
 	"time"
+
+	"github.com/aws/aws-sdk-go-v2/service/s3"
+	"github.com/dhis2-sre/im-database-manager/pkg/storage"
 
 	"github.com/dhis2-sre/im-database-manager/pkg/config"
 	"github.com/dhis2-sre/im-database-manager/pkg/model"
@@ -69,6 +74,146 @@ func TestHandler_Upload(t *testing.T) {
 	userClient.AssertExpectations(t)
 }
 
+func TestHandler_CreateExternalDownload(t *testing.T) {
+	repository := &mockRepository{}
+	repository.
+		On("FindById", uint(1)).
+		Return(&model.Database{
+			Model:     gorm.Model{ID: 1},
+			GroupName: "group-name",
+		}, nil)
+	repository.
+		On("PurgeExternalDownload").
+		Return(nil)
+	expiration := time.Now().Add(time.Duration(1) * time.Hour).Round(time.Duration(1)).UTC()
+	externalDownload := model.ExternalDownload{
+		UUID:       uuid.UUID{},
+		Expiration: expiration,
+		DatabaseID: 1,
+	}
+	repository.
+		On("CreateExternalDownload", uint(1), expiration).
+		Return(externalDownload, nil)
+	service := NewService(config.Config{}, nil, nil, repository)
+	handler := New(nil, service, nil)
+
+	w := httptest.NewRecorder()
+	c := newContext(w, "group-name")
+	c.AddParam("id", "1")
+	createExternalDatabaseRequest := &CreateExternalDatabaseRequest{Expiration: expiration}
+	c.Request = newPost(t, "/databases/1/external", createExternalDatabaseRequest)
+
+	handler.CreateExternalDownload(c)
+
+	require.Empty(t, c.Errors)
+	assertResponse(t, w, http.StatusCreated, &externalDownload)
+	repository.AssertExpectations(t)
+}
+
+func TestHandler_Download(t *testing.T) {
+	awsS3Client := &mockAWSS3Client{}
+	awsS3Client.
+		On("GetObject", mock.AnythingOfType("*context.emptyCtx"), mock.AnythingOfType("*s3.GetObjectInput"), mock.AnythingOfType("[]func(*s3.Options)")).
+		Return(&s3.GetObjectOutput{
+			Body:          io.NopCloser(strings.NewReader("Hello, World!")),
+			ContentLength: 13,
+		}, nil)
+	s3Client, err := storage.NewS3Client(awsS3Client, nil)
+	require.NoError(t, err)
+	repository := &mockRepository{}
+	repository.
+		On("FindById", uint(1)).
+		Return(&model.Database{
+			GroupName: "group-name",
+			Url:       "s3://whatever",
+		}, nil)
+	service := NewService(config.Config{}, nil, s3Client, repository)
+	handler := New(nil, service, nil)
+
+	w := httptest.NewRecorder()
+	c, _ := gin.CreateTestContext(w)
+	c.AddParam("id", "1")
+	user := &models.User{
+		Groups: []*models.Group{
+			{Name: "group-name"},
+		},
+	}
+	c.Set("user", user)
+
+	handler.Download(c)
+
+	assert.Empty(t, c.Errors)
+	headers := w.Header()
+	assert.Equal(t, "attachment; filename=whatever", headers.Get("Content-Disposition"))
+	assert.Equal(t, "File Transfer", headers.Get("Content-Description"))
+	assert.Equal(t, "binary", headers.Get("Content-Transfer-Encoding"))
+	assert.Equal(t, "application/octet-stream", headers.Get("Content-Type"))
+	assert.Equal(t, "13", headers.Get("Content-Length"))
+	assert.Equal(t, "Hello, World!", w.Body.String())
+	repository.AssertExpectations(t)
+	awsS3Client.AssertExpectations(t)
+}
+
+type mockAWSS3Client struct{ mock.Mock }
+
+func (m *mockAWSS3Client) CopyObject(ctx context.Context, params *s3.CopyObjectInput, optFns ...func(*s3.Options)) (*s3.CopyObjectOutput, error) {
+	panic("implement me")
+}
+
+func (m *mockAWSS3Client) DeleteObject(ctx context.Context, params *s3.DeleteObjectInput, optFns ...func(*s3.Options)) (*s3.DeleteObjectOutput, error) {
+	panic("implement me")
+}
+
+func (m *mockAWSS3Client) GetObject(ctx context.Context, params *s3.GetObjectInput, optFns ...func(*s3.Options)) (*s3.GetObjectOutput, error) {
+	called := m.Called(ctx, params, optFns)
+	return called.Get(0).(*s3.GetObjectOutput), nil
+}
+
+func (m *mockAWSS3Client) PutObject(ctx context.Context, input *s3.PutObjectInput, f ...func(*s3.Options)) (*s3.PutObjectOutput, error) {
+	panic("implement me")
+}
+
+func (m *mockAWSS3Client) UploadPart(ctx context.Context, input *s3.UploadPartInput, f ...func(*s3.Options)) (*s3.UploadPartOutput, error) {
+	panic("implement me")
+}
+
+func (m *mockAWSS3Client) CreateMultipartUpload(ctx context.Context, input *s3.CreateMultipartUploadInput, f ...func(*s3.Options)) (*s3.CreateMultipartUploadOutput, error) {
+	panic("implement me")
+}
+
+func (m *mockAWSS3Client) CompleteMultipartUpload(ctx context.Context, input *s3.CompleteMultipartUploadInput, f ...func(*s3.Options)) (*s3.CompleteMultipartUploadOutput, error) {
+	panic("implement me")
+}
+
+func (m *mockAWSS3Client) AbortMultipartUpload(ctx context.Context, input *s3.AbortMultipartUploadInput, f ...func(*s3.Options)) (*s3.AbortMultipartUploadOutput, error) {
+	panic("implement me")
+}
+
+func TestHandler_Update(t *testing.T) {
+	database := &model.Database{GroupName: "group-name"}
+	repository := &mockRepository{}
+	repository.
+		On("FindById", uint(1)).
+		Return(database, nil)
+	repository.
+		On("Update", database).
+		Return(nil)
+	service := NewService(config.Config{}, nil, nil, repository)
+	handler := New(nil, service, nil)
+
+	w := httptest.NewRecorder()
+	c := newContext(w, "group-name")
+	c.AddParam("id", "1")
+	updateDatabaseRequest := &UpdateDatabaseRequest{Name: "database-name"}
+	c.Request = newPost(t, "/databases/1", updateDatabaseRequest)
+
+	handler.Update(c)
+
+	assert.Empty(t, c.Errors)
+	assertResponse(t, w, http.StatusOK, database)
+	repository.AssertExpectations(t)
+}
+
 func TestHandler_Unlock(t *testing.T) {
 	repository := &mockRepository{}
 	repository.
@@ -88,15 +233,8 @@ func TestHandler_Unlock(t *testing.T) {
 	handler := New(nil, service, nil)
 
 	w := httptest.NewRecorder()
-	c, _ := gin.CreateTestContext(w)
+	c := newContext(w, "group-name")
 	c.AddParam("id", "1")
-	user := &models.User{
-		ID: uint64(1),
-		Groups: []*models.Group{
-			{Name: "group-name"},
-		},
-	}
-	c.Set("user", user)
 
 	handler.Unlock(c)
 
@@ -109,7 +247,7 @@ func TestHandler_Unlock(t *testing.T) {
 
 func TestHandler_Lock(t *testing.T) {
 	repository := &mockRepository{}
-	database := &model.Database{GroupName: "name"}
+	database := &model.Database{GroupName: "group-name"}
 	repository.
 		On("FindById", uint(1)).
 		Return(database, nil)
@@ -125,15 +263,8 @@ func TestHandler_Lock(t *testing.T) {
 	handler := New(nil, service, nil)
 
 	w := httptest.NewRecorder()
-	c, _ := gin.CreateTestContext(w)
+	c := newContext(w, "group-name")
 	c.AddParam("id", "1")
-	user := &models.User{
-		ID: uint64(1),
-		Groups: []*models.Group{
-			{Name: "name"},
-		},
-	}
-	c.Set("user", user)
 	lockDatabaseRequest := &LockDatabaseRequest{InstanceId: 1}
 	c.Request = newPost(t, "/whatever", lockDatabaseRequest)
 
@@ -179,6 +310,7 @@ func TestHandler_Delete(t *testing.T) {
 
 func newContext(w *httptest.ResponseRecorder, group string) *gin.Context {
 	user := &models.User{
+		ID: uint64(1),
 		Groups: []*models.Group{
 			{Name: group},
 		},
@@ -191,7 +323,7 @@ func newContext(w *httptest.ResponseRecorder, group string) *gin.Context {
 func TestHandler_FindById(t *testing.T) {
 	repository := &mockRepository{}
 	database := &model.Database{
-		GroupName: "name",
+		GroupName: "group-name",
 	}
 	repository.
 		On("FindById", uint(1)).
@@ -200,14 +332,8 @@ func TestHandler_FindById(t *testing.T) {
 	handler := New(nil, service, nil)
 
 	w := httptest.NewRecorder()
-	c, _ := gin.CreateTestContext(w)
+	c := newContext(w, "group-name")
 	c.AddParam("id", "1")
-	user := &models.User{
-		Groups: []*models.Group{
-			{Name: "name"},
-		},
-	}
-	c.Set("user", user)
 
 	handler.FindById(c)
 
@@ -240,17 +366,8 @@ func TestHandler_Copy(t *testing.T) {
 	handler := New(userClient, service, nil)
 
 	w := httptest.NewRecorder()
-	c, _ := gin.CreateTestContext(w)
+	c := newContext(w, "group-name")
 	c.AddParam("id", "1")
-	user := &models.User{
-		ID: 1,
-		Groups: []*models.Group{
-			{
-				Name: "group-name",
-			},
-		},
-	}
-	c.Set("user", user)
 	copyRequest := &CopyDatabaseRequest{
 		Name:  "database-name",
 		Group: "group-name",
@@ -284,33 +401,26 @@ func TestHandler_List(t *testing.T) {
 		{
 			Model:     gorm.Model{ID: 1},
 			Name:      "some name",
-			GroupName: "name",
+			GroupName: "group-name",
 			Url:       "",
 		},
 	}
 	repository := &mockRepository{}
 	repository.
-		On("FindByGroupNames", []string{"name"}).
+		On("FindByGroupNames", []string{"group-name"}).
 		Return(databases, nil)
 	service := NewService(config.Config{}, nil, nil, repository)
 	handler := New(nil, service, nil)
 
 	w := httptest.NewRecorder()
-	c, _ := gin.CreateTestContext(w)
-	user := &models.User{
-		Groups: []*models.Group{
-			{
-				Name: "name",
-			},
-		}}
-	c.Set("user", user)
+	c := newContext(w, "group-name")
 
 	handler.List(c)
 
 	assert.Empty(t, c.Errors)
 	expectedBody := &[]GroupsWithDatabases{
 		{
-			Name:      "name",
+			Name:      "group-name",
 			Databases: databases,
 		},
 	}
@@ -338,14 +448,7 @@ func TestHandler_List_RepositoryError(t *testing.T) {
 	handler := New(nil, service, nil)
 
 	w := httptest.NewRecorder()
-	c, _ := gin.CreateTestContext(w)
-	user := &models.User{
-		Groups: []*models.Group{
-			{
-				Name: "group-name",
-			},
-		}}
-	c.Set("user", user)
+	c := newContext(w, "group-name")
 
 	handler.List(c)
 
@@ -394,11 +497,13 @@ func (m *mockRepository) FindByGroupNames(names []string) ([]*model.Database, er
 }
 
 func (m *mockRepository) Update(d *model.Database) error {
-	panic("implement me")
+	called := m.Called(d)
+	return called.Error(0)
 }
 
 func (m *mockRepository) CreateExternalDownload(databaseID uint, expiration time.Time) (model.ExternalDownload, error) {
-	panic("implement me")
+	called := m.Called(databaseID, expiration)
+	return called.Get(0).(model.ExternalDownload), nil
 }
 
 func (m *mockRepository) FindExternalDownload(uuid uuid.UUID) (model.ExternalDownload, error) {
@@ -406,7 +511,7 @@ func (m *mockRepository) FindExternalDownload(uuid uuid.UUID) (model.ExternalDow
 }
 
 func (m *mockRepository) PurgeExternalDownload() error {
-	panic("implement me")
+	return m.Called().Error(0)
 }
 
 type mockUserClient struct{ mock.Mock }

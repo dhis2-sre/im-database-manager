@@ -13,6 +13,8 @@ import (
 	"testing"
 	"time"
 
+	"github.com/aws/aws-sdk-go-v2/feature/s3/manager"
+
 	"github.com/aws/aws-sdk-go-v2/service/s3"
 	"github.com/dhis2-sre/im-database-manager/pkg/storage"
 
@@ -34,11 +36,12 @@ func TestHandler_Upload(t *testing.T) {
 		Return(&models.Group{
 			Name: "group-name",
 		}, nil)
-	// TODO: Don't mock the s3 client
-	s3Client := &mockS3Client{}
-	s3Client.
-		On("Upload", mock.AnythingOfType("string"), mock.AnythingOfType("string"), mock.AnythingOfType("*bytes.Buffer")).
-		Return(nil)
+	s3Uploader := &mockAwsS3Uploader{}
+	s3Uploader.
+		On("Upload", mock.AnythingOfType("*context.emptyCtx"), mock.AnythingOfType("*s3.PutObjectInput"), mock.AnythingOfType("[]func(*manager.Uploader)")).
+		Return(&manager.UploadOutput{}, nil)
+	s3Client, err := storage.NewS3Client(nil, s3Uploader)
+	require.NoError(t, err)
 	repository := &mockRepository{}
 	repository.
 		On("Save", mock.AnythingOfType("*model.Database")).
@@ -46,6 +49,25 @@ func TestHandler_Upload(t *testing.T) {
 	service := NewService(config.Config{}, nil, s3Client, repository)
 	handler := New(userClient, service, nil)
 
+	w := httptest.NewRecorder()
+	c := newContext(w, "group-name")
+	body, contentType := createMultipartMessage(t)
+	request, err := http.NewRequest(http.MethodPost, "/whatever", body)
+	require.NoError(t, err)
+	request.Header.Set("Authorization", "token")
+	request.Header.Set("Content-Type", contentType)
+	c.Request = request
+
+	handler.Upload(c)
+
+	require.Empty(t, c.Errors)
+	assertResponse(t, w, http.StatusCreated, &model.Database{Name: "database.sql", GroupName: "group-name", Url: "s3:///group-name/database.sql"})
+	repository.AssertExpectations(t)
+	s3Uploader.AssertExpectations(t)
+	userClient.AssertExpectations(t)
+}
+
+func createMultipartMessage(t *testing.T) (*bytes.Buffer, string) {
 	var buf bytes.Buffer
 	multipartWriter := multipart.NewWriter(&buf)
 	err := multipartWriter.WriteField("group", "group-name")
@@ -56,22 +78,14 @@ func TestHandler_Upload(t *testing.T) {
 	require.NoError(t, err)
 	err = multipartWriter.Close()
 	require.NoError(t, err)
+	return &buf, multipartWriter.FormDataContentType()
+}
 
-	w := httptest.NewRecorder()
-	c := newContext(w, "group-name")
-	request, err := http.NewRequest(http.MethodPost, "/whatever", &buf)
-	require.NoError(t, err)
-	request.Header.Set("Authorization", "token")
-	request.Header.Set("Content-Type", multipartWriter.FormDataContentType())
-	c.Request = request
+type mockAwsS3Uploader struct{ mock.Mock }
 
-	handler.Upload(c)
-
-	require.Empty(t, c.Errors)
-	assertResponse(t, w, http.StatusCreated, &model.Database{Name: "database.sql", GroupName: "group-name", Url: "s3:///group-name/database.sql"})
-	repository.AssertExpectations(t)
-	s3Client.AssertExpectations(t)
-	userClient.AssertExpectations(t)
+func (m *mockAwsS3Uploader) Upload(ctx context.Context, input *s3.PutObjectInput, opts ...func(*manager.Uploader)) (*manager.UploadOutput, error) {
+	called := m.Called(ctx, input, opts)
+	return called.Get(0).(*manager.UploadOutput), nil
 }
 
 func TestHandler_CreateExternalDownload(t *testing.T) {

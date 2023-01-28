@@ -24,7 +24,7 @@ deploy:
         createNamespace: true
         remoteChart: postgresql
         repo: https://charts.bitnami.com/bitnami
-        version: 11.0.4
+        version: 11.6.2
         useHelmSecrets: true
         valuesFiles:
           - helm/data/secrets/{{ .ENVIRONMENT }}/postgresql.yaml

@@ -27,34 +27,25 @@ import (
 
 	"github.com/dhis2-sre/im-database-manager/internal/apperror"
 	"github.com/dhis2-sre/im-database-manager/pkg/config"
-	"github.com/dhis2-sre/im-database-manager/pkg/storage"
 	"github.com/dhis2-sre/im-user/swagger/sdk/models"
 )
 
-type Service interface {
-	Copy(id uint, d *model.Database, group *models.Group) error
-	FindById(id uint) (*model.Database, error)
-	Lock(id uint, instanceId uint, userId uint) (*model.Lock, error)
-	Unlock(id uint) error
-	Upload(d *model.Database, group *models.Group, file io.Reader) (*model.Database, error)
-	Download(id uint, dst io.Writer, headers func(contentLength int64)) error
-	Delete(id uint) error
-	List(groups []*models.Group) ([]*model.Database, error)
-	Update(d *model.Database) error
-	CreateExternalDownload(databaseID uint, expiration time.Time) (model.ExternalDownload, error)
-	FindExternalDownload(uuid uuid.UUID) (model.ExternalDownload, error)
-	SaveAs(token string, database *model.Database, instance *instanceModels.Instance, stack *instanceModels.Stack, newName string, format string) (*model.Database, error)
+func NewService(c config.Config, userClient userClientHandler, s3Client S3Client, repository Repository) *service {
+	return &service{c, userClient, s3Client, repository}
 }
 
 type service struct {
 	c          config.Config
 	userClient userClientHandler
-	s3Client   storage.S3Client
+	s3Client   S3Client
 	repository Repository
 }
 
-func NewService(c config.Config, userClient userClientHandler, s3Client storage.S3Client, repository Repository) *service {
-	return &service{c, userClient, s3Client, repository}
+type S3Client interface {
+	Copy(bucket string, source string, destination string) error
+	Upload(bucket string, key string, body *bytes.Buffer) error
+	Delete(bucket string, key string) error
+	Download(bucket string, key string, dst io.Writer, cb func(contentLength int64)) error
 }
 
 func (s service) Copy(id uint, d *model.Database, group *models.Group) error {

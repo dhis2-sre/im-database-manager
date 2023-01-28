@@ -2,13 +2,18 @@ package database
 
 import (
 	"bytes"
+	"context"
 	"encoding/json"
 	"errors"
 	"io"
 	"net/http"
 	"net/http/httptest"
+	"strings"
 	"testing"
 	"time"
+
+	"github.com/aws/aws-sdk-go-v2/service/s3"
+	"github.com/dhis2-sre/im-database-manager/pkg/storage"
 
 	"github.com/dhis2-sre/im-database-manager/pkg/config"
 	"github.com/dhis2-sre/im-database-manager/pkg/model"
@@ -20,6 +25,85 @@ import (
 	"github.com/stretchr/testify/require"
 	"gorm.io/gorm"
 )
+
+func TestHandler_Download(t *testing.T) {
+	awsS3Client := &mockAWSS3Client{}
+	awsS3Client.
+		On("GetObject", mock.AnythingOfType("*context.emptyCtx"), mock.AnythingOfType("*s3.GetObjectInput"), mock.AnythingOfType("[]func(*s3.Options)")).
+		Return(&s3.GetObjectOutput{
+			Body:          io.NopCloser(strings.NewReader("Hello, World!")),
+			ContentLength: 13,
+		}, nil)
+	s3Client, err := storage.NewS3Client(awsS3Client, nil)
+	require.NoError(t, err)
+	repository := &mockRepository{}
+	repository.
+		On("FindById", uint(1)).
+		Return(&model.Database{
+			GroupName: "group-name",
+			Url:       "s3://whatever",
+		}, nil)
+	service := NewService(config.Config{}, nil, s3Client, repository)
+	handler := New(nil, service, nil)
+
+	w := httptest.NewRecorder()
+	c, _ := gin.CreateTestContext(w)
+	c.AddParam("id", "1")
+	user := &models.User{
+		Groups: []*models.Group{
+			{Name: "group-name"},
+		},
+	}
+	c.Set("user", user)
+
+	handler.Download(c)
+
+	assert.Empty(t, c.Errors)
+	headers := w.Header()
+	assert.Equal(t, "attachment; filename=whatever", headers.Get("Content-Disposition"))
+	assert.Equal(t, "File Transfer", headers.Get("Content-Description"))
+	assert.Equal(t, "binary", headers.Get("Content-Transfer-Encoding"))
+	assert.Equal(t, "application/octet-stream", headers.Get("Content-Type"))
+	assert.Equal(t, "13", headers.Get("Content-Length"))
+	assert.Equal(t, "Hello, World!", w.Body.String())
+	repository.AssertExpectations(t)
+	awsS3Client.AssertExpectations(t)
+}
+
+type mockAWSS3Client struct{ mock.Mock }
+
+func (m *mockAWSS3Client) CopyObject(ctx context.Context, params *s3.CopyObjectInput, optFns ...func(*s3.Options)) (*s3.CopyObjectOutput, error) {
+	panic("implement me")
+}
+
+func (m *mockAWSS3Client) DeleteObject(ctx context.Context, params *s3.DeleteObjectInput, optFns ...func(*s3.Options)) (*s3.DeleteObjectOutput, error) {
+	panic("implement me")
+}
+
+func (m *mockAWSS3Client) GetObject(ctx context.Context, params *s3.GetObjectInput, optFns ...func(*s3.Options)) (*s3.GetObjectOutput, error) {
+	called := m.Called(ctx, params, optFns)
+	return called.Get(0).(*s3.GetObjectOutput), nil
+}
+
+func (m *mockAWSS3Client) PutObject(ctx context.Context, input *s3.PutObjectInput, f ...func(*s3.Options)) (*s3.PutObjectOutput, error) {
+	panic("implement me")
+}
+
+func (m *mockAWSS3Client) UploadPart(ctx context.Context, input *s3.UploadPartInput, f ...func(*s3.Options)) (*s3.UploadPartOutput, error) {
+	panic("implement me")
+}
+
+func (m *mockAWSS3Client) CreateMultipartUpload(ctx context.Context, input *s3.CreateMultipartUploadInput, f ...func(*s3.Options)) (*s3.CreateMultipartUploadOutput, error) {
+	panic("implement me")
+}
+
+func (m *mockAWSS3Client) CompleteMultipartUpload(ctx context.Context, input *s3.CompleteMultipartUploadInput, f ...func(*s3.Options)) (*s3.CompleteMultipartUploadOutput, error) {
+	panic("implement me")
+}
+
+func (m *mockAWSS3Client) AbortMultipartUpload(ctx context.Context, input *s3.AbortMultipartUploadInput, f ...func(*s3.Options)) (*s3.AbortMultipartUploadOutput, error) {
+	panic("implement me")
+}
 
 func TestHandler_Update(t *testing.T) {
 	database := &model.Database{GroupName: "group-name"}

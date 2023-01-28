@@ -1,6 +1,7 @@
 package database
 
 import (
+	"io"
 	"mime/multipart"
 	"net/http"
 	"path"
@@ -16,18 +17,33 @@ import (
 	"github.com/google/uuid"
 )
 
-type Handler struct {
-	userClient      userClientHandler
-	instanceClient  instanceClientHandler
-	databaseService Service
-}
-
 func New(userClient userClientHandler, databaseService Service, instanceClient instanceClientHandler) Handler {
 	return Handler{
 		userClient,
 		instanceClient,
 		databaseService,
 	}
+}
+
+type Handler struct {
+	userClient      userClientHandler
+	instanceClient  instanceClientHandler
+	databaseService Service
+}
+
+type Service interface {
+	Copy(id uint, d *model.Database, group *userModels.Group) error
+	FindById(id uint) (*model.Database, error)
+	Lock(id uint, instanceId uint, userId uint) (*model.Lock, error)
+	Unlock(id uint) error
+	Upload(d *model.Database, group *userModels.Group, file io.Reader) (*model.Database, error)
+	Download(id uint, dst io.Writer, headers func(contentLength int64)) error
+	Delete(id uint) error
+	List(groups []*userModels.Group) ([]*model.Database, error)
+	Update(d *model.Database) error
+	CreateExternalDownload(databaseID uint, expiration time.Time) (model.ExternalDownload, error)
+	FindExternalDownload(uuid uuid.UUID) (model.ExternalDownload, error)
+	SaveAs(token string, database *model.Database, instance *instanceModels.Instance, stack *instanceModels.Stack, newName string, format string) (*model.Database, error)
 }
 
 type userClientHandler interface {

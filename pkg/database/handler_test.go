@@ -5,7 +5,6 @@ import (
 	"encoding/json"
 	"errors"
 	"io"
-	"log"
 	"mime/multipart"
 	"net/http"
 	"net/http/httptest"
@@ -30,47 +29,43 @@ func TestHandler_Upload(t *testing.T) {
 		Return(&models.Group{
 			Name: "group-name",
 		}, nil)
+	// TODO: Don't mock the s3 client
+	s3Client := &mockS3Client{}
+	s3Client.
+		On("Upload", mock.AnythingOfType("string"), mock.AnythingOfType("string"), mock.AnythingOfType("*bytes.Buffer")).
+		Return(nil)
 	repository := &mockRepository{}
-	// TODO: Don't use AnythingOfType... Unless avoidable
 	repository.
 		On("Save", mock.AnythingOfType("*model.Database")).
-		Return()
-	service := NewService(config.Config{}, nil, nil, repository)
+		Return(nil)
+	service := NewService(config.Config{}, nil, s3Client, repository)
 	handler := New(userClient, service, nil)
 
 	var buf bytes.Buffer
 	multipartWriter := multipart.NewWriter(&buf)
 	err := multipartWriter.WriteField("group", "group-name")
 	require.NoError(t, err)
-	//	defer multipartWriter.Close()
-	/*
-		field, err := multipartWriter.CreateFormField("group")
-		require.NoError(t, err)
-		_, err = field.Write([]byte("group-name"))
-		require.NoError(t, err)
-	*/
-
-	filePart, err := multipartWriter.CreateFormFile("database", "file.txt")
+	filePart, err := multipartWriter.CreateFormFile("database", "database.sql")
 	require.NoError(t, err)
 	_, err = filePart.Write([]byte("Hello, World!"))
 	require.NoError(t, err)
-
 	err = multipartWriter.Close()
 	require.NoError(t, err)
 
 	w := httptest.NewRecorder()
 	c := newContext(w, "group-name")
-	c.Request = newPost(t, "", &buf)
-	c.Request.Header.Set("Content-Type", multipartWriter.FormDataContentType())
+	request, err := http.NewRequest(http.MethodPost, "/whatever", &buf)
+	require.NoError(t, err)
+	request.Header.Set("Authorization", "token")
+	request.Header.Set("Content-Type", multipartWriter.FormDataContentType())
+	c.Request = request
 
 	handler.Upload(c)
 
 	require.Empty(t, c.Errors)
-	log.Println("c.Errors.Last().Error()")
-	log.Println(c.Errors.Last().Error())
-	require.NoError(t, c.Err())
-
+	assertResponse(t, w, http.StatusCreated, &model.Database{Name: "database.sql", GroupName: "group-name", Url: "s3:///group-name/database.sql"})
 	repository.AssertExpectations(t)
+	s3Client.AssertExpectations(t)
 	userClient.AssertExpectations(t)
 }
 
@@ -367,7 +362,7 @@ func (m *mockRepository) Create(d *model.Database) error {
 }
 
 func (m *mockRepository) Save(d *model.Database) error {
-	panic("implement me")
+	return m.Called(d).Error(0)
 }
 
 func (m *mockRepository) FindById(id uint) (*model.Database, error) {
@@ -433,7 +428,8 @@ func (m *mockS3Client) Copy(bucket string, source string, destination string) er
 }
 
 func (m *mockS3Client) Upload(bucket string, key string, body *bytes.Buffer) error {
-	panic("implement me")
+	called := m.Called(bucket, key, body)
+	return called.Error(0)
 }
 
 func (m *mockS3Client) Delete(bucket string, key string) error {

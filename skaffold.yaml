@@ -1,4 +1,4 @@
-apiVersion: skaffold/v2beta25
+apiVersion: skaffold/v2beta29
 kind: Config
 build:
   artifacts:
@@ -14,7 +14,7 @@ deploy:
         createNamespace: true
         remoteChart: rabbitmq
         repo: https://charts.bitnami.com/bitnami
-        version: 8.29.0
+        version: 10.3.9
         useHelmSecrets: true
         valuesFiles:
           - helm/data/secrets/{{ .ENVIRONMENT }}/rabbitmq.yaml
@@ -24,7 +24,7 @@ deploy:
         createNamespace: true
         remoteChart: postgresql
         repo: https://charts.bitnami.com/bitnami
-        version: 11.0.4
+        version: 11.6.2
         useHelmSecrets: true
         valuesFiles:
           - helm/data/secrets/{{ .ENVIRONMENT }}/postgresql.yaml

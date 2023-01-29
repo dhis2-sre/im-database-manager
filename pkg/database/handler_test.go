@@ -162,26 +162,6 @@ func (m *mockAWSS3Client) GetObject(ctx context.Context, params *s3.GetObjectInp
 	return called.Get(0).(*s3.GetObjectOutput), nil
 }
 
-func (m *mockAWSS3Client) PutObject(ctx context.Context, input *s3.PutObjectInput, f ...func(*s3.Options)) (*s3.PutObjectOutput, error) {
-	panic("implement me")
-}
-
-func (m *mockAWSS3Client) UploadPart(ctx context.Context, input *s3.UploadPartInput, f ...func(*s3.Options)) (*s3.UploadPartOutput, error) {
-	panic("implement me")
-}
-
-func (m *mockAWSS3Client) CreateMultipartUpload(ctx context.Context, input *s3.CreateMultipartUploadInput, f ...func(*s3.Options)) (*s3.CreateMultipartUploadOutput, error) {
-	panic("implement me")
-}
-
-func (m *mockAWSS3Client) CompleteMultipartUpload(ctx context.Context, input *s3.CompleteMultipartUploadInput, f ...func(*s3.Options)) (*s3.CompleteMultipartUploadOutput, error) {
-	panic("implement me")
-}
-
-func (m *mockAWSS3Client) AbortMultipartUpload(ctx context.Context, input *s3.AbortMultipartUploadInput, f ...func(*s3.Options)) (*s3.AbortMultipartUploadOutput, error) {
-	panic("implement me")
-}
-
 func TestHandler_Update(t *testing.T) {
 	database := &model.Database{GroupName: "group-name"}
 	repository := &mockRepository{}

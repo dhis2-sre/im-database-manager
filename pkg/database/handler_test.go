@@ -130,14 +130,8 @@ func TestHandler_Download(t *testing.T) {
 	handler := New(nil, service, nil)
 
 	w := httptest.NewRecorder()
-	c, _ := gin.CreateTestContext(w)
+	c := newContext(w, "group-name")
 	c.AddParam("id", "1")
-	user := &models.User{
-		Groups: []*models.Group{
-			{Name: "group-name"},
-		},
-	}
-	c.Set("user", user)
 
 	handler.Download(c)
 

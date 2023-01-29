@@ -26,6 +26,53 @@ import (
 	"gorm.io/gorm"
 )
 
+func TestHandler_ExternalDownload(t *testing.T) {
+	awsS3Client := &mockAWSS3Client{}
+	awsS3Client.
+		On("GetObject", mock.AnythingOfType("*context.emptyCtx"), mock.AnythingOfType("*s3.GetObjectInput"), mock.AnythingOfType("[]func(*s3.Options)")).
+		Return(&s3.GetObjectOutput{
+			Body:          io.NopCloser(strings.NewReader("Hello, World!")),
+			ContentLength: 13,
+		}, nil)
+	s3Client, err := storage.NewS3Client(awsS3Client, nil)
+	require.NoError(t, err)
+	database := &model.Database{
+		Model:     gorm.Model{ID: 1},
+		GroupName: "group-name",
+		Url:       "s3://whatever",
+	}
+	repository := &mockRepository{}
+	repository.
+		On("FindExternalDownload", mock.AnythingOfType("uuid.UUID")).
+		Return(model.ExternalDownload{
+			DatabaseID: 1,
+		}, nil)
+	repository.
+		On("FindById", uint(1)).
+		Return(database, nil)
+	repository.
+		On("PurgeExternalDownload").
+		Return(nil)
+	service := NewService(config.Config{}, nil, s3Client, repository)
+	handler := New(nil, service, nil)
+
+	w := httptest.NewRecorder()
+	c := newContext(w, "group-name")
+	c.AddParam("uuid", uuid.New().String())
+
+	handler.ExternalDownload(c)
+
+	assert.Empty(t, c.Errors)
+	headers := w.Header()
+	assert.Equal(t, "attachment; filename=whatever", headers.Get("Content-Disposition"))
+	assert.Equal(t, "File Transfer", headers.Get("Content-Description"))
+	assert.Equal(t, "binary", headers.Get("Content-Transfer-Encoding"))
+	assert.Equal(t, "application/octet-stream", headers.Get("Content-Type"))
+	assert.Equal(t, "13", headers.Get("Content-Length"))
+	repository.AssertExpectations(t)
+	awsS3Client.AssertExpectations(t)
+}
+
 func TestHandler_CreateExternalDownload(t *testing.T) {
 	repository := &mockRepository{}
 	repository.
@@ -459,7 +506,8 @@ func (m *mockRepository) CreateExternalDownload(databaseID uint, expiration time
 }
 
 func (m *mockRepository) FindExternalDownload(uuid uuid.UUID) (model.ExternalDownload, error) {
-	panic("implement me")
+	called := m.Called(uuid)
+	return called.Get(0).(model.ExternalDownload), nil
 }
 
 func (m *mockRepository) PurgeExternalDownload() error {

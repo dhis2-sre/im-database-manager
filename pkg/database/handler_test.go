@@ -13,6 +13,7 @@ import (
 	"time"
 
 	h "github.com/dhis2-sre/im-database-manager/internal/handler"
+
 	instanceModels "github.com/dhis2-sre/im-manager/swagger/sdk/models"
 	userModels "github.com/dhis2-sre/im-user/swagger/sdk/models"
 
@@ -56,10 +57,10 @@ func TestHandler_SaveAs(t *testing.T) {
 	instanceClient.
 		On("FindByIdDecrypted", "token", uint(1)).
 		Return(&instanceModels.Instance{
-			GroupName: "group-name",
 			ID:        1,
-			StackName: "stack-name",
 			UserID:    1,
+			GroupName: "group-name",
+			StackName: "stack-name",
 			RequiredParameters: []*instanceModels.InstanceRequiredParameter{
 				{
 					StackRequiredParameterID: "DATABASE_ID",
@@ -81,27 +82,13 @@ func TestHandler_SaveAs(t *testing.T) {
 		}, nil)
 	instanceClient.
 		On("FindStack", "token", "stack-name").
-		Return(&instanceModels.Stack{
-			Name: "stack-name",
-		}, nil)
+		Return(&instanceModels.Stack{Name: "stack-name"}, nil)
 	handler := New(nil, service, instanceClient)
 
 	w := httptest.NewRecorder()
-	c, _ := gin.CreateTestContext(w)
+	c := newContext(w, "group-name")
 	c.AddParam("instanceId", "1")
-	user := &models.User{
-		Groups: []*models.Group{
-			{Name: "group-name"},
-		},
-	}
-	c.Set("user", user)
-	s := &saveAsRequest{
-		Name:   "new-name",
-		Format: "custom",
-	}
-	request := newPost(t, "/whatever", s)
-	request.Header.Set("Authorization", "token")
-	c.Request = request
+	c.Request = newPost(t, "/whatever", &saveAsRequest{Name: "new-name", Format: "custom"})
 
 	handler.SaveAs(c)
 

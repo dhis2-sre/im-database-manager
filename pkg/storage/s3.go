@@ -52,7 +52,7 @@ func (s S3Client) Upload(bucket string, key string, body *bytes.Buffer) error {
 		Key:    aws.String(key),
 		Body:   bytes.NewReader(body.Bytes()),
 		ACL:    types.ObjectCannedACLPrivate,
-	}, nil)
+	}, func(uploader *manager.Uploader) {})
 
 	if err != nil {
 		return fmt.Errorf("error uploading object to bucket %q using key %q: %s", bucket, key, err)

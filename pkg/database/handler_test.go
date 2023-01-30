@@ -70,6 +70,7 @@ func TestHandler_ExternalDownload(t *testing.T) {
 	assert.Equal(t, "binary", headers.Get("Content-Transfer-Encoding"))
 	assert.Equal(t, "application/octet-stream", headers.Get("Content-Type"))
 	assert.Equal(t, "13", headers.Get("Content-Length"))
+	assert.Equal(t, "Hello, World!", w.Body.String())
 	repository.AssertExpectations(t)
 	awsS3Client.AssertExpectations(t)
 }

@@ -113,7 +113,8 @@ func (m *mockAWSS3Client) CopyObject(ctx context.Context, params *s3.CopyObjectI
 }
 
 func (m *mockAWSS3Client) DeleteObject(ctx context.Context, params *s3.DeleteObjectInput, optFns ...func(*s3.Options)) (*s3.DeleteObjectOutput, error) {
-	panic("implement me")
+	called := m.Called(ctx, params, optFns)
+	return called.Get(0).(*s3.DeleteObjectOutput), nil
 }
 
 func (m *mockAWSS3Client) GetObject(ctx context.Context, params *s3.GetObjectInput, optFns ...func(*s3.Options)) (*s3.GetObjectOutput, error) {
@@ -228,10 +229,12 @@ func TestHandler_Lock(t *testing.T) {
 }
 
 func TestHandler_Delete(t *testing.T) {
-	s3Client := &mockS3Client{}
-	s3Client.
-		On("Delete", "", "path").
-		Return(nil)
+	awsS3Client := &mockAWSS3Client{}
+	awsS3Client.
+		On("DeleteObject", mock.AnythingOfType("*context.emptyCtx"), mock.AnythingOfType("*s3.DeleteObjectInput"), mock.AnythingOfType("[]func(*s3.Options)")).
+		Return(&s3.DeleteObjectOutput{})
+	s3Client, err := storage.NewS3Client(awsS3Client, nil)
+	require.NoError(t, err)
 	database := &model.Database{
 		GroupName: "group-name",
 		Url:       "/path",
@@ -257,7 +260,7 @@ func TestHandler_Delete(t *testing.T) {
 	c.Writer.Flush()
 	assert.Equal(t, http.StatusAccepted, w.Code)
 	repository.AssertExpectations(t)
-	s3Client.AssertExpectations(t)
+	awsS3Client.AssertExpectations(t)
 }
 
 func newContext(w *httptest.ResponseRecorder, group string) *gin.Context {

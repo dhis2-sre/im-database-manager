@@ -13,6 +13,9 @@ import (
 	"testing"
 	"time"
 
+	"github.com/aws/aws-sdk-go-v2/aws"
+	"github.com/aws/aws-sdk-go-v2/service/s3/types"
+
 	"github.com/aws/aws-sdk-go-v2/feature/s3/manager"
 
 	"github.com/aws/aws-sdk-go-v2/service/s3"
@@ -37,8 +40,14 @@ func TestHandler_Upload(t *testing.T) {
 			Name: "group-name",
 		}, nil)
 	s3Uploader := &mockAwsS3Uploader{}
+	putObjectInput := &s3.PutObjectInput{
+		Bucket: aws.String(""),
+		Key:    aws.String("group-name/database.sql"),
+		Body:   bytes.NewReader([]byte("Hello, World!")),
+		ACL:    types.ObjectCannedACLPrivate,
+	}
 	s3Uploader.
-		On("Upload", mock.AnythingOfType("*context.emptyCtx"), mock.AnythingOfType("*s3.PutObjectInput"), mock.AnythingOfType("[]func(*manager.Uploader)")).
+		On("Upload", mock.AnythingOfType("*context.emptyCtx"), putObjectInput, mock.AnythingOfType("[]func(*manager.Uploader)")).
 		Return(&manager.UploadOutput{}, nil)
 	s3Client, err := storage.NewS3Client(nil, s3Uploader)
 	require.NoError(t, err)
@@ -51,7 +60,7 @@ func TestHandler_Upload(t *testing.T) {
 
 	w := httptest.NewRecorder()
 	c := newContext(w, "group-name")
-	c.Request = newMultipartRequest(t, "group-name", "database.sql", []byte("Hello, World!"))
+	c.Request = newMultipartRequest(t, "group-name", "database.sql", "Hello, World!")
 
 	handler.Upload(c)
 
@@ -62,14 +71,14 @@ func TestHandler_Upload(t *testing.T) {
 	userClient.AssertExpectations(t)
 }
 
-func newMultipartRequest(t *testing.T, group string, filename string, fileContent []byte) *http.Request {
+func newMultipartRequest(t *testing.T, group string, filename string, fileContent string) *http.Request {
 	var buf bytes.Buffer
 	multipartWriter := multipart.NewWriter(&buf)
 	err := multipartWriter.WriteField("group", group)
 	require.NoError(t, err)
 	filePart, err := multipartWriter.CreateFormFile("database", filename)
 	require.NoError(t, err)
-	_, err = filePart.Write(fileContent)
+	_, err = filePart.Write([]byte(fileContent))
 	require.NoError(t, err)
 	err = multipartWriter.Close()
 	require.NoError(t, err)

@@ -41,9 +41,10 @@ func TestHandler_ExternalDownload(t *testing.T) {
 		GroupName: "group-name",
 		Url:       "s3://whatever",
 	}
+	id := uuid.New()
 	repository := &mockRepository{}
 	repository.
-		On("FindExternalDownload", mock.AnythingOfType("uuid.UUID")).
+		On("FindExternalDownload", id).
 		Return(model.ExternalDownload{
 			DatabaseID: 1,
 		}, nil)
@@ -58,7 +59,7 @@ func TestHandler_ExternalDownload(t *testing.T) {
 
 	w := httptest.NewRecorder()
 	c := newContext(w, "group-name")
-	c.AddParam("uuid", uuid.New().String())
+	c.AddParam("uuid", id.String())
 
 	handler.ExternalDownload(c)
 

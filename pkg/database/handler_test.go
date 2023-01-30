@@ -51,12 +51,7 @@ func TestHandler_Upload(t *testing.T) {
 
 	w := httptest.NewRecorder()
 	c := newContext(w, "group-name")
-	body, contentType := createMultipartMessage(t)
-	request, err := http.NewRequest(http.MethodPost, "/whatever", body)
-	require.NoError(t, err)
-	request.Header.Set("Authorization", "token")
-	request.Header.Set("Content-Type", contentType)
-	c.Request = request
+	c.Request = newMultipartRequest(t, "group-name", "database.sql", []byte("Hello, World!"))
 
 	handler.Upload(c)
 
@@ -67,18 +62,22 @@ func TestHandler_Upload(t *testing.T) {
 	userClient.AssertExpectations(t)
 }
 
-func createMultipartMessage(t *testing.T) (*bytes.Buffer, string) {
+func newMultipartRequest(t *testing.T, group string, filename string, fileContent []byte) *http.Request {
 	var buf bytes.Buffer
 	multipartWriter := multipart.NewWriter(&buf)
-	err := multipartWriter.WriteField("group", "group-name")
+	err := multipartWriter.WriteField("group", group)
 	require.NoError(t, err)
-	filePart, err := multipartWriter.CreateFormFile("database", "database.sql")
+	filePart, err := multipartWriter.CreateFormFile("database", filename)
 	require.NoError(t, err)
-	_, err = filePart.Write([]byte("Hello, World!"))
+	_, err = filePart.Write(fileContent)
 	require.NoError(t, err)
 	err = multipartWriter.Close()
 	require.NoError(t, err)
-	return &buf, multipartWriter.FormDataContentType()
+	request, err := http.NewRequest(http.MethodPost, "", &buf)
+	require.NoError(t, err)
+	request.Header.Set("Authorization", "token")
+	request.Header.Set("Content-Type", multipartWriter.FormDataContentType())
+	return request
 }
 
 type mockAwsS3Uploader struct{ mock.Mock }

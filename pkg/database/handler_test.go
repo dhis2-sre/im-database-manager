@@ -222,11 +222,13 @@ func TestHandler_Download(t *testing.T) {
 type mockAWSS3Client struct{ mock.Mock }
 
 func (m *mockAWSS3Client) CopyObject(ctx context.Context, params *s3.CopyObjectInput, optFns ...func(*s3.Options)) (*s3.CopyObjectOutput, error) {
-	panic("implement me")
+	called := m.Called(ctx, params, optFns)
+	return called.Get(0).(*s3.CopyObjectOutput), nil
 }
 
 func (m *mockAWSS3Client) DeleteObject(ctx context.Context, params *s3.DeleteObjectInput, optFns ...func(*s3.Options)) (*s3.DeleteObjectOutput, error) {
-	panic("implement me")
+	called := m.Called(ctx, params, optFns)
+	return called.Get(0).(*s3.DeleteObjectOutput), nil
 }
 
 func (m *mockAWSS3Client) GetObject(ctx context.Context, params *s3.GetObjectInput, optFns ...func(*s3.Options)) (*s3.GetObjectOutput, error) {
@@ -321,10 +323,12 @@ func TestHandler_Lock(t *testing.T) {
 }
 
 func TestHandler_Delete(t *testing.T) {
-	s3Client := &mockS3Client{}
-	s3Client.
-		On("Delete", "", "path").
-		Return(nil)
+	awsS3Client := &mockAWSS3Client{}
+	awsS3Client.
+		On("DeleteObject", mock.AnythingOfType("*context.emptyCtx"), mock.AnythingOfType("*s3.DeleteObjectInput"), mock.AnythingOfType("[]func(*s3.Options)")).
+		Return(&s3.DeleteObjectOutput{})
+	s3Client, err := storage.NewS3Client(awsS3Client, nil)
+	require.NoError(t, err)
 	database := &model.Database{
 		GroupName: "group-name",
 		Url:       "/path",
@@ -350,7 +354,7 @@ func TestHandler_Delete(t *testing.T) {
 	c.Writer.Flush()
 	assert.Equal(t, http.StatusAccepted, w.Code)
 	repository.AssertExpectations(t)
-	s3Client.AssertExpectations(t)
+	awsS3Client.AssertExpectations(t)
 }
 
 func newContext(w *httptest.ResponseRecorder, group string) *gin.Context {
@@ -394,10 +398,12 @@ func TestHandler_Copy(t *testing.T) {
 		Return(&models.Group{
 			Name: "group-name",
 		}, nil)
-	s3Client := &mockS3Client{}
-	s3Client.
-		On("Copy", mock.AnythingOfType("string"), "path", "group-name/database-name").
-		Return(nil)
+	awsS3Client := &mockAWSS3Client{}
+	awsS3Client.
+		On("CopyObject", mock.AnythingOfType("*context.emptyCtx"), mock.AnythingOfType("*s3.CopyObjectInput"), mock.AnythingOfType("[]func(*s3.Options)")).
+		Return(&s3.CopyObjectOutput{}, nil)
+	s3Client, err := storage.NewS3Client(awsS3Client, nil)
+	require.NoError(t, err)
 	repository := &mockRepository{}
 	repository.
 		On("FindById", uint(1)).
@@ -424,7 +430,7 @@ func TestHandler_Copy(t *testing.T) {
 	assert.Equal(t, http.StatusCreated, w.Code)
 	assert.Empty(t, c.Errors)
 	userClient.AssertExpectations(t)
-	s3Client.AssertExpectations(t)
+	awsS3Client.AssertExpectations(t)
 	repository.AssertExpectations(t)
 }
 
@@ -568,25 +574,5 @@ func (m *mockUserClient) FindGroupByName(token string, name string) (*models.Gro
 }
 
 func (m *mockUserClient) FindUserById(token string, id uint) (*models.User, error) {
-	panic("implement me")
-}
-
-type mockS3Client struct{ mock.Mock }
-
-func (m *mockS3Client) Copy(bucket string, source string, destination string) error {
-	called := m.Called(bucket, source, destination)
-	return called.Error(0)
-}
-
-func (m *mockS3Client) Upload(bucket string, key string, body *bytes.Buffer) error {
-	called := m.Called(bucket, key, body)
-	return called.Error(0)
-}
-
-func (m *mockS3Client) Delete(bucket string, key string) error {
-	return m.Called(bucket, key).Error(0)
-}
-
-func (m *mockS3Client) Download(bucket string, key string, dst io.Writer, cb func(contentLength int64)) error {
 	panic("implement me")
 }

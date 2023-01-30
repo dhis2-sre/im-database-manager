@@ -1,6 +1,10 @@
 package database
 
-import "github.com/dhis2-sre/im-database-manager/pkg/model"
+import (
+	"mime/multipart"
+
+	"github.com/dhis2-sre/im-database-manager/pkg/model"
+)
 
 // swagger:response
 type Error struct {
@@ -53,8 +57,12 @@ type _ struct {
 	// Upload database request body parameter
 	// in: formData
 	// required: true
+	Group string
+	// Upload database request body parameter
+	// in: formData
+	// required: true
 	// swagger:file
-	File UploadDatabaseRequest
+	File multipart.File
 }
 
 // swagger:parameters updateDatabaseById

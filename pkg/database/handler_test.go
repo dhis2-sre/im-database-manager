@@ -6,11 +6,17 @@ import (
 	"encoding/json"
 	"errors"
 	"io"
+	"mime/multipart"
 	"net/http"
 	"net/http/httptest"
 	"strings"
 	"testing"
 	"time"
+
+	"github.com/aws/aws-sdk-go-v2/aws"
+	"github.com/aws/aws-sdk-go-v2/service/s3/types"
+
+	"github.com/aws/aws-sdk-go-v2/feature/s3/manager"
 
 	"github.com/aws/aws-sdk-go-v2/service/s3"
 	"github.com/dhis2-sre/im-database-manager/pkg/storage"
@@ -25,6 +31,119 @@ import (
 	"github.com/stretchr/testify/require"
 	"gorm.io/gorm"
 )
+
+func TestHandler_Upload(t *testing.T) {
+	userClient := &mockUserClient{}
+	userClient.
+		On("FindGroupByName", "token", "group-name").
+		Return(&models.Group{
+			Name: "group-name",
+		}, nil)
+	s3Uploader := &mockAwsS3Uploader{}
+	putObjectInput := &s3.PutObjectInput{
+		Bucket: aws.String(""),
+		Key:    aws.String("group-name/database.sql"),
+		Body:   bytes.NewReader([]byte("Hello, World!")),
+		ACL:    types.ObjectCannedACLPrivate,
+	}
+	s3Uploader.
+		On("Upload", mock.AnythingOfType("*context.emptyCtx"), putObjectInput, mock.AnythingOfType("[]func(*manager.Uploader)")).
+		Return(&manager.UploadOutput{}, nil)
+	s3Client, err := storage.NewS3Client(nil, s3Uploader)
+	require.NoError(t, err)
+	repository := &mockRepository{}
+	repository.
+		On("Save", mock.AnythingOfType("*model.Database")).
+		Return(nil)
+	service := NewService(config.Config{}, nil, s3Client, repository)
+	handler := New(userClient, service, nil)
+
+	w := httptest.NewRecorder()
+	c := newContext(w, "group-name")
+	c.Request = newMultipartRequest(t, "group-name", "database.sql", "Hello, World!")
+
+	handler.Upload(c)
+
+	require.Empty(t, c.Errors)
+	assertResponse(t, w, http.StatusCreated, &model.Database{Name: "database.sql", GroupName: "group-name", Url: "s3:///group-name/database.sql"})
+	repository.AssertExpectations(t)
+	s3Uploader.AssertExpectations(t)
+	userClient.AssertExpectations(t)
+}
+
+func newMultipartRequest(t *testing.T, group string, filename string, fileContent string) *http.Request {
+	var buf bytes.Buffer
+	multipartWriter := multipart.NewWriter(&buf)
+	err := multipartWriter.WriteField("group", group)
+	require.NoError(t, err)
+	filePart, err := multipartWriter.CreateFormFile("database", filename)
+	require.NoError(t, err)
+	_, err = filePart.Write([]byte(fileContent))
+	require.NoError(t, err)
+	err = multipartWriter.Close()
+	require.NoError(t, err)
+	request, err := http.NewRequest(http.MethodPost, "", &buf)
+	require.NoError(t, err)
+	request.Header.Set("Authorization", "token")
+	request.Header.Set("Content-Type", multipartWriter.FormDataContentType())
+	return request
+}
+
+type mockAwsS3Uploader struct{ mock.Mock }
+
+func (m *mockAwsS3Uploader) Upload(ctx context.Context, input *s3.PutObjectInput, opts ...func(*manager.Uploader)) (*manager.UploadOutput, error) {
+	called := m.Called(ctx, input, opts)
+	return called.Get(0).(*manager.UploadOutput), nil
+}
+
+func TestHandler_ExternalDownload(t *testing.T) {
+	awsS3Client := &mockAWSS3Client{}
+	awsS3Client.
+		On("GetObject", mock.AnythingOfType("*context.emptyCtx"), mock.AnythingOfType("*s3.GetObjectInput"), mock.AnythingOfType("[]func(*s3.Options)")).
+		Return(&s3.GetObjectOutput{
+			Body:          io.NopCloser(strings.NewReader("Hello, World!")),
+			ContentLength: 13,
+		}, nil)
+	s3Client, err := storage.NewS3Client(awsS3Client, nil)
+	require.NoError(t, err)
+	database := &model.Database{
+		Model:     gorm.Model{ID: 1},
+		GroupName: "group-name",
+		Url:       "s3://whatever",
+	}
+	id := uuid.New()
+	repository := &mockRepository{}
+	repository.
+		On("FindExternalDownload", id).
+		Return(model.ExternalDownload{
+			DatabaseID: 1,
+		}, nil)
+	repository.
+		On("FindById", uint(1)).
+		Return(database, nil)
+	repository.
+		On("PurgeExternalDownload").
+		Return(nil)
+	service := NewService(config.Config{}, nil, s3Client, repository)
+	handler := New(nil, service, nil)
+
+	w := httptest.NewRecorder()
+	c := newContext(w, "group-name")
+	c.AddParam("uuid", id.String())
+
+	handler.ExternalDownload(c)
+
+	assert.Empty(t, c.Errors)
+	headers := w.Header()
+	assert.Equal(t, "attachment; filename=whatever", headers.Get("Content-Disposition"))
+	assert.Equal(t, "File Transfer", headers.Get("Content-Description"))
+	assert.Equal(t, "binary", headers.Get("Content-Transfer-Encoding"))
+	assert.Equal(t, "application/octet-stream", headers.Get("Content-Type"))
+	assert.Equal(t, "13", headers.Get("Content-Length"))
+	assert.Equal(t, "Hello, World!", w.Body.String())
+	repository.AssertExpectations(t)
+	awsS3Client.AssertExpectations(t)
+}
 
 func TestHandler_CreateExternalDownload(t *testing.T) {
 	repository := &mockRepository{}
@@ -83,14 +202,8 @@ func TestHandler_Download(t *testing.T) {
 	handler := New(nil, service, nil)
 
 	w := httptest.NewRecorder()
-	c, _ := gin.CreateTestContext(w)
+	c := newContext(w, "group-name")
 	c.AddParam("id", "1")
-	user := &models.User{
-		Groups: []*models.Group{
-			{Name: "group-name"},
-		},
-	}
-	c.Set("user", user)
 
 	handler.Download(c)
 
@@ -121,26 +234,6 @@ func (m *mockAWSS3Client) DeleteObject(ctx context.Context, params *s3.DeleteObj
 func (m *mockAWSS3Client) GetObject(ctx context.Context, params *s3.GetObjectInput, optFns ...func(*s3.Options)) (*s3.GetObjectOutput, error) {
 	called := m.Called(ctx, params, optFns)
 	return called.Get(0).(*s3.GetObjectOutput), nil
-}
-
-func (m *mockAWSS3Client) PutObject(ctx context.Context, input *s3.PutObjectInput, f ...func(*s3.Options)) (*s3.PutObjectOutput, error) {
-	panic("implement me")
-}
-
-func (m *mockAWSS3Client) UploadPart(ctx context.Context, input *s3.UploadPartInput, f ...func(*s3.Options)) (*s3.UploadPartOutput, error) {
-	panic("implement me")
-}
-
-func (m *mockAWSS3Client) CreateMultipartUpload(ctx context.Context, input *s3.CreateMultipartUploadInput, f ...func(*s3.Options)) (*s3.CreateMultipartUploadOutput, error) {
-	panic("implement me")
-}
-
-func (m *mockAWSS3Client) CompleteMultipartUpload(ctx context.Context, input *s3.CompleteMultipartUploadInput, f ...func(*s3.Options)) (*s3.CompleteMultipartUploadOutput, error) {
-	panic("implement me")
-}
-
-func (m *mockAWSS3Client) AbortMultipartUpload(ctx context.Context, input *s3.AbortMultipartUploadInput, f ...func(*s3.Options)) (*s3.AbortMultipartUploadOutput, error) {
-	panic("implement me")
 }
 
 func TestHandler_Update(t *testing.T) {
@@ -423,7 +516,7 @@ func (m *mockRepository) Create(d *model.Database) error {
 }
 
 func (m *mockRepository) Save(d *model.Database) error {
-	panic("implement me")
+	return m.Called(d).Error(0)
 }
 
 func (m *mockRepository) FindById(id uint) (*model.Database, error) {
@@ -465,7 +558,8 @@ func (m *mockRepository) CreateExternalDownload(databaseID uint, expiration time
 }
 
 func (m *mockRepository) FindExternalDownload(uuid uuid.UUID) (model.ExternalDownload, error) {
-	panic("implement me")
+	called := m.Called(uuid)
+	return called.Get(0).(model.ExternalDownload), nil
 }
 
 func (m *mockRepository) PurgeExternalDownload() error {

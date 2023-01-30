@@ -1,6 +1,7 @@
 package database
 
 import (
+	"errors"
 	"io"
 	"mime/multipart"
 	"net/http"
@@ -56,11 +57,6 @@ type instanceClientHandler interface {
 	FindStack(token string, name string) (*instanceModels.Stack, error)
 }
 
-type UploadDatabaseRequest struct {
-	Group    string                `form:"group" binding:"required"`
-	Database *multipart.FileHeader `form:"database" binding:"required"`
-}
-
 // Upload database
 // swagger:route POST /databases uploadDatabase
 //
@@ -76,24 +72,24 @@ type UploadDatabaseRequest struct {
 //   404: Error
 //   415: Error
 func (h Handler) Upload(c *gin.Context) {
-	var request UploadDatabaseRequest
-	if err := handler.DataBinder(c, &request); err != nil {
+	file, err := c.FormFile("database")
+	if err != nil {
 		_ = c.Error(err)
 		return
 	}
 
-	if request.Database == nil {
-		badRequest := apperror.NewBadRequest("file not found")
-		_ = c.Error(badRequest)
+	groupName := c.PostForm("group")
+	if groupName == "" {
+		_ = c.Error(errors.New("group name not found"))
 		return
 	}
 
 	d := &model.Database{
-		Name:      request.Database.Filename,
-		GroupName: request.Group,
+		Name:      file.Filename,
+		GroupName: groupName,
 	}
 
-	err := h.canAccess(c, d)
+	err = h.canAccess(c, d)
 	if err != nil {
 		_ = c.Error(err)
 		return
@@ -111,7 +107,7 @@ func (h Handler) Upload(c *gin.Context) {
 		return
 	}
 
-	file, err := request.Database.Open()
+	f, err := file.Open()
 	if err != nil {
 		_ = c.Error(err)
 		return
@@ -123,9 +119,9 @@ func (h Handler) Upload(c *gin.Context) {
 			_ = c.Error(err)
 			return
 		}
-	}(file)
+	}(f)
 
-	save, err := h.databaseService.Upload(d, group, file)
+	save, err := h.databaseService.Upload(d, group, f)
 	if err != nil {
 		_ = c.Error(err)
 		return

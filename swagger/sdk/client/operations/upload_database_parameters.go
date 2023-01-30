@@ -65,6 +65,12 @@ type UploadDatabaseParams struct {
 	*/
 	File runtime.NamedReadCloser
 
+	/* Group.
+
+	   Upload database request body parameter
+	*/
+	Group string
+
 	timeout    time.Duration
 	Context    context.Context
 	HTTPClient *http.Client
@@ -129,6 +135,17 @@ func (o *UploadDatabaseParams) SetFile(file runtime.NamedReadCloser) {
 	o.File = file
 }
 
+// WithGroup adds the group to the upload database params
+func (o *UploadDatabaseParams) WithGroup(group string) *UploadDatabaseParams {
+	o.SetGroup(group)
+	return o
+}
+
+// SetGroup adds the group to the upload database params
+func (o *UploadDatabaseParams) SetGroup(group string) {
+	o.Group = group
+}
+
 // WriteToRequest writes these params to a swagger request
 func (o *UploadDatabaseParams) WriteToRequest(r runtime.ClientRequest, reg strfmt.Registry) error {
 
@@ -139,6 +156,15 @@ func (o *UploadDatabaseParams) WriteToRequest(r runtime.ClientRequest, reg strfm
 	// form file param File
 	if err := r.SetFileParam("File", o.File); err != nil {
 		return err
+	}
+
+	// form param Group
+	frGroup := o.Group
+	fGroup := frGroup
+	if fGroup != "" {
+		if err := r.SetFormParam("Group", fGroup); err != nil {
+			return err
+		}
 	}
 
 	if len(res) > 0 {

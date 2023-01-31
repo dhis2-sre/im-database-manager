@@ -33,48 +33,6 @@ import (
 	"gorm.io/gorm"
 )
 
-type mockNewPgDump struct{ mock.Mock }
-
-func (m *mockNewPgDump) NewDump(opts *pg.Postgres) (*pg.Dump, error) {
-	called := m.Called(opts)
-	return called.Get(0).(*pg.Dump), nil
-}
-
-type mockPgDump struct{ mock.Mock }
-
-func (m *mockPgDump) Exec(opts pg.ExecOptions) pg.Result {
-	called := m.Called(opts)
-	return called.Get(0).(pg.Result)
-}
-
-func (m *mockPgDump) ResetOptions() {
-	panic("implement me")
-}
-
-func (m *mockPgDump) EnableVerbose() {
-	panic("implement me")
-}
-
-func (m *mockPgDump) SetFileName(filename string) {
-	panic("implement me")
-}
-
-func (m *mockPgDump) GetFileName() string {
-	panic("implement me")
-}
-
-func (m *mockPgDump) SetupFormat(f string) {
-	panic("implement me")
-}
-
-func (m *mockPgDump) SetPath(path string) {
-	panic("implement me")
-}
-
-func (m *mockPgDump) IgnoreTableDataToString() []string {
-	panic("implement me")
-}
-
 func TestHandler_SaveAs(t *testing.T) {
 	err := h.RegisterValidation()
 	require.NoError(t, err)
@@ -97,9 +55,10 @@ func TestHandler_SaveAs(t *testing.T) {
 		On("Save", database).
 		Return(nil)
 	newPgDump := &mockNewPgDump{}
-	pgDump := &mockPgDump{}
+	postgres := &pg.Postgres{Host: "%!(EXTRA string=, string=group-name)", Port: 5432, DB: "database-name", Username: "database-username", Password: "database-password"}
+	pgDump := &pg.Dump{Postgres: postgres}
 	newPgDump.
-		On("NewDump", &pg.Postgres{Host: "%!(EXTRA string=, string=group-name)", Port: 5432, DB: "database-name", Username: "database-username", Password: "database-password", EnvPassword: ""}).
+		On("NewDump", postgres).
 		Return(pgDump, nil)
 	service := NewService(config.Config{}, userClient, nil, repository, newPgDump)
 	instanceClient := &mockInstanceClient{}
@@ -144,10 +103,16 @@ func TestHandler_SaveAs(t *testing.T) {
 	assert.Empty(t, c.Errors)
 	assertResponse(t, w, http.StatusCreated, database)
 	repository.AssertExpectations(t)
-	pgDump.AssertExpectations(t)
 	newPgDump.AssertExpectations(t)
 	userClient.AssertExpectations(t)
 	instanceClient.AssertExpectations(t)
+}
+
+type mockNewPgDump struct{ mock.Mock }
+
+func (m *mockNewPgDump) NewDump(opts *pg.Postgres) (*pg.Dump, error) {
+	called := m.Called(opts)
+	return called.Get(0).(*pg.Dump), nil
 }
 
 type mockInstanceClient struct{ mock.Mock }

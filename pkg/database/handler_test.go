@@ -43,10 +43,7 @@ func TestHandler_SaveAs(t *testing.T) {
 			Name:                 "group-name",
 			ClusterConfiguration: &models.ClusterConfiguration{KubernetesConfiguration: nil},
 		}, nil)
-	database := &model.Database{
-		Name:      "new-name",
-		GroupName: "group-name",
-	}
+	database := &model.Database{Name: "new-name", GroupName: "group-name"}
 	repository := &mockRepository{}
 	repository.
 		On("FindById", uint(1)).

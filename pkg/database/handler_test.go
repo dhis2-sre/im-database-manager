@@ -67,22 +67,10 @@ func TestHandler_SaveAs(t *testing.T) {
 			GroupName: "group-name",
 			StackName: "stack-name",
 			RequiredParameters: []*instanceModels.InstanceRequiredParameter{
-				{
-					StackRequiredParameterID: "DATABASE_ID",
-					Value:                    "1",
-				},
-				{
-					StackRequiredParameterID: "DATABASE_NAME",
-					Value:                    "database-name",
-				},
-				{
-					StackRequiredParameterID: "DATABASE_USERNAME",
-					Value:                    "database-username",
-				},
-				{
-					StackRequiredParameterID: "DATABASE_PASSWORD",
-					Value:                    "database-password",
-				},
+				{StackRequiredParameterID: "DATABASE_ID", Value: "1"},
+				{StackRequiredParameterID: "DATABASE_NAME", Value: "database-name"},
+				{StackRequiredParameterID: "DATABASE_USERNAME", Value: "database-username"},
+				{StackRequiredParameterID: "DATABASE_PASSWORD", Value: "database-password"},
 			},
 		}, nil)
 	instanceClient.

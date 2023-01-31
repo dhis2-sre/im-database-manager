@@ -12,6 +12,8 @@ import (
 	"testing"
 	"time"
 
+	pg "github.com/habx/pg-commands"
+
 	h "github.com/dhis2-sre/im-database-manager/internal/handler"
 
 	instanceModels "github.com/dhis2-sre/im-manager/swagger/sdk/models"
@@ -30,6 +32,48 @@ import (
 	"github.com/stretchr/testify/require"
 	"gorm.io/gorm"
 )
+
+type mockNewPgDump struct{ mock.Mock }
+
+func (m *mockNewPgDump) NewDump(opts *pg.Postgres) (*pg.Dump, error) {
+	called := m.Called(opts)
+	return called.Get(0).(*pg.Dump), nil
+}
+
+type mockPgDump struct{ mock.Mock }
+
+func (m *mockPgDump) Exec(opts pg.ExecOptions) pg.Result {
+	called := m.Called(opts)
+	return called.Get(0).(pg.Result)
+}
+
+func (m *mockPgDump) ResetOptions() {
+	panic("implement me")
+}
+
+func (m *mockPgDump) EnableVerbose() {
+	panic("implement me")
+}
+
+func (m *mockPgDump) SetFileName(filename string) {
+	panic("implement me")
+}
+
+func (m *mockPgDump) GetFileName() string {
+	panic("implement me")
+}
+
+func (m *mockPgDump) SetupFormat(f string) {
+	panic("implement me")
+}
+
+func (m *mockPgDump) SetPath(path string) {
+	panic("implement me")
+}
+
+func (m *mockPgDump) IgnoreTableDataToString() []string {
+	panic("implement me")
+}
 
 func TestHandler_SaveAs(t *testing.T) {
 	err := h.RegisterValidation()
@@ -52,7 +96,12 @@ func TestHandler_SaveAs(t *testing.T) {
 	repository.
 		On("Save", database).
 		Return(nil)
-	service := NewService(config.Config{}, userClient, nil, repository)
+	newPgDump := &mockNewPgDump{}
+	pgDump := &mockPgDump{}
+	newPgDump.
+		On("NewDump", &pg.Postgres{Host: "%!(EXTRA string=, string=group-name)", Port: 5432, DB: "database-name", Username: "database-username", Password: "database-password", EnvPassword: ""}).
+		Return(pgDump, nil)
+	service := NewService(config.Config{}, userClient, nil, repository, newPgDump)
 	instanceClient := &mockInstanceClient{}
 	instanceClient.
 		On("FindByIdDecrypted", "token", uint(1)).
@@ -95,6 +144,8 @@ func TestHandler_SaveAs(t *testing.T) {
 	assert.Empty(t, c.Errors)
 	assertResponse(t, w, http.StatusCreated, database)
 	repository.AssertExpectations(t)
+	pgDump.AssertExpectations(t)
+	newPgDump.AssertExpectations(t)
 	userClient.AssertExpectations(t)
 	instanceClient.AssertExpectations(t)
 }
@@ -131,7 +182,7 @@ func TestHandler_CreateExternalDownload(t *testing.T) {
 	repository.
 		On("CreateExternalDownload", uint(1), expiration).
 		Return(externalDownload, nil)
-	service := NewService(config.Config{}, nil, nil, repository)
+	service := NewService(config.Config{}, nil, nil, repository, nil)
 	handler := New(nil, service, nil)
 
 	w := httptest.NewRecorder()
@@ -164,7 +215,7 @@ func TestHandler_Download(t *testing.T) {
 			GroupName: "group-name",
 			Url:       "s3://whatever",
 		}, nil)
-	service := NewService(config.Config{}, nil, s3Client, repository)
+	service := NewService(config.Config{}, nil, s3Client, repository, nil)
 	handler := New(nil, service, nil)
 
 	w := httptest.NewRecorder()
@@ -235,7 +286,7 @@ func TestHandler_Update(t *testing.T) {
 	repository.
 		On("Update", database).
 		Return(nil)
-	service := NewService(config.Config{}, nil, nil, repository)
+	service := NewService(config.Config{}, nil, nil, repository, nil)
 	handler := New(nil, service, nil)
 
 	w := httptest.NewRecorder()
@@ -266,7 +317,7 @@ func TestHandler_Unlock(t *testing.T) {
 	repository.
 		On("Unlock", uint(1)).
 		Return(nil)
-	service := NewService(config.Config{}, nil, nil, repository)
+	service := NewService(config.Config{}, nil, nil, repository, nil)
 	handler := New(nil, service, nil)
 
 	w := httptest.NewRecorder()
@@ -296,7 +347,7 @@ func TestHandler_Lock(t *testing.T) {
 	repository.
 		On("Lock", uint(1), uint(1), uint(1)).
 		Return(lock, nil)
-	service := NewService(config.Config{}, nil, nil, repository)
+	service := NewService(config.Config{}, nil, nil, repository, nil)
 	handler := New(nil, service, nil)
 
 	w := httptest.NewRecorder()
@@ -328,7 +379,7 @@ func TestHandler_Delete(t *testing.T) {
 	repository.
 		On("Delete", uint(1)).
 		Return(nil)
-	service := NewService(config.Config{}, nil, s3Client, repository)
+	service := NewService(config.Config{}, nil, s3Client, repository, nil)
 	handler := New(nil, service, nil)
 
 	w := httptest.NewRecorder()
@@ -365,7 +416,7 @@ func TestHandler_FindById(t *testing.T) {
 	repository.
 		On("FindById", uint(1)).
 		Return(database, nil)
-	service := NewService(config.Config{}, nil, nil, repository)
+	service := NewService(config.Config{}, nil, nil, repository, nil)
 	handler := New(nil, service, nil)
 
 	w := httptest.NewRecorder()
@@ -399,7 +450,7 @@ func TestHandler_Copy(t *testing.T) {
 	repository.
 		On("Create", mock.AnythingOfType("*model.Database")).
 		Return(nil)
-	service := NewService(config.Config{}, nil, s3Client, repository)
+	service := NewService(config.Config{}, nil, s3Client, repository, nil)
 	handler := New(userClient, service, nil)
 
 	w := httptest.NewRecorder()
@@ -446,7 +497,7 @@ func TestHandler_List(t *testing.T) {
 	repository.
 		On("FindByGroupNames", []string{"group-name"}).
 		Return(databases, nil)
-	service := NewService(config.Config{}, nil, nil, repository)
+	service := NewService(config.Config{}, nil, nil, repository, nil)
 	handler := New(nil, service, nil)
 
 	w := httptest.NewRecorder()
@@ -481,7 +532,7 @@ func TestHandler_List_RepositoryError(t *testing.T) {
 	repository.
 		On("FindByGroupNames", []string{"group-name"}).
 		Return(nil, errors.New("some error"))
-	service := NewService(config.Config{}, nil, nil, repository)
+	service := NewService(config.Config{}, nil, nil, repository, nil)
 	handler := New(nil, service, nil)
 
 	w := httptest.NewRecorder()

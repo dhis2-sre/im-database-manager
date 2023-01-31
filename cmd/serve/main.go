@@ -30,6 +30,8 @@ import (
 	"fmt"
 	"os"
 
+	pg "github.com/habx/pg-commands"
+
 	"github.com/aws/aws-sdk-go-v2/feature/s3/manager"
 
 	s3config "github.com/aws/aws-sdk-go-v2/config"
@@ -76,7 +78,7 @@ func run() error {
 		return err
 	}
 	dbRepo := database.NewRepository(db)
-	dbSvc := database.NewService(cfg, usrSvc, s3Client, dbRepo)
+	dbSvc := database.NewService(cfg, usrSvc, s3Client, dbRepo, pgDump{})
 
 	dbHandler := database.New(usrSvc, dbSvc, instanceSvc)
 
@@ -92,4 +94,10 @@ func run() error {
 
 	r := server.GetEngine(cfg.BasePath, dbHandler, authMiddleware)
 	return r.Run()
+}
+
+type pgDump struct{}
+
+func (p pgDump) NewDump(opts *pg.Postgres) (*pg.Dump, error) {
+	return pg.NewDump(opts)
 }

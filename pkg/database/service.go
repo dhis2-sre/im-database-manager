@@ -30,8 +30,8 @@ import (
 	"github.com/dhis2-sre/im-user/swagger/sdk/models"
 )
 
-func NewService(c config.Config, userClient userClientHandler, s3Client S3Client, repository Repository) *service {
-	return &service{c, userClient, s3Client, repository}
+func NewService(c config.Config, userClient userClientHandler, s3Client S3Client, repository Repository, dump PgDump) *service {
+	return &service{c, userClient, s3Client, repository, dump}
 }
 
 type service struct {
@@ -39,6 +39,11 @@ type service struct {
 	userClient userClientHandler
 	s3Client   S3Client
 	repository Repository
+	pgDump     PgDump
+}
+
+type PgDump interface {
+	NewDump(pg *pg.Postgres) (*pg.Dump, error)
 }
 
 type S3Client interface {
@@ -231,7 +236,7 @@ func (s service) SaveAs(token string, database *model.Database, instance *instan
 		return nil, err
 	}
 
-	dump, err := newPgDumpConfig(instance, stack)
+	dump, err := s.newPgDumpConfig(instance, stack)
 	if err != nil {
 		return nil, err
 	}
@@ -372,7 +377,7 @@ func gz(gzFile string, database *model.Database, src *os.File) (*os.File, error)
 	return outFile, nil
 }
 
-func newPgDumpConfig(instance *instanceModels.Instance, stack *instanceModels.Stack) (*pg.Dump, error) {
+func (s service) newPgDumpConfig(instance *instanceModels.Instance, stack *instanceModels.Stack) (*pg.Dump, error) {
 	databaseName, err := findParameter("DATABASE_NAME", instance, stack)
 	if err != nil {
 		return nil, err
@@ -388,7 +393,7 @@ func newPgDumpConfig(instance *instanceModels.Instance, stack *instanceModels.St
 		return nil, err
 	}
 
-	dump, err := pg.NewDump(&pg.Postgres{
+	dump, err := s.pgDump.NewDump(&pg.Postgres{
 		Host:     fmt.Sprintf(stack.HostnamePattern, instance.Name, instance.GroupName),
 		Port:     5432,
 		DB:       databaseName,

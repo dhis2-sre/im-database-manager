@@ -93,7 +93,7 @@ func TestHandler_SaveAs(t *testing.T) {
 	w := httptest.NewRecorder()
 	c := newContext(w, "group-name")
 	c.AddParam("instanceId", "1")
-	c.Request = newPost(t, "/whatever", &saveAsRequest{Name: "new-name", Format: "custom"})
+	c.Request = newPost(t, "", &saveAsRequest{Name: "new-name", Format: "custom"})
 
 	handler.SaveAs(c)
 

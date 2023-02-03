@@ -43,7 +43,7 @@ func TestHandler_Upload(t *testing.T) {
 	putObjectInput := &s3.PutObjectInput{
 		Bucket: aws.String(""),
 		Key:    aws.String("group-name/database.sql"),
-		Body:   bytes.NewReader([]byte("Hello, World!")),
+		Body:   bytes.NewBuffer([]byte("Hello, World!")),
 		ACL:    types.ObjectCannedACLPrivate,
 	}
 	s3Uploader.

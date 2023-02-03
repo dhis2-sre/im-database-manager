@@ -43,7 +43,7 @@ type service struct {
 
 type S3Client interface {
 	Copy(bucket string, source string, destination string) error
-	Upload(bucket string, key string, body *bytes.Buffer) error
+	Upload(bucket string, key string, body io.Reader) error
 	Delete(bucket string, key string) error
 	Download(bucket string, key string, dst io.Writer, cb func(contentLength int64)) error
 }
@@ -398,6 +398,9 @@ func newPgDumpConfig(instance *instanceModels.Instance, stack *instanceModels.St
 	if err != nil {
 		return nil, err
 	}
+
+	// TODO: This is very DHIS2 specific... More stack meta data?
+	dump.IgnoreTableData = []string{"analytics*", "_*"}
 
 	return dump, nil
 }

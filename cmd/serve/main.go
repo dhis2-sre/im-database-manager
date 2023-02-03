@@ -66,10 +66,7 @@ func run() error {
 	}
 	s3AWSClient := s3.NewFromConfig(s3Config)
 	uploader := manager.NewUploader(s3AWSClient)
-	s3Client, err := storage.NewS3Client(s3AWSClient, uploader)
-	if err != nil {
-		return err
-	}
+	s3Client := storage.NewS3Client(s3AWSClient, uploader)
 
 	db, err := storage.NewDatabase(cfg)
 	if err != nil {

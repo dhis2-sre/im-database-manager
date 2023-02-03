@@ -49,8 +49,7 @@ func TestHandler_Upload(t *testing.T) {
 	s3Uploader.
 		On("Upload", mock.AnythingOfType("*context.emptyCtx"), putObjectInput, mock.AnythingOfType("[]func(*manager.Uploader)")).
 		Return(&manager.UploadOutput{}, nil)
-	s3Client, err := storage.NewS3Client(nil, s3Uploader)
-	require.NoError(t, err)
+	s3Client := storage.NewS3Client(nil, s3Uploader)
 	repository := &mockRepository{}
 	repository.
 		On("Save", mock.AnythingOfType("*model.Database")).
@@ -104,8 +103,7 @@ func TestHandler_ExternalDownload(t *testing.T) {
 			Body:          io.NopCloser(strings.NewReader("Hello, World!")),
 			ContentLength: 13,
 		}, nil)
-	s3Client, err := storage.NewS3Client(awsS3Client, nil)
-	require.NoError(t, err)
+	s3Client := storage.NewS3Client(awsS3Client, nil)
 	database := &model.Database{
 		Model:     gorm.Model{ID: 1},
 		GroupName: "group-name",
@@ -189,8 +187,7 @@ func TestHandler_Download(t *testing.T) {
 			Body:          io.NopCloser(strings.NewReader("Hello, World!")),
 			ContentLength: 13,
 		}, nil)
-	s3Client, err := storage.NewS3Client(awsS3Client, nil)
-	require.NoError(t, err)
+	s3Client := storage.NewS3Client(awsS3Client, nil)
 	repository := &mockRepository{}
 	repository.
 		On("FindById", uint(1)).
@@ -327,8 +324,7 @@ func TestHandler_Delete(t *testing.T) {
 	awsS3Client.
 		On("DeleteObject", mock.AnythingOfType("*context.emptyCtx"), mock.AnythingOfType("*s3.DeleteObjectInput"), mock.AnythingOfType("[]func(*s3.Options)")).
 		Return(&s3.DeleteObjectOutput{})
-	s3Client, err := storage.NewS3Client(awsS3Client, nil)
-	require.NoError(t, err)
+	s3Client := storage.NewS3Client(awsS3Client, nil)
 	database := &model.Database{
 		GroupName: "group-name",
 		Url:       "/path",
@@ -402,8 +398,7 @@ func TestHandler_Copy(t *testing.T) {
 	awsS3Client.
 		On("CopyObject", mock.AnythingOfType("*context.emptyCtx"), mock.AnythingOfType("*s3.CopyObjectInput"), mock.AnythingOfType("[]func(*s3.Options)")).
 		Return(&s3.CopyObjectOutput{}, nil)
-	s3Client, err := storage.NewS3Client(awsS3Client, nil)
-	require.NoError(t, err)
+	s3Client := storage.NewS3Client(awsS3Client, nil)
 	repository := &mockRepository{}
 	repository.
 		On("FindById", uint(1)).

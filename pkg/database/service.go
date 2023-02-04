@@ -1,7 +1,6 @@
 package database
 
 import (
-	"bytes"
 	"compress/gzip"
 	"context"
 	"errors"
@@ -119,15 +118,8 @@ func (s service) Unlock(id uint) error {
 }
 
 func (s service) Upload(d *model.Database, group *models.Group, file io.Reader) (*model.Database, error) {
-	buffer := new(bytes.Buffer)
-	_, err := buffer.ReadFrom(file)
-	if err != nil {
-		return nil, err
-	}
-
 	key := fmt.Sprintf("%s/%s", group.Name, d.Name)
-
-	err = s.s3Client.Upload(s.c.Bucket, key, buffer)
+	err := s.s3Client.Upload(s.c.Bucket, key, file)
 	if err != nil {
 		return nil, err
 	}

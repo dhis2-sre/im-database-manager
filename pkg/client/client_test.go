@@ -7,6 +7,8 @@ import (
 	"testing"
 	"time"
 
+	"github.com/dhis2-sre/im-database-manager/pkg/storage"
+
 	"github.com/dhis2-sre/im-database-manager/internal/handler"
 	"github.com/dhis2-sre/im-database-manager/internal/middleware"
 	"github.com/dhis2-sre/im-database-manager/pkg/database"
@@ -77,7 +79,7 @@ func (m *mockDatabaseService) Unlock(id uint) error {
 	panic("implement me")
 }
 
-func (m *mockDatabaseService) Upload(d *model.Database, group *models.Group, file io.Reader) (*model.Database, error) {
+func (m *mockDatabaseService) Upload(d *model.Database, group *models.Group, file storage.ReadAtSeeker, length int64) (*model.Database, error) {
 	panic("implement me")
 }
 

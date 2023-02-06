@@ -9,8 +9,6 @@ import (
 	"strconv"
 	"time"
 
-	"github.com/dhis2-sre/im-database-manager/pkg/storage"
-
 	"github.com/dhis2-sre/im-database-manager/internal/apperror"
 	"github.com/dhis2-sre/im-database-manager/internal/handler"
 	"github.com/dhis2-sre/im-database-manager/pkg/model"
@@ -39,7 +37,7 @@ type Service interface {
 	FindById(id uint) (*model.Database, error)
 	Lock(id uint, instanceId uint, userId uint) (*model.Lock, error)
 	Unlock(id uint) error
-	Upload(d *model.Database, group *userModels.Group, file storage.ReadAtSeeker, size int64) (*model.Database, error)
+	Upload(d *model.Database, group *userModels.Group, file ReadAtSeeker, size int64) (*model.Database, error)
 	Download(id uint, dst io.Writer, headers func(contentLength int64)) error
 	Delete(id uint) error
 	List(groups []*userModels.Group) ([]*model.Database, error)

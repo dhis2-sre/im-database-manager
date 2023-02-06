@@ -119,7 +119,12 @@ func (s service) Unlock(id uint) error {
 	return err
 }
 
-func (s service) Upload(d *model.Database, group *models.Group, file storage.ReadAtSeeker, size int64) (*model.Database, error) {
+type ReadAtSeeker interface {
+	io.ReaderAt
+	io.ReadSeeker
+}
+
+func (s service) Upload(d *model.Database, group *models.Group, file ReadAtSeeker, size int64) (*model.Database, error) {
 	key := fmt.Sprintf("%s/%s", group.Name, d.Name)
 	err := s.s3Client.Upload(s.c.Bucket, key, file, size)
 	if err != nil {

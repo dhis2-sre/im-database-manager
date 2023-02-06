@@ -9,6 +9,7 @@ import (
 	"mime/multipart"
 	"net/http"
 	"net/http/httptest"
+	"strconv"
 	"strings"
 	"testing"
 	"time"
@@ -85,6 +86,7 @@ func newMultipartRequest(t *testing.T, group string, filename string, fileConten
 	require.NoError(t, err)
 	request.Header.Set("Authorization", "token")
 	request.Header.Set("Content-Type", multipartWriter.FormDataContentType())
+	request.Header.Set("Content-Length", strconv.Itoa(len(fileContent)))
 	return request
 }
 

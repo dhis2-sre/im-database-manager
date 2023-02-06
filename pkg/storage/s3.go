@@ -6,6 +6,7 @@ import (
 	"io"
 	"log"
 	"path"
+	"sync"
 
 	"github.com/aws/aws-sdk-go-v2/aws"
 	"github.com/aws/aws-sdk-go-v2/feature/s3/manager"
@@ -107,6 +108,7 @@ type progressReader struct {
 	size int64
 	read int64
 	cb   func(read int64, size int64)
+	mux  sync.Mutex
 }
 
 func (r *progressReader) Read(p []byte) (int, error) {
@@ -119,8 +121,10 @@ func (r *progressReader) ReadAt(p []byte, off int64) (int, error) {
 		return n, err
 	}
 
+	r.mux.Lock()
 	r.read += int64(n)
 	r.cb(r.read, r.size)
+	r.mux.Unlock()
 
 	return n, err
 }
@@ -130,5 +134,5 @@ func (r *progressReader) Seek(offset int64, whence int) (int64, error) {
 }
 
 func NewProgressReader(fp ReadAtSeeker, size int64, cb func(read int64, size int64)) (*progressReader, error) {
-	return &progressReader{fp, size, 0, cb}, nil
+	return &progressReader{fp, size, 0, cb, sync.Mutex{}}, nil
 }

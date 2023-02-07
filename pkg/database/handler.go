@@ -37,7 +37,7 @@ type Service interface {
 	FindById(id uint) (*model.Database, error)
 	Lock(id uint, instanceId uint, userId uint) (*model.Lock, error)
 	Unlock(id uint) error
-	Upload(d *model.Database, group *userModels.Group, file ReadAtSeeker, size int64) (*model.Database, error)
+	Upload(d *model.Database, group *userModels.Group, reader ReadAtSeeker, size int64) (*model.Database, error)
 	Download(id uint, dst io.Writer, headers func(contentLength int64)) error
 	Delete(id uint) error
 	List(groups []*userModels.Group) ([]*model.Database, error)

@@ -77,7 +77,7 @@ func (m *mockDatabaseService) Unlock(id uint) error {
 	panic("implement me")
 }
 
-func (m *mockDatabaseService) Upload(d *model.Database, group *models.Group, file database.ReadAtSeeker, size int64) (*model.Database, error) {
+func (m *mockDatabaseService) Upload(d *model.Database, group *models.Group, reader database.ReadAtSeeker, size int64) (*model.Database, error) {
 	panic("implement me")
 }
 

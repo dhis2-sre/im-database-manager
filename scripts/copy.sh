@@ -11,4 +11,4 @@ NAME=$3
 echo "{
   \"name\": \"$NAME\",
   \"group\": \"$GROUP\"
-}" | $HTTP post "$INSTANCE_HOST/databases/$SOURCE/copy" "Authorization: Bearer $ACCESS_TOKEN"
+}" | $HTTP post "$IM_HOST/databases/$SOURCE/copy" "Authorization: Bearer $ACCESS_TOKEN"

@@ -9,4 +9,4 @@ EXPIRATION=$2
 
 echo "{
   \"expiration\": \"$EXPIRATION\"
-}" | $HTTP post "$INSTANCE_HOST/databases/$DATABASE/external" "Authorization: Bearer $ACCESS_TOKEN"
+}" | $HTTP post "$IM_HOST/databases/$DATABASE/external" "Authorization: Bearer $ACCESS_TOKEN"

@@ -4,4 +4,4 @@ set -euo pipefail
 
 UUID=$1
 
-curl -L "$INSTANCE_HOST/databases/external/$UUID" | cat
+curl -L "$IM_HOST/databases/external/$UUID" | cat

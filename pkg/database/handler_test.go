@@ -34,9 +34,7 @@ func TestHandler_Upload(t *testing.T) {
 	userClient := &mockUserClient{}
 	userClient.
 		On("FindGroupByName", "token", "group-name").
-		Return(&models.Group{
-			Name: "group-name",
-		}, nil)
+		Return(&models.Group{Name: "group-name"}, nil)
 	s3Uploader := &mockAwsS3Uploader{}
 	putObjectInput := mock.MatchedBy(func(put *s3.PutObjectInput) bool {
 		body := new(strings.Builder)

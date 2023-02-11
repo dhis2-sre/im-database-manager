@@ -13,10 +13,8 @@ import (
 	"testing"
 	"time"
 
-	"github.com/aws/aws-sdk-go-v2/aws"
-	"github.com/aws/aws-sdk-go-v2/service/s3/types"
-
 	"github.com/aws/aws-sdk-go-v2/feature/s3/manager"
+	"github.com/aws/aws-sdk-go/aws"
 
 	"github.com/aws/aws-sdk-go-v2/service/s3"
 	"github.com/dhis2-sre/im-database-manager/pkg/storage"
@@ -36,16 +34,18 @@ func TestHandler_Upload(t *testing.T) {
 	userClient := &mockUserClient{}
 	userClient.
 		On("FindGroupByName", "token", "group-name").
-		Return(&models.Group{
-			Name: "group-name",
-		}, nil)
+		Return(&models.Group{Name: "group-name"}, nil)
 	s3Uploader := &mockAwsS3Uploader{}
-	putObjectInput := &s3.PutObjectInput{
-		Bucket: aws.String(""),
-		Key:    aws.String("group-name/database.sql"),
-		Body:   bytes.NewReader([]byte("Hello, World!")),
-		ACL:    types.ObjectCannedACLPrivate,
-	}
+	putObjectInput := mock.MatchedBy(func(put *s3.PutObjectInput) bool {
+		body := new(strings.Builder)
+		_, err := io.Copy(body, put.Body)
+		if err != nil {
+			t.Fatalf("failed to copy body: %v", err)
+		}
+		return *put.Bucket == *aws.String("") &&
+			*put.Key == *aws.String("group-name/database.sql") &&
+			body.String() == "Hello, World!"
+	})
 	s3Uploader.
 		On("Upload", mock.AnythingOfType("*context.emptyCtx"), putObjectInput, mock.AnythingOfType("[]func(*manager.Uploader)")).
 		Return(&manager.UploadOutput{}, nil)
@@ -485,6 +485,7 @@ func assertJSON[V any](t *testing.T, body *bytes.Buffer, expected V) {
 	require.NoError(t, err)
 	require.Equal(t, expected, *actualBody, "HTTP response body does not match")
 }
+
 func TestHandler_List_RepositoryError(t *testing.T) {
 	repository := &mockRepository{}
 	repository.

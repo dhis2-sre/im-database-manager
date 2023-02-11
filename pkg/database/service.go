@@ -1,7 +1,6 @@
 package database
 
 import (
-	"bytes"
 	"compress/gzip"
 	"context"
 	"errors"
@@ -43,7 +42,7 @@ type service struct {
 
 type S3Client interface {
 	Copy(bucket string, source string, destination string) error
-	Upload(bucket string, key string, body *bytes.Buffer) error
+	Upload(bucket string, key string, body io.Reader) error
 	Delete(bucket string, key string) error
 	Download(bucket string, key string, dst io.Writer, cb func(contentLength int64)) error
 }
@@ -119,15 +118,8 @@ func (s service) Unlock(id uint) error {
 }
 
 func (s service) Upload(d *model.Database, group *models.Group, file io.Reader) (*model.Database, error) {
-	buffer := new(bytes.Buffer)
-	_, err := buffer.ReadFrom(file)
-	if err != nil {
-		return nil, err
-	}
-
 	key := fmt.Sprintf("%s/%s", group.Name, d.Name)
-
-	err = s.s3Client.Upload(s.c.Bucket, key, buffer)
+	err := s.s3Client.Upload(s.c.Bucket, key, file)
 	if err != nil {
 		return nil, err
 	}
@@ -398,6 +390,9 @@ func newPgDumpConfig(instance *instanceModels.Instance, stack *instanceModels.St
 	if err != nil {
 		return nil, err
 	}
+
+	// TODO: This is very DHIS2 specific... More stack meta data?
+	dump.IgnoreTableData = []string{"analytics*", "_*"}
 
 	return dump, nil
 }

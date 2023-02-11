@@ -1,7 +1,6 @@
 package storage
 
 import (
-	"bytes"
 	"context"
 	"fmt"
 	"io"
@@ -46,11 +45,11 @@ func (s S3Client) Copy(bucket string, source string, destination string) error {
 	return nil
 }
 
-func (s S3Client) Upload(bucket string, key string, body *bytes.Buffer) error {
+func (s S3Client) Upload(bucket string, key string, body io.Reader) error {
 	_, err := s.uploader.Upload(context.TODO(), &s3.PutObjectInput{
 		Bucket: aws.String(bucket),
 		Key:    aws.String(key),
-		Body:   bytes.NewReader(body.Bytes()),
+		Body:   body,
 		ACL:    types.ObjectCannedACLPrivate,
 	})
 

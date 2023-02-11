@@ -127,6 +127,7 @@ type ReadAtSeeker interface {
 func (s service) Upload(d *model.Database, group *models.Group, reader ReadAtSeeker, size int64) (*model.Database, error) {
 	key := fmt.Sprintf("%s/%s", group.Name, d.Name)
 	err := s.s3Client.Upload(s.c.Bucket, key, reader, size)
+
 	if err != nil {
 		return nil, err
 	}

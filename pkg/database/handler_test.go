@@ -38,17 +38,18 @@ func TestHandler_Upload(t *testing.T) {
 			Name: "group-name",
 		}, nil)
 	s3Uploader := &mockAwsS3Uploader{}
+	putObjectInput := mock.MatchedBy(func(put *s3.PutObjectInput) bool {
+		body := new(strings.Builder)
+		_, err := io.Copy(body, put.Body)
+		if err != nil {
+			t.Fatalf("failed to copy body: %v", err)
+		}
+		return *put.Bucket == *aws.String("") &&
+			*put.Key == *aws.String("group-name/database.sql") &&
+			body.String() == "Hello, World!"
+	})
 	s3Uploader.
-		On("Upload", mock.AnythingOfType("*context.emptyCtx"), mock.MatchedBy(func(put *s3.PutObjectInput) bool {
-			body := new(strings.Builder)
-			_, err := io.Copy(body, put.Body)
-			if err != nil {
-				t.Fatalf("failed to copy body: %v", err)
-			}
-			return *put.Bucket == *aws.String("") &&
-				*put.Key == *aws.String("group-name/database.sql") &&
-				body.String() == "Hello, World!"
-		}), mock.AnythingOfType("[]func(*manager.Uploader)")).
+		On("Upload", mock.AnythingOfType("*context.emptyCtx"), putObjectInput, mock.AnythingOfType("[]func(*manager.Uploader)")).
 		Return(&manager.UploadOutput{}, nil)
 	s3Client := storage.NewS3Client(nil, s3Uploader)
 	repository := &mockRepository{}

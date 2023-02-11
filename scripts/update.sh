@@ -9,4 +9,4 @@ NAME=$2
 
 echo "{
   \"name\": \"$NAME\"
-}" | $HTTP put "$INSTANCE_HOST/databases/$DATABASE" "Authorization: Bearer $ACCESS_TOKEN"
+}" | $HTTP put "$IM_HOST/databases/$DATABASE" "Authorization: Bearer $ACCESS_TOKEN"

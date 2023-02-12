@@ -108,7 +108,8 @@ type progressReader struct {
 	size int64
 	read int64
 	cb   func(read int64, size int64)
-	mux  sync.Mutex
+	// TODO: We don't need the mutex, right? https://github.com/aws/aws-sdk-go/blob/5707eba1610d563b9c563dbc862587649bcb9811/service/s3/s3manager/upload.go#L463
+	mux sync.Mutex
 }
 
 func (r *progressReader) Read(p []byte) (int, error) {

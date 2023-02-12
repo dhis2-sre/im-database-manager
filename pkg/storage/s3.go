@@ -50,7 +50,7 @@ func (s S3Client) Copy(bucket string, source string, destination string) error {
 func (s S3Client) Upload(bucket string, key string, body ReadAtSeeker, size int64) error {
 	target := path.Join(bucket, key)
 	log.Printf("Uploading: " + target)
-	reader, err := NewProgressReader(body, size, func(read int64, size int64) {
+	reader, err := newProgressReader(body, size, func(read int64, size int64) {
 		log.Printf("%s - total read:%d\tprogress:%d%%", target, read, int(float32(read*100)/float32(size)))
 	})
 	if err != nil {
@@ -134,6 +134,6 @@ func (r *progressReader) Seek(offset int64, whence int) (int64, error) {
 	return r.fp.Seek(offset, whence)
 }
 
-func NewProgressReader(fp ReadAtSeeker, size int64, cb func(read int64, size int64)) (*progressReader, error) {
+func newProgressReader(fp ReadAtSeeker, size int64, cb func(read int64, size int64)) (*progressReader, error) {
 	return &progressReader{fp, size, 0, cb, sync.Mutex{}}, nil
 }

@@ -104,10 +104,10 @@ type ReadAtSeeker interface {
 }
 
 type progressReader struct {
-	fp   ReadAtSeeker
-	size int64
-	read int64
-	cb   func(read int64, size int64)
+	fp       ReadAtSeeker
+	size     int64
+	read     int64
+	progress func(read int64, size int64)
 	// TODO: We don't need the mutex, right? https://github.com/aws/aws-sdk-go/blob/5707eba1610d563b9c563dbc862587649bcb9811/service/s3/s3manager/upload.go#L463
 	mux sync.Mutex
 }
@@ -124,7 +124,7 @@ func (r *progressReader) ReadAt(p []byte, off int64) (int, error) {
 
 	r.mux.Lock()
 	r.read += int64(n)
-	r.cb(r.read, r.size)
+	r.progress(r.read, r.size)
 	r.mux.Unlock()
 
 	return n, err
@@ -134,6 +134,6 @@ func (r *progressReader) Seek(offset int64, whence int) (int64, error) {
 	return r.fp.Seek(offset, whence)
 }
 
-func newProgressReader(fp ReadAtSeeker, size int64, cb func(read int64, size int64)) (*progressReader, error) {
-	return &progressReader{fp, size, 0, cb, sync.Mutex{}}, nil
+func newProgressReader(fp ReadAtSeeker, size int64, progress func(read int64, size int64)) (*progressReader, error) {
+	return &progressReader{fp, size, 0, progress, sync.Mutex{}}, nil
 }

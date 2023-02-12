@@ -6,6 +6,7 @@ binary:
 	go build -o im-database-manager -ldflags "-s -w" ./cmd/serve
 
 check:
+	go install github.com/securego/gosec/v2/cmd/gosec@latest
 	pre-commit run --all-files --show-diff-on-failure
 
 smoke-test:
@@ -20,7 +21,6 @@ init:
 	direnv allow
 	pip install pre-commit
 	pre-commit install --install-hooks --overwrite
-	go install github.com/securego/gosec/v2/cmd/gosec@latest
 
 push-docker-image:
 	IMAGE_TAG=$(tag) docker compose push prod

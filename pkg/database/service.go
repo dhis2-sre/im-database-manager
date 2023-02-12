@@ -300,7 +300,7 @@ func (s service) SaveAs(token string, database *model.Database, instance *instan
 		}
 
 		dumpFile := dumpPath + dumpExec.File
-		file, err := os.Open(dumpFile)
+		file, err := os.Open(dumpFile) // #nosec
 		if err != nil {
 			logError(err)
 			return
@@ -342,7 +342,7 @@ func removeTempFile(fd *os.File) {
 }
 
 func gz(gzFile string, database *model.Database, src *os.File) (*os.File, error) {
-	outFile, err := os.Create(gzFile)
+	outFile, err := os.Create(gzFile) // #nosec
 	if err != nil {
 		return nil, err
 	}

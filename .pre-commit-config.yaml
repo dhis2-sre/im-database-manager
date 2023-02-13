@@ -14,11 +14,11 @@ repos:
 #      - id: go-imports
 #      - id: go-mod-tidy
 # TODO: Doesn't work, use below hook from https://github.com/golangci/golangci-lint
-#      - id: golangci-lint
+      - id: go-lint
 #      - id: go-critic
-      - id: go-sec-repo-pkg
-        args:
-          - "-exclude-generated"
+#      - id: go-sec-repo-pkg
+#        args:
+#          - "-exclude-generated"
 
 #  - repo: https://github.com/golangci/golangci-lint
 #    rev: v1.45.2

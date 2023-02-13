@@ -2,21 +2,16 @@ tag ?= latest
 version ?= $(shell yq e '.version' helm/chart/Chart.yaml)
 clean-cmd = docker compose down --remove-orphans --volumes
 
-check:
-	pre-commit run --all-files --show-diff-on-failure
-
-smoke-test:
-	docker compose up -d database jwks
-	sleep 3
-	IMAGE_TAG=$(tag) docker compose up -d prod
-
-docker-image:
-	IMAGE_TAG=$(tag) docker compose build prod
-
 init:
 	direnv allow
 	pip install pre-commit
 	pre-commit install --install-hooks --overwrite
+
+check:
+	pre-commit run --all-files --show-diff-on-failure
+
+docker-image:
+	IMAGE_TAG=$(tag) docker compose build prod
 
 push-docker-image:
 	IMAGE_TAG=$(tag) docker compose push prod
@@ -31,6 +26,11 @@ test: clean
 test-coverage: clean
 	docker compose run --no-deps test-coverage
 	$(clean-cmd)
+
+smoke-test:
+	docker compose up -d database jwks
+	sleep 3
+	IMAGE_TAG=$(tag) docker compose up -d prod
 
 clean:
 	$(clean-cmd)

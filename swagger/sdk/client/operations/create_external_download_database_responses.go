@@ -63,7 +63,8 @@ func NewCreateExternalDownloadDatabaseOK() *CreateExternalDownloadDatabaseOK {
 	return &CreateExternalDownloadDatabaseOK{}
 }
 
-/* CreateExternalDownloadDatabaseOK describes a response with status code 200, with default header values.
+/*
+CreateExternalDownloadDatabaseOK describes a response with status code 200, with default header values.
 
 CreateExternalDownloadDatabaseOK create external download database o k
 */
@@ -71,44 +72,9 @@ type CreateExternalDownloadDatabaseOK struct {
 	Payload *models.ExternalDownload
 }
 
-// IsSuccess returns true when this create external download database o k response has a 2xx status code
-func (o *CreateExternalDownloadDatabaseOK) IsSuccess() bool {
-	return true
-}
-
-// IsRedirect returns true when this create external download database o k response has a 3xx status code
-func (o *CreateExternalDownloadDatabaseOK) IsRedirect() bool {
-	return false
-}
-
-// IsClientError returns true when this create external download database o k response has a 4xx status code
-func (o *CreateExternalDownloadDatabaseOK) IsClientError() bool {
-	return false
-}
-
-// IsServerError returns true when this create external download database o k response has a 5xx status code
-func (o *CreateExternalDownloadDatabaseOK) IsServerError() bool {
-	return false
-}
-
-// IsCode returns true when this create external download database o k response a status code equal to that given
-func (o *CreateExternalDownloadDatabaseOK) IsCode(code int) bool {
-	return code == 200
-}
-
-// Code gets the status code for the create external download database o k response
-func (o *CreateExternalDownloadDatabaseOK) Code() int {
-	return 200
-}
-
 func (o *CreateExternalDownloadDatabaseOK) Error() string {
 	return fmt.Sprintf("[POST /databases/{id}/external][%d] createExternalDownloadDatabaseOK  %+v", 200, o.Payload)
 }
-
-func (o *CreateExternalDownloadDatabaseOK) String() string {
-	return fmt.Sprintf("[POST /databases/{id}/external][%d] createExternalDownloadDatabaseOK  %+v", 200, o.Payload)
-}
-
 func (o *CreateExternalDownloadDatabaseOK) GetPayload() *models.ExternalDownload {
 	return o.Payload
 }
@@ -130,48 +96,15 @@ func NewCreateExternalDownloadDatabaseUnauthorized() *CreateExternalDownloadData
 	return &CreateExternalDownloadDatabaseUnauthorized{}
 }
 
-/* CreateExternalDownloadDatabaseUnauthorized describes a response with status code 401, with default header values.
+/*
+CreateExternalDownloadDatabaseUnauthorized describes a response with status code 401, with default header values.
 
 CreateExternalDownloadDatabaseUnauthorized create external download database unauthorized
 */
 type CreateExternalDownloadDatabaseUnauthorized struct {
 }
 
-// IsSuccess returns true when this create external download database unauthorized response has a 2xx status code
-func (o *CreateExternalDownloadDatabaseUnauthorized) IsSuccess() bool {
-	return false
-}
-
-// IsRedirect returns true when this create external download database unauthorized response has a 3xx status code
-func (o *CreateExternalDownloadDatabaseUnauthorized) IsRedirect() bool {
-	return false
-}
-
-// IsClientError returns true when this create external download database unauthorized response has a 4xx status code
-func (o *CreateExternalDownloadDatabaseUnauthorized) IsClientError() bool {
-	return true
-}
-
-// IsServerError returns true when this create external download database unauthorized response has a 5xx status code
-func (o *CreateExternalDownloadDatabaseUnauthorized) IsServerError() bool {
-	return false
-}
-
-// IsCode returns true when this create external download database unauthorized response a status code equal to that given
-func (o *CreateExternalDownloadDatabaseUnauthorized) IsCode(code int) bool {
-	return code == 401
-}
-
-// Code gets the status code for the create external download database unauthorized response
-func (o *CreateExternalDownloadDatabaseUnauthorized) Code() int {
-	return 401
-}
-
 func (o *CreateExternalDownloadDatabaseUnauthorized) Error() string {
-	return fmt.Sprintf("[POST /databases/{id}/external][%d] createExternalDownloadDatabaseUnauthorized ", 401)
-}
-
-func (o *CreateExternalDownloadDatabaseUnauthorized) String() string {
 	return fmt.Sprintf("[POST /databases/{id}/external][%d] createExternalDownloadDatabaseUnauthorized ", 401)
 }
 
@@ -185,48 +118,15 @@ func NewCreateExternalDownloadDatabaseForbidden() *CreateExternalDownloadDatabas
 	return &CreateExternalDownloadDatabaseForbidden{}
 }
 
-/* CreateExternalDownloadDatabaseForbidden describes a response with status code 403, with default header values.
+/*
+CreateExternalDownloadDatabaseForbidden describes a response with status code 403, with default header values.
 
 CreateExternalDownloadDatabaseForbidden create external download database forbidden
 */
 type CreateExternalDownloadDatabaseForbidden struct {
 }
 
-// IsSuccess returns true when this create external download database forbidden response has a 2xx status code
-func (o *CreateExternalDownloadDatabaseForbidden) IsSuccess() bool {
-	return false
-}
-
-// IsRedirect returns true when this create external download database forbidden response has a 3xx status code
-func (o *CreateExternalDownloadDatabaseForbidden) IsRedirect() bool {
-	return false
-}
-
-// IsClientError returns true when this create external download database forbidden response has a 4xx status code
-func (o *CreateExternalDownloadDatabaseForbidden) IsClientError() bool {
-	return true
-}
-
-// IsServerError returns true when this create external download database forbidden response has a 5xx status code
-func (o *CreateExternalDownloadDatabaseForbidden) IsServerError() bool {
-	return false
-}
-
-// IsCode returns true when this create external download database forbidden response a status code equal to that given
-func (o *CreateExternalDownloadDatabaseForbidden) IsCode(code int) bool {
-	return code == 403
-}
-
-// Code gets the status code for the create external download database forbidden response
-func (o *CreateExternalDownloadDatabaseForbidden) Code() int {
-	return 403
-}
-
 func (o *CreateExternalDownloadDatabaseForbidden) Error() string {
-	return fmt.Sprintf("[POST /databases/{id}/external][%d] createExternalDownloadDatabaseForbidden ", 403)
-}
-
-func (o *CreateExternalDownloadDatabaseForbidden) String() string {
 	return fmt.Sprintf("[POST /databases/{id}/external][%d] createExternalDownloadDatabaseForbidden ", 403)
 }
 
@@ -240,48 +140,15 @@ func NewCreateExternalDownloadDatabaseNotFound() *CreateExternalDownloadDatabase
 	return &CreateExternalDownloadDatabaseNotFound{}
 }
 
-/* CreateExternalDownloadDatabaseNotFound describes a response with status code 404, with default header values.
+/*
+CreateExternalDownloadDatabaseNotFound describes a response with status code 404, with default header values.
 
 CreateExternalDownloadDatabaseNotFound create external download database not found
 */
 type CreateExternalDownloadDatabaseNotFound struct {
 }
 
-// IsSuccess returns true when this create external download database not found response has a 2xx status code
-func (o *CreateExternalDownloadDatabaseNotFound) IsSuccess() bool {
-	return false
-}
-
-// IsRedirect returns true when this create external download database not found response has a 3xx status code
-func (o *CreateExternalDownloadDatabaseNotFound) IsRedirect() bool {
-	return false
-}
-
-// IsClientError returns true when this create external download database not found response has a 4xx status code
-func (o *CreateExternalDownloadDatabaseNotFound) IsClientError() bool {
-	return true
-}
-
-// IsServerError returns true when this create external download database not found response has a 5xx status code
-func (o *CreateExternalDownloadDatabaseNotFound) IsServerError() bool {
-	return false
-}
-
-// IsCode returns true when this create external download database not found response a status code equal to that given
-func (o *CreateExternalDownloadDatabaseNotFound) IsCode(code int) bool {
-	return code == 404
-}
-
-// Code gets the status code for the create external download database not found response
-func (o *CreateExternalDownloadDatabaseNotFound) Code() int {
-	return 404
-}
-
 func (o *CreateExternalDownloadDatabaseNotFound) Error() string {
-	return fmt.Sprintf("[POST /databases/{id}/external][%d] createExternalDownloadDatabaseNotFound ", 404)
-}
-
-func (o *CreateExternalDownloadDatabaseNotFound) String() string {
 	return fmt.Sprintf("[POST /databases/{id}/external][%d] createExternalDownloadDatabaseNotFound ", 404)
 }
 
@@ -295,48 +162,15 @@ func NewCreateExternalDownloadDatabaseUnsupportedMediaType() *CreateExternalDown
 	return &CreateExternalDownloadDatabaseUnsupportedMediaType{}
 }
 
-/* CreateExternalDownloadDatabaseUnsupportedMediaType describes a response with status code 415, with default header values.
+/*
+CreateExternalDownloadDatabaseUnsupportedMediaType describes a response with status code 415, with default header values.
 
 CreateExternalDownloadDatabaseUnsupportedMediaType create external download database unsupported media type
 */
 type CreateExternalDownloadDatabaseUnsupportedMediaType struct {
 }
 
-// IsSuccess returns true when this create external download database unsupported media type response has a 2xx status code
-func (o *CreateExternalDownloadDatabaseUnsupportedMediaType) IsSuccess() bool {
-	return false
-}
-
-// IsRedirect returns true when this create external download database unsupported media type response has a 3xx status code
-func (o *CreateExternalDownloadDatabaseUnsupportedMediaType) IsRedirect() bool {
-	return false
-}
-
-// IsClientError returns true when this create external download database unsupported media type response has a 4xx status code
-func (o *CreateExternalDownloadDatabaseUnsupportedMediaType) IsClientError() bool {
-	return true
-}
-
-// IsServerError returns true when this create external download database unsupported media type response has a 5xx status code
-func (o *CreateExternalDownloadDatabaseUnsupportedMediaType) IsServerError() bool {
-	return false
-}
-
-// IsCode returns true when this create external download database unsupported media type response a status code equal to that given
-func (o *CreateExternalDownloadDatabaseUnsupportedMediaType) IsCode(code int) bool {
-	return code == 415
-}
-
-// Code gets the status code for the create external download database unsupported media type response
-func (o *CreateExternalDownloadDatabaseUnsupportedMediaType) Code() int {
-	return 415
-}
-
 func (o *CreateExternalDownloadDatabaseUnsupportedMediaType) Error() string {
-	return fmt.Sprintf("[POST /databases/{id}/external][%d] createExternalDownloadDatabaseUnsupportedMediaType ", 415)
-}
-
-func (o *CreateExternalDownloadDatabaseUnsupportedMediaType) String() string {
 	return fmt.Sprintf("[POST /databases/{id}/external][%d] createExternalDownloadDatabaseUnsupportedMediaType ", 415)
 }
 

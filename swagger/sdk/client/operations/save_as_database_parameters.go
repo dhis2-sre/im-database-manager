@@ -55,10 +55,12 @@ func NewSaveAsDatabaseParamsWithHTTPClient(client *http.Client) *SaveAsDatabaseP
 	}
 }
 
-/* SaveAsDatabaseParams contains all the parameters to send to the API endpoint
-   for the save as database operation.
+/*
+SaveAsDatabaseParams contains all the parameters to send to the API endpoint
 
-   Typically these are written to a http.Request.
+	for the save as database operation.
+
+	Typically these are written to a http.Request.
 */
 type SaveAsDatabaseParams struct {
 

@@ -53,10 +53,12 @@ func NewFindDatabaseByIDParamsWithHTTPClient(client *http.Client) *FindDatabaseB
 	}
 }
 
-/* FindDatabaseByIDParams contains all the parameters to send to the API endpoint
-   for the find database by Id operation.
+/*
+FindDatabaseByIDParams contains all the parameters to send to the API endpoint
 
-   Typically these are written to a http.Request.
+	for the find database by Id operation.
+
+	Typically these are written to a http.Request.
 */
 type FindDatabaseByIDParams struct {
 

@@ -55,10 +55,12 @@ func NewUnlockDatabaseByIDParamsWithHTTPClient(client *http.Client) *UnlockDatab
 	}
 }
 
-/* UnlockDatabaseByIDParams contains all the parameters to send to the API endpoint
-   for the unlock database by Id operation.
+/*
+UnlockDatabaseByIDParams contains all the parameters to send to the API endpoint
 
-   Typically these are written to a http.Request.
+	for the unlock database by Id operation.
+
+	Typically these are written to a http.Request.
 */
 type UnlockDatabaseByIDParams struct {
 

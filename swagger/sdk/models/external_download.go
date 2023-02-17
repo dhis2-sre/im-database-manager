@@ -27,8 +27,7 @@ type ExternalDownload struct {
 	Expiration strfmt.DateTime `json:"Expiration,omitempty"`
 
 	// UUID
-	// Format: uuid
-	UUID strfmt.UUID `json:"UUID,omitempty"`
+	UUID UUID `json:"UUID,omitempty"`
 }
 
 // Validate validates this external download
@@ -66,15 +65,43 @@ func (m *ExternalDownload) validateUUID(formats strfmt.Registry) error {
 		return nil
 	}
 
-	if err := validate.FormatOf("UUID", "body", "uuid", m.UUID.String(), formats); err != nil {
+	if err := m.UUID.Validate(formats); err != nil {
+		if ve, ok := err.(*errors.Validation); ok {
+			return ve.ValidateName("UUID")
+		} else if ce, ok := err.(*errors.CompositeError); ok {
+			return ce.ValidateName("UUID")
+		}
 		return err
 	}
 
 	return nil
 }
 
-// ContextValidate validates this external download based on context it is used
+// ContextValidate validate this external download based on the context it is used
 func (m *ExternalDownload) ContextValidate(ctx context.Context, formats strfmt.Registry) error {
+	var res []error
+
+	if err := m.contextValidateUUID(ctx, formats); err != nil {
+		res = append(res, err)
+	}
+
+	if len(res) > 0 {
+		return errors.CompositeValidationError(res...)
+	}
+	return nil
+}
+
+func (m *ExternalDownload) contextValidateUUID(ctx context.Context, formats strfmt.Registry) error {
+
+	if err := m.UUID.ContextValidate(ctx, formats); err != nil {
+		if ve, ok := err.(*errors.Validation); ok {
+			return ve.ValidateName("UUID")
+		} else if ce, ok := err.(*errors.CompositeError); ok {
+			return ce.ValidateName("UUID")
+		}
+		return err
+	}
+
 	return nil
 }
 

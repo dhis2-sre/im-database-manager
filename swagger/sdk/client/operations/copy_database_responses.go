@@ -57,7 +57,8 @@ func NewCopyDatabaseAccepted() *CopyDatabaseAccepted {
 	return &CopyDatabaseAccepted{}
 }
 
-/* CopyDatabaseAccepted describes a response with status code 202, with default header values.
+/*
+CopyDatabaseAccepted describes a response with status code 202, with default header values.
 
 Database
 */
@@ -65,44 +66,9 @@ type CopyDatabaseAccepted struct {
 	Payload *models.Database
 }
 
-// IsSuccess returns true when this copy database accepted response has a 2xx status code
-func (o *CopyDatabaseAccepted) IsSuccess() bool {
-	return true
-}
-
-// IsRedirect returns true when this copy database accepted response has a 3xx status code
-func (o *CopyDatabaseAccepted) IsRedirect() bool {
-	return false
-}
-
-// IsClientError returns true when this copy database accepted response has a 4xx status code
-func (o *CopyDatabaseAccepted) IsClientError() bool {
-	return false
-}
-
-// IsServerError returns true when this copy database accepted response has a 5xx status code
-func (o *CopyDatabaseAccepted) IsServerError() bool {
-	return false
-}
-
-// IsCode returns true when this copy database accepted response a status code equal to that given
-func (o *CopyDatabaseAccepted) IsCode(code int) bool {
-	return code == 202
-}
-
-// Code gets the status code for the copy database accepted response
-func (o *CopyDatabaseAccepted) Code() int {
-	return 202
-}
-
 func (o *CopyDatabaseAccepted) Error() string {
 	return fmt.Sprintf("[POST /databases/{id}/copy][%d] copyDatabaseAccepted  %+v", 202, o.Payload)
 }
-
-func (o *CopyDatabaseAccepted) String() string {
-	return fmt.Sprintf("[POST /databases/{id}/copy][%d] copyDatabaseAccepted  %+v", 202, o.Payload)
-}
-
 func (o *CopyDatabaseAccepted) GetPayload() *models.Database {
 	return o.Payload
 }
@@ -124,48 +90,15 @@ func NewCopyDatabaseUnauthorized() *CopyDatabaseUnauthorized {
 	return &CopyDatabaseUnauthorized{}
 }
 
-/* CopyDatabaseUnauthorized describes a response with status code 401, with default header values.
+/*
+CopyDatabaseUnauthorized describes a response with status code 401, with default header values.
 
 CopyDatabaseUnauthorized copy database unauthorized
 */
 type CopyDatabaseUnauthorized struct {
 }
 
-// IsSuccess returns true when this copy database unauthorized response has a 2xx status code
-func (o *CopyDatabaseUnauthorized) IsSuccess() bool {
-	return false
-}
-
-// IsRedirect returns true when this copy database unauthorized response has a 3xx status code
-func (o *CopyDatabaseUnauthorized) IsRedirect() bool {
-	return false
-}
-
-// IsClientError returns true when this copy database unauthorized response has a 4xx status code
-func (o *CopyDatabaseUnauthorized) IsClientError() bool {
-	return true
-}
-
-// IsServerError returns true when this copy database unauthorized response has a 5xx status code
-func (o *CopyDatabaseUnauthorized) IsServerError() bool {
-	return false
-}
-
-// IsCode returns true when this copy database unauthorized response a status code equal to that given
-func (o *CopyDatabaseUnauthorized) IsCode(code int) bool {
-	return code == 401
-}
-
-// Code gets the status code for the copy database unauthorized response
-func (o *CopyDatabaseUnauthorized) Code() int {
-	return 401
-}
-
 func (o *CopyDatabaseUnauthorized) Error() string {
-	return fmt.Sprintf("[POST /databases/{id}/copy][%d] copyDatabaseUnauthorized ", 401)
-}
-
-func (o *CopyDatabaseUnauthorized) String() string {
 	return fmt.Sprintf("[POST /databases/{id}/copy][%d] copyDatabaseUnauthorized ", 401)
 }
 
@@ -179,48 +112,15 @@ func NewCopyDatabaseForbidden() *CopyDatabaseForbidden {
 	return &CopyDatabaseForbidden{}
 }
 
-/* CopyDatabaseForbidden describes a response with status code 403, with default header values.
+/*
+CopyDatabaseForbidden describes a response with status code 403, with default header values.
 
 CopyDatabaseForbidden copy database forbidden
 */
 type CopyDatabaseForbidden struct {
 }
 
-// IsSuccess returns true when this copy database forbidden response has a 2xx status code
-func (o *CopyDatabaseForbidden) IsSuccess() bool {
-	return false
-}
-
-// IsRedirect returns true when this copy database forbidden response has a 3xx status code
-func (o *CopyDatabaseForbidden) IsRedirect() bool {
-	return false
-}
-
-// IsClientError returns true when this copy database forbidden response has a 4xx status code
-func (o *CopyDatabaseForbidden) IsClientError() bool {
-	return true
-}
-
-// IsServerError returns true when this copy database forbidden response has a 5xx status code
-func (o *CopyDatabaseForbidden) IsServerError() bool {
-	return false
-}
-
-// IsCode returns true when this copy database forbidden response a status code equal to that given
-func (o *CopyDatabaseForbidden) IsCode(code int) bool {
-	return code == 403
-}
-
-// Code gets the status code for the copy database forbidden response
-func (o *CopyDatabaseForbidden) Code() int {
-	return 403
-}
-
 func (o *CopyDatabaseForbidden) Error() string {
-	return fmt.Sprintf("[POST /databases/{id}/copy][%d] copyDatabaseForbidden ", 403)
-}
-
-func (o *CopyDatabaseForbidden) String() string {
 	return fmt.Sprintf("[POST /databases/{id}/copy][%d] copyDatabaseForbidden ", 403)
 }
 
@@ -234,48 +134,15 @@ func NewCopyDatabaseUnsupportedMediaType() *CopyDatabaseUnsupportedMediaType {
 	return &CopyDatabaseUnsupportedMediaType{}
 }
 
-/* CopyDatabaseUnsupportedMediaType describes a response with status code 415, with default header values.
+/*
+CopyDatabaseUnsupportedMediaType describes a response with status code 415, with default header values.
 
 CopyDatabaseUnsupportedMediaType copy database unsupported media type
 */
 type CopyDatabaseUnsupportedMediaType struct {
 }
 
-// IsSuccess returns true when this copy database unsupported media type response has a 2xx status code
-func (o *CopyDatabaseUnsupportedMediaType) IsSuccess() bool {
-	return false
-}
-
-// IsRedirect returns true when this copy database unsupported media type response has a 3xx status code
-func (o *CopyDatabaseUnsupportedMediaType) IsRedirect() bool {
-	return false
-}
-
-// IsClientError returns true when this copy database unsupported media type response has a 4xx status code
-func (o *CopyDatabaseUnsupportedMediaType) IsClientError() bool {
-	return true
-}
-
-// IsServerError returns true when this copy database unsupported media type response has a 5xx status code
-func (o *CopyDatabaseUnsupportedMediaType) IsServerError() bool {
-	return false
-}
-
-// IsCode returns true when this copy database unsupported media type response a status code equal to that given
-func (o *CopyDatabaseUnsupportedMediaType) IsCode(code int) bool {
-	return code == 415
-}
-
-// Code gets the status code for the copy database unsupported media type response
-func (o *CopyDatabaseUnsupportedMediaType) Code() int {
-	return 415
-}
-
 func (o *CopyDatabaseUnsupportedMediaType) Error() string {
-	return fmt.Sprintf("[POST /databases/{id}/copy][%d] copyDatabaseUnsupportedMediaType ", 415)
-}
-
-func (o *CopyDatabaseUnsupportedMediaType) String() string {
 	return fmt.Sprintf("[POST /databases/{id}/copy][%d] copyDatabaseUnsupportedMediaType ", 415)
 }
 

@@ -55,10 +55,12 @@ func NewUpdateDatabaseByIDParamsWithHTTPClient(client *http.Client) *UpdateDatab
 	}
 }
 
-/* UpdateDatabaseByIDParams contains all the parameters to send to the API endpoint
-   for the update database by Id operation.
+/*
+UpdateDatabaseByIDParams contains all the parameters to send to the API endpoint
 
-   Typically these are written to a http.Request.
+	for the update database by Id operation.
+
+	Typically these are written to a http.Request.
 */
 type UpdateDatabaseByIDParams struct {
 

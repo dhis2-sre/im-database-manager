@@ -54,48 +54,15 @@ func NewUpdateDatabaseByIDOK() *UpdateDatabaseByIDOK {
 	return &UpdateDatabaseByIDOK{}
 }
 
-/* UpdateDatabaseByIDOK describes a response with status code 200, with default header values.
+/*
+UpdateDatabaseByIDOK describes a response with status code 200, with default header values.
 
 UpdateDatabaseByIDOK update database by Id o k
 */
 type UpdateDatabaseByIDOK struct {
 }
 
-// IsSuccess returns true when this update database by Id o k response has a 2xx status code
-func (o *UpdateDatabaseByIDOK) IsSuccess() bool {
-	return true
-}
-
-// IsRedirect returns true when this update database by Id o k response has a 3xx status code
-func (o *UpdateDatabaseByIDOK) IsRedirect() bool {
-	return false
-}
-
-// IsClientError returns true when this update database by Id o k response has a 4xx status code
-func (o *UpdateDatabaseByIDOK) IsClientError() bool {
-	return false
-}
-
-// IsServerError returns true when this update database by Id o k response has a 5xx status code
-func (o *UpdateDatabaseByIDOK) IsServerError() bool {
-	return false
-}
-
-// IsCode returns true when this update database by Id o k response a status code equal to that given
-func (o *UpdateDatabaseByIDOK) IsCode(code int) bool {
-	return code == 200
-}
-
-// Code gets the status code for the update database by Id o k response
-func (o *UpdateDatabaseByIDOK) Code() int {
-	return 200
-}
-
 func (o *UpdateDatabaseByIDOK) Error() string {
-	return fmt.Sprintf("[PUT /databases/{id}][%d] updateDatabaseByIdOK ", 200)
-}
-
-func (o *UpdateDatabaseByIDOK) String() string {
 	return fmt.Sprintf("[PUT /databases/{id}][%d] updateDatabaseByIdOK ", 200)
 }
 
@@ -109,48 +76,15 @@ func NewUpdateDatabaseByIDUnauthorized() *UpdateDatabaseByIDUnauthorized {
 	return &UpdateDatabaseByIDUnauthorized{}
 }
 
-/* UpdateDatabaseByIDUnauthorized describes a response with status code 401, with default header values.
+/*
+UpdateDatabaseByIDUnauthorized describes a response with status code 401, with default header values.
 
 UpdateDatabaseByIDUnauthorized update database by Id unauthorized
 */
 type UpdateDatabaseByIDUnauthorized struct {
 }
 
-// IsSuccess returns true when this update database by Id unauthorized response has a 2xx status code
-func (o *UpdateDatabaseByIDUnauthorized) IsSuccess() bool {
-	return false
-}
-
-// IsRedirect returns true when this update database by Id unauthorized response has a 3xx status code
-func (o *UpdateDatabaseByIDUnauthorized) IsRedirect() bool {
-	return false
-}
-
-// IsClientError returns true when this update database by Id unauthorized response has a 4xx status code
-func (o *UpdateDatabaseByIDUnauthorized) IsClientError() bool {
-	return true
-}
-
-// IsServerError returns true when this update database by Id unauthorized response has a 5xx status code
-func (o *UpdateDatabaseByIDUnauthorized) IsServerError() bool {
-	return false
-}
-
-// IsCode returns true when this update database by Id unauthorized response a status code equal to that given
-func (o *UpdateDatabaseByIDUnauthorized) IsCode(code int) bool {
-	return code == 401
-}
-
-// Code gets the status code for the update database by Id unauthorized response
-func (o *UpdateDatabaseByIDUnauthorized) Code() int {
-	return 401
-}
-
 func (o *UpdateDatabaseByIDUnauthorized) Error() string {
-	return fmt.Sprintf("[PUT /databases/{id}][%d] updateDatabaseByIdUnauthorized ", 401)
-}
-
-func (o *UpdateDatabaseByIDUnauthorized) String() string {
 	return fmt.Sprintf("[PUT /databases/{id}][%d] updateDatabaseByIdUnauthorized ", 401)
 }
 
@@ -164,48 +98,15 @@ func NewUpdateDatabaseByIDForbidden() *UpdateDatabaseByIDForbidden {
 	return &UpdateDatabaseByIDForbidden{}
 }
 
-/* UpdateDatabaseByIDForbidden describes a response with status code 403, with default header values.
+/*
+UpdateDatabaseByIDForbidden describes a response with status code 403, with default header values.
 
 UpdateDatabaseByIDForbidden update database by Id forbidden
 */
 type UpdateDatabaseByIDForbidden struct {
 }
 
-// IsSuccess returns true when this update database by Id forbidden response has a 2xx status code
-func (o *UpdateDatabaseByIDForbidden) IsSuccess() bool {
-	return false
-}
-
-// IsRedirect returns true when this update database by Id forbidden response has a 3xx status code
-func (o *UpdateDatabaseByIDForbidden) IsRedirect() bool {
-	return false
-}
-
-// IsClientError returns true when this update database by Id forbidden response has a 4xx status code
-func (o *UpdateDatabaseByIDForbidden) IsClientError() bool {
-	return true
-}
-
-// IsServerError returns true when this update database by Id forbidden response has a 5xx status code
-func (o *UpdateDatabaseByIDForbidden) IsServerError() bool {
-	return false
-}
-
-// IsCode returns true when this update database by Id forbidden response a status code equal to that given
-func (o *UpdateDatabaseByIDForbidden) IsCode(code int) bool {
-	return code == 403
-}
-
-// Code gets the status code for the update database by Id forbidden response
-func (o *UpdateDatabaseByIDForbidden) Code() int {
-	return 403
-}
-
 func (o *UpdateDatabaseByIDForbidden) Error() string {
-	return fmt.Sprintf("[PUT /databases/{id}][%d] updateDatabaseByIdForbidden ", 403)
-}
-
-func (o *UpdateDatabaseByIDForbidden) String() string {
 	return fmt.Sprintf("[PUT /databases/{id}][%d] updateDatabaseByIdForbidden ", 403)
 }
 
@@ -219,48 +120,15 @@ func NewUpdateDatabaseByIDUnsupportedMediaType() *UpdateDatabaseByIDUnsupportedM
 	return &UpdateDatabaseByIDUnsupportedMediaType{}
 }
 
-/* UpdateDatabaseByIDUnsupportedMediaType describes a response with status code 415, with default header values.
+/*
+UpdateDatabaseByIDUnsupportedMediaType describes a response with status code 415, with default header values.
 
 UpdateDatabaseByIDUnsupportedMediaType update database by Id unsupported media type
 */
 type UpdateDatabaseByIDUnsupportedMediaType struct {
 }
 
-// IsSuccess returns true when this update database by Id unsupported media type response has a 2xx status code
-func (o *UpdateDatabaseByIDUnsupportedMediaType) IsSuccess() bool {
-	return false
-}
-
-// IsRedirect returns true when this update database by Id unsupported media type response has a 3xx status code
-func (o *UpdateDatabaseByIDUnsupportedMediaType) IsRedirect() bool {
-	return false
-}
-
-// IsClientError returns true when this update database by Id unsupported media type response has a 4xx status code
-func (o *UpdateDatabaseByIDUnsupportedMediaType) IsClientError() bool {
-	return true
-}
-
-// IsServerError returns true when this update database by Id unsupported media type response has a 5xx status code
-func (o *UpdateDatabaseByIDUnsupportedMediaType) IsServerError() bool {
-	return false
-}
-
-// IsCode returns true when this update database by Id unsupported media type response a status code equal to that given
-func (o *UpdateDatabaseByIDUnsupportedMediaType) IsCode(code int) bool {
-	return code == 415
-}
-
-// Code gets the status code for the update database by Id unsupported media type response
-func (o *UpdateDatabaseByIDUnsupportedMediaType) Code() int {
-	return 415
-}
-
 func (o *UpdateDatabaseByIDUnsupportedMediaType) Error() string {
-	return fmt.Sprintf("[PUT /databases/{id}][%d] updateDatabaseByIdUnsupportedMediaType ", 415)
-}
-
-func (o *UpdateDatabaseByIDUnsupportedMediaType) String() string {
 	return fmt.Sprintf("[PUT /databases/{id}][%d] updateDatabaseByIdUnsupportedMediaType ", 415)
 }
 

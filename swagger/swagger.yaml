@@ -1,516 +1,527 @@
 consumes:
-    - application/json
+- application/json
 definitions:
-    CopyDatabaseRequest:
-        properties:
-            group:
-                type: string
-                x-go-name: Group
-            name:
-                type: string
-                x-go-name: Name
-        type: object
-        x-go-package: github.com/dhis2-sre/im-database-manager/pkg/database
-    Database:
-        properties:
-            CreatedAt:
-                format: date-time
-                type: string
-            DeletedAt:
-                $ref: '#/definitions/DeletedAt'
-            ExternalDownloads:
-                items:
-                    $ref: '#/definitions/ExternalDownload'
-                type: array
-            GroupName:
-                type: string
-            ID:
-                format: uint64
-                type: integer
-            Lock:
-                $ref: '#/definitions/Lock'
-            Name:
-                type: string
-            UpdatedAt:
-                format: date-time
-                type: string
-            Url:
-                type: string
-        type: object
-        x-go-package: github.com/dhis2-sre/im-database-manager/pkg/model
-    DeletedAt:
-        $ref: '#/definitions/NullTime'
-    ExternalDownload:
-        properties:
-            DatabaseID:
-                format: uint64
-                type: integer
-            Expiration:
-                format: date-time
-                type: string
-            UUID:
-                format: uuid
-                type: string
-        type: object
-        x-go-package: github.com/dhis2-sre/im-database-manager/pkg/model
-    GroupsWithDatabases:
-        properties:
-            Databases:
-                items:
-                    $ref: '#/definitions/Database'
-                type: array
-            Hostname:
-                type: string
-            ID:
-                format: uint64
-                type: integer
-            Name:
-                type: string
-        type: object
-        x-go-package: github.com/dhis2-sre/im-database-manager/pkg/database
-    Lock:
-        properties:
-            DatabaseID:
-                format: uint64
-                type: integer
-            InstanceID:
-                format: uint64
-                type: integer
-            UserID:
-                format: uint64
-                type: integer
-        type: object
-        x-go-package: github.com/dhis2-sre/im-database-manager/pkg/model
-    LockDatabaseRequest:
-        properties:
-            instanceId:
-                format: uint64
-                type: integer
-                x-go-name: InstanceId
-        type: object
-        x-go-package: github.com/dhis2-sre/im-database-manager/pkg/database
-    Model:
-        description: |-
-            Model a basic GoLang struct which includes the following fields: ID, CreatedAt, UpdatedAt, DeletedAt
-            It may be embedded into your model or you may build your own model without it
-            type User struct {
-            gorm.Model
-            }
-        properties:
-            CreatedAt:
-                format: date-time
-                type: string
-            DeletedAt:
-                $ref: '#/definitions/DeletedAt'
-            ID:
-                format: uint64
-                type: integer
-            UpdatedAt:
-                format: date-time
-                type: string
-        type: object
-        x-go-package: gorm.io/gorm
-    NullTime:
-        description: |-
-            NullTime implements the Scanner interface so
-            it can be used as a scan destination, similar to NullString.
-        properties:
-            Time:
-                format: date-time
-                type: string
-            Valid:
-                type: boolean
-        title: NullTime represents a time.Time that may be null.
-        type: object
-        x-go-package: database/sql
-    Response:
-        properties:
-            status:
-                type: string
-                x-go-name: Status
-        type: object
-        x-go-package: github.com/dhis2-sre/im-database-manager/pkg/health
-    UpdateDatabaseRequest:
-        properties:
-            name:
-                type: string
-                x-go-name: Name
-        type: object
-        x-go-package: github.com/dhis2-sre/im-database-manager/pkg/database
-    saveAsRequest:
-        properties:
-            format:
-                description: Database dump format. Currently plain and custom are support, please see https://www.postgresql.org/docs/current/app-pgdump.html
-                type: string
-                x-go-name: Format
-            name:
-                description: Name of the new database
-                type: string
-                x-go-name: Name
-        type: object
-        x-go-package: github.com/dhis2-sre/im-database-manager/pkg/database
+  CopyDatabaseRequest:
+    properties:
+      group:
+        type: string
+        x-go-name: Group
+      name:
+        type: string
+        x-go-name: Name
+    type: object
+    x-go-package: github.com/dhis2-sre/im-database-manager/pkg/database
+  Database:
+    properties:
+      CreatedAt:
+        format: date-time
+        type: string
+      DeletedAt:
+        $ref: '#/definitions/DeletedAt'
+      ExternalDownloads:
+        items:
+          $ref: '#/definitions/ExternalDownload'
+        type: array
+      GroupName:
+        type: string
+      ID:
+        format: uint64
+        type: integer
+      Lock:
+        $ref: '#/definitions/Lock'
+      Name:
+        type: string
+      UpdatedAt:
+        format: date-time
+        type: string
+      Url:
+        type: string
+    type: object
+    x-go-package: github.com/dhis2-sre/im-database-manager/pkg/model
+  DeletedAt:
+    $ref: '#/definitions/NullTime'
+  ExternalDownload:
+    properties:
+      DatabaseID:
+        format: uint64
+        type: integer
+      Expiration:
+        format: date-time
+        type: string
+      UUID:
+        $ref: '#/definitions/UUID'
+    type: object
+    x-go-package: github.com/dhis2-sre/im-database-manager/pkg/model
+  GroupsWithDatabases:
+    properties:
+      Databases:
+        items:
+          $ref: '#/definitions/Database'
+        type: array
+      Hostname:
+        type: string
+      ID:
+        format: uint64
+        type: integer
+      Name:
+        type: string
+    type: object
+    x-go-package: github.com/dhis2-sre/im-database-manager/pkg/database
+  Lock:
+    properties:
+      DatabaseID:
+        format: uint64
+        type: integer
+      InstanceID:
+        format: uint64
+        type: integer
+      UserID:
+        format: uint64
+        type: integer
+    type: object
+    x-go-package: github.com/dhis2-sre/im-database-manager/pkg/model
+  LockDatabaseRequest:
+    properties:
+      instanceId:
+        format: uint64
+        type: integer
+        x-go-name: InstanceId
+    type: object
+    x-go-package: github.com/dhis2-sre/im-database-manager/pkg/database
+  Model:
+    description: |-
+      Model a basic GoLang struct which includes the following fields: ID, CreatedAt, UpdatedAt, DeletedAt
+      It may be embedded into your model or you may build your own model without it
+      type User struct {
+      gorm.Model
+      }
+    properties:
+      CreatedAt:
+        format: date-time
+        type: string
+      DeletedAt:
+        $ref: '#/definitions/DeletedAt'
+      ID:
+        format: uint64
+        type: integer
+      UpdatedAt:
+        format: date-time
+        type: string
+    type: object
+    x-go-package: gorm.io/gorm
+  NullTime:
+    description: |-
+      NullTime implements the Scanner interface so
+      it can be used as a scan destination, similar to NullString.
+    properties:
+      Time:
+        format: date-time
+        type: string
+      Valid:
+        type: boolean
+    title: NullTime represents a time.Time that may be null.
+    type: object
+    x-go-package: database/sql
+  Response:
+    properties:
+      status:
+        type: string
+        x-go-name: Status
+    type: object
+    x-go-package: github.com/dhis2-sre/im-database-manager/pkg/health
+  UUID:
+    description: |-
+      A UUID is a 128 bit (16 byte) Universal Unique IDentifier as defined in RFC
+      4122.
+    items:
+      format: uint8
+      type: integer
+    type: array
+    x-go-package: github.com/google/uuid
+  UpdateDatabaseRequest:
+    properties:
+      name:
+        type: string
+        x-go-name: Name
+    type: object
+    x-go-package: github.com/dhis2-sre/im-database-manager/pkg/database
+  saveAsRequest:
+    properties:
+      format:
+        description: Database dump format. Currently plain and custom are support,
+          please see https://www.postgresql.org/docs/current/app-pgdump.html
+        type: string
+        x-go-name: Format
+      name:
+        description: Name of the new database
+        type: string
+        x-go-name: Name
+    type: object
+    x-go-package: github.com/dhis2-sre/im-database-manager/pkg/database
 info:
-    contact:
-        email: info@dhis2.org
-        url: https://github.com/dhis2-sre/im-database-manager
-    description: Database Manager Service as part of the Instance Manager environment
-    license:
-        name: TODO
-    termsOfService: There are no TOS at this moment, use at your own risk we take no responsibility
-    title: Instance Database Manager Service.
-    version: 0.1.0
+  contact:
+    email: info@dhis2.org
+    url: https://github.com/dhis2-sre/im-database-manager
+  description: Database Manager Service as part of the Instance Manager environment
+  license:
+    name: TODO
+  termsOfService: There are no TOS at this moment, use at your own risk we take no
+    responsibility
+  title: Instance Database Manager Service.
+  version: 0.1.0
 paths:
-    /databases:
-        get:
-            description: List databases
-            operationId: listDatabases
-            responses:
-                "200":
-                    description: GroupsWithDatabases
-                    schema:
-                        items:
-                            $ref: '#/definitions/GroupsWithDatabases'
-                        type: array
-                "401":
-                    $ref: '#/responses/Error'
-                "403":
-                    $ref: '#/responses/Error'
-                "415":
-                    $ref: '#/responses/Error'
-            security:
-                - oauth2: []
-        post:
-            description: Upload database
-            operationId: uploadDatabase
-            parameters:
-                - description: Upload database request body parameter
-                  in: formData
-                  name: Group
-                  required: true
-                  type: string
-                - description: Upload database request body parameter
-                  in: formData
-                  name: File
-                  required: true
-                  type: file
-            responses:
-                "201":
-                    description: Database
-                    schema:
-                        $ref: '#/definitions/Database'
-                "401":
-                    $ref: '#/responses/Error'
-                "403":
-                    $ref: '#/responses/Error'
-                "404":
-                    $ref: '#/responses/Error'
-                "415":
-                    $ref: '#/responses/Error'
-            security:
-                - oauth2: []
-    /databases/{id}:
-        delete:
-            description: Delete database by id
-            operationId: deleteDatabaseById
-            parameters:
-                - format: uint64
-                  in: path
-                  name: id
-                  required: true
-                  type: integer
-                  x-go-name: ID
-            responses:
-                "202":
-                    description: ""
-                "401":
-                    $ref: '#/responses/Error'
-                "403":
-                    $ref: '#/responses/Error'
-                "404":
-                    $ref: '#/responses/Error'
-                "415":
-                    $ref: '#/responses/Error'
-            security:
-                - oauth2: []
-        get:
-            description: Find database by id
-            operationId: findDatabaseById
-            parameters:
-                - format: uint64
-                  in: path
-                  name: id
-                  required: true
-                  type: integer
-                  x-go-name: ID
-            responses:
-                "200":
-                    description: Database
-                    schema:
-                        $ref: '#/definitions/Database'
-                "400":
-                    $ref: '#/responses/Error'
-                "401":
-                    $ref: '#/responses/Error'
-                "403":
-                    $ref: '#/responses/Error'
-                "404":
-                    $ref: '#/responses/Error'
-                "415":
-                    $ref: '#/responses/Error'
-            security:
-                - oauth2: []
-        put:
-            description: 'TODO: Race condition? If two clients request at the same time... Do we need a transaction between find and update'
-            operationId: updateDatabaseById
-            parameters:
-                - format: uint64
-                  in: path
-                  name: id
-                  required: true
-                  type: integer
-                  x-go-name: ID
-                - description: Update database request body parameter
-                  in: body
-                  name: Body
-                  required: true
-                  schema:
-                    $ref: '#/definitions/UpdateDatabaseRequest'
-            responses:
-                "200":
-                    description: ""
-                "401":
-                    $ref: '#/responses/Error'
-                "403":
-                    $ref: '#/responses/Error'
-                "415":
-                    $ref: '#/responses/Error'
-            security:
-                - oauth2: []
-                - TODO:
-                    - document
-            summary: Update database by id
-    /databases/{id}/copy:
-        post:
-            description: Copy database
-            operationId: copyDatabase
-            parameters:
-                - format: uint64
-                  in: path
-                  name: id
-                  required: true
-                  type: integer
-                  x-go-name: ID
-                - description: Copy database request body parameter
-                  in: body
-                  name: Body
-                  required: true
-                  schema:
-                    $ref: '#/definitions/CopyDatabaseRequest'
-            responses:
-                "202":
-                    description: Database
-                    schema:
-                        $ref: '#/definitions/Database'
-                "401":
-                    $ref: '#/responses/Error'
-                "403":
-                    $ref: '#/responses/Error'
-                "415":
-                    $ref: '#/responses/Error'
-            security:
-                - oauth2: []
-    /databases/{id}/download:
-        get:
-            description: Download database
-            operationId: downloadDatabase
-            parameters:
-                - format: uint64
-                  in: path
-                  name: id
-                  required: true
-                  type: integer
-                  x-go-name: ID
-            responses:
-                "200":
-                    $ref: '#/responses/DownloadDatabaseResponse'
-                "401":
-                    $ref: '#/responses/Error'
-                "403":
-                    $ref: '#/responses/Error'
-                "404":
-                    $ref: '#/responses/Error'
-                "415":
-                    $ref: '#/responses/Error'
-            security:
-                - oauth2: []
-    /databases/{id}/external:
-        post:
-            description: Create external database download
-            operationId: createExternalDownloadDatabase
-            parameters:
-                - format: uint64
-                  in: path
-                  name: id
-                  required: true
-                  type: integer
-                  x-go-name: ID
-            responses:
-                "200":
-                    $ref: '#/responses/CreateExternalDownloadResponse'
-                "401":
-                    $ref: '#/responses/Error'
-                "403":
-                    $ref: '#/responses/Error'
-                "404":
-                    $ref: '#/responses/Error'
-                "415":
-                    $ref: '#/responses/Error'
-            security:
-                - oauth2: []
-    /databases/{id}/lock:
-        delete:
-            description: Unlock database by id
-            operationId: unlockDatabaseById
-            parameters:
-                - format: uint64
-                  in: path
-                  name: id
-                  required: true
-                  type: integer
-                  x-go-name: ID
-                - description: Lock/unlock database request body parameter
-                  in: body
-                  name: Body
-                  required: true
-                  schema:
-                    $ref: '#/definitions/LockDatabaseRequest'
-            responses:
-                "202":
-                    description: ""
-                "401":
-                    $ref: '#/responses/Error'
-                "403":
-                    $ref: '#/responses/Error'
-                "404":
-                    $ref: '#/responses/Error'
-                "415":
-                    $ref: '#/responses/Error'
-            security:
-                - oauth2: []
-        post:
-            description: Lock database by id
-            operationId: lockDatabaseById
-            parameters:
-                - format: uint64
-                  in: path
-                  name: id
-                  required: true
-                  type: integer
-                  x-go-name: ID
-                - description: Lock/unlock database request body parameter
-                  in: body
-                  name: Body
-                  required: true
-                  schema:
-                    $ref: '#/definitions/LockDatabaseRequest'
-            responses:
-                "200":
-                    description: Lock
-                    schema:
-                        $ref: '#/definitions/Lock'
-                "401":
-                    $ref: '#/responses/Error'
-                "403":
-                    $ref: '#/responses/Error'
-                "404":
-                    $ref: '#/responses/Error'
-                "409":
-                    $ref: '#/responses/Error'
-                "415":
-                    $ref: '#/responses/Error'
-            security:
-                - oauth2: []
-    /databases/external/{uuid}:
-        get:
-            description: Download database
-            operationId: externalDownloadDatabase
-            parameters:
-                - format: uint64
-                  in: path
-                  name: uuid
-                  required: true
-                  type: integer
-                  x-go-name: UUID
-            responses:
-                "200":
-                    $ref: '#/responses/DownloadDatabaseResponse'
-                "401":
-                    $ref: '#/responses/Error'
-                "403":
-                    $ref: '#/responses/Error'
-                "404":
-                    $ref: '#/responses/Error'
-                "415":
-                    $ref: '#/responses/Error'
-            security:
-                - oauth2: []
-    /databases/save-as/{instanceId}:
-        post:
-            description: SaveAs database
-            operationId: saveAsDatabase
-            parameters:
-                - format: uint64
-                  in: path
-                  name: instanceId
-                  required: true
-                  type: integer
-                  x-go-name: InstanceID
-                - description: SaveAs database request body parameter
-                  in: body
-                  name: Body
-                  required: true
-                  schema:
-                    $ref: '#/definitions/saveAsRequest'
-            responses:
-                "201":
-                    description: Database
-                    schema:
-                        $ref: '#/definitions/Database'
-                "401":
-                    $ref: '#/responses/Error'
-                "403":
-                    $ref: '#/responses/Error'
-                "404":
-                    $ref: '#/responses/Error'
-                "415":
-                    $ref: '#/responses/Error'
-            security:
-                - oauth2: []
-    /health:
-        get:
-            description: Service health status
-            operationId: health
-            responses:
-                "200":
-                    $ref: '#/responses/Response'
+  /databases:
+    get:
+      description: List databases
+      operationId: listDatabases
+      responses:
+        "200":
+          description: GroupsWithDatabases
+          schema:
+            items:
+              $ref: '#/definitions/GroupsWithDatabases'
+            type: array
+        "401":
+          $ref: '#/responses/Error'
+        "403":
+          $ref: '#/responses/Error'
+        "415":
+          $ref: '#/responses/Error'
+      security:
+      - oauth2: []
+    post:
+      description: Upload database
+      operationId: uploadDatabase
+      parameters:
+      - description: Upload database request body parameter
+        in: formData
+        name: Group
+        required: true
+        type: string
+      - description: Upload database request body parameter
+        in: formData
+        name: File
+        required: true
+        type: file
+      responses:
+        "201":
+          description: Database
+          schema:
+            $ref: '#/definitions/Database'
+        "401":
+          $ref: '#/responses/Error'
+        "403":
+          $ref: '#/responses/Error'
+        "404":
+          $ref: '#/responses/Error'
+        "415":
+          $ref: '#/responses/Error'
+      security:
+      - oauth2: []
+  /databases/{id}:
+    delete:
+      description: Delete database by id
+      operationId: deleteDatabaseById
+      parameters:
+      - format: uint64
+        in: path
+        name: id
+        required: true
+        type: integer
+        x-go-name: ID
+      responses:
+        "202":
+          description: ""
+        "401":
+          $ref: '#/responses/Error'
+        "403":
+          $ref: '#/responses/Error'
+        "404":
+          $ref: '#/responses/Error'
+        "415":
+          $ref: '#/responses/Error'
+      security:
+      - oauth2: []
+    get:
+      description: Find database by id
+      operationId: findDatabaseById
+      parameters:
+      - format: uint64
+        in: path
+        name: id
+        required: true
+        type: integer
+        x-go-name: ID
+      responses:
+        "200":
+          description: Database
+          schema:
+            $ref: '#/definitions/Database'
+        "400":
+          $ref: '#/responses/Error'
+        "401":
+          $ref: '#/responses/Error'
+        "403":
+          $ref: '#/responses/Error'
+        "404":
+          $ref: '#/responses/Error'
+        "415":
+          $ref: '#/responses/Error'
+      security:
+      - oauth2: []
+    put:
+      description: 'TODO: Race condition? If two clients request at the same time...
+        Do we need a transaction between find and update'
+      operationId: updateDatabaseById
+      parameters:
+      - format: uint64
+        in: path
+        name: id
+        required: true
+        type: integer
+        x-go-name: ID
+      - description: Update database request body parameter
+        in: body
+        name: Body
+        required: true
+        schema:
+          $ref: '#/definitions/UpdateDatabaseRequest'
+      responses:
+        "200":
+          description: ""
+        "401":
+          $ref: '#/responses/Error'
+        "403":
+          $ref: '#/responses/Error'
+        "415":
+          $ref: '#/responses/Error'
+      security:
+      - oauth2: []
+      - TODO:
+        - document
+      summary: Update database by id
+  /databases/{id}/copy:
+    post:
+      description: Copy database
+      operationId: copyDatabase
+      parameters:
+      - format: uint64
+        in: path
+        name: id
+        required: true
+        type: integer
+        x-go-name: ID
+      - description: Copy database request body parameter
+        in: body
+        name: Body
+        required: true
+        schema:
+          $ref: '#/definitions/CopyDatabaseRequest'
+      responses:
+        "202":
+          description: Database
+          schema:
+            $ref: '#/definitions/Database'
+        "401":
+          $ref: '#/responses/Error'
+        "403":
+          $ref: '#/responses/Error'
+        "415":
+          $ref: '#/responses/Error'
+      security:
+      - oauth2: []
+  /databases/{id}/download:
+    get:
+      description: Download database
+      operationId: downloadDatabase
+      parameters:
+      - format: uint64
+        in: path
+        name: id
+        required: true
+        type: integer
+        x-go-name: ID
+      responses:
+        "200":
+          $ref: '#/responses/DownloadDatabaseResponse'
+        "401":
+          $ref: '#/responses/Error'
+        "403":
+          $ref: '#/responses/Error'
+        "404":
+          $ref: '#/responses/Error'
+        "415":
+          $ref: '#/responses/Error'
+      security:
+      - oauth2: []
+  /databases/{id}/external:
+    post:
+      description: Create external database download
+      operationId: createExternalDownloadDatabase
+      parameters:
+      - format: uint64
+        in: path
+        name: id
+        required: true
+        type: integer
+        x-go-name: ID
+      responses:
+        "200":
+          $ref: '#/responses/CreateExternalDownloadResponse'
+        "401":
+          $ref: '#/responses/Error'
+        "403":
+          $ref: '#/responses/Error'
+        "404":
+          $ref: '#/responses/Error'
+        "415":
+          $ref: '#/responses/Error'
+      security:
+      - oauth2: []
+  /databases/{id}/lock:
+    delete:
+      description: Unlock database by id
+      operationId: unlockDatabaseById
+      parameters:
+      - format: uint64
+        in: path
+        name: id
+        required: true
+        type: integer
+        x-go-name: ID
+      - description: Lock/unlock database request body parameter
+        in: body
+        name: Body
+        required: true
+        schema:
+          $ref: '#/definitions/LockDatabaseRequest'
+      responses:
+        "202":
+          description: ""
+        "401":
+          $ref: '#/responses/Error'
+        "403":
+          $ref: '#/responses/Error'
+        "404":
+          $ref: '#/responses/Error'
+        "415":
+          $ref: '#/responses/Error'
+      security:
+      - oauth2: []
+    post:
+      description: Lock database by id
+      operationId: lockDatabaseById
+      parameters:
+      - format: uint64
+        in: path
+        name: id
+        required: true
+        type: integer
+        x-go-name: ID
+      - description: Lock/unlock database request body parameter
+        in: body
+        name: Body
+        required: true
+        schema:
+          $ref: '#/definitions/LockDatabaseRequest'
+      responses:
+        "200":
+          description: Lock
+          schema:
+            $ref: '#/definitions/Lock'
+        "401":
+          $ref: '#/responses/Error'
+        "403":
+          $ref: '#/responses/Error'
+        "404":
+          $ref: '#/responses/Error'
+        "409":
+          $ref: '#/responses/Error'
+        "415":
+          $ref: '#/responses/Error'
+      security:
+      - oauth2: []
+  /databases/external/{uuid}:
+    get:
+      description: Download database
+      operationId: externalDownloadDatabase
+      parameters:
+      - format: uint64
+        in: path
+        name: uuid
+        required: true
+        type: integer
+        x-go-name: UUID
+      responses:
+        "200":
+          $ref: '#/responses/DownloadDatabaseResponse'
+        "401":
+          $ref: '#/responses/Error'
+        "403":
+          $ref: '#/responses/Error'
+        "404":
+          $ref: '#/responses/Error'
+        "415":
+          $ref: '#/responses/Error'
+      security:
+      - oauth2: []
+  /databases/save-as/{instanceId}:
+    post:
+      description: SaveAs database
+      operationId: saveAsDatabase
+      parameters:
+      - format: uint64
+        in: path
+        name: instanceId
+        required: true
+        type: integer
+        x-go-name: InstanceID
+      - description: SaveAs database request body parameter
+        in: body
+        name: Body
+        required: true
+        schema:
+          $ref: '#/definitions/saveAsRequest'
+      responses:
+        "201":
+          description: Database
+          schema:
+            $ref: '#/definitions/Database'
+        "401":
+          $ref: '#/responses/Error'
+        "403":
+          $ref: '#/responses/Error'
+        "404":
+          $ref: '#/responses/Error'
+        "415":
+          $ref: '#/responses/Error'
+      security:
+      - oauth2: []
+  /health:
+    get:
+      description: Service health status
+      operationId: health
+      responses:
+        "200":
+          $ref: '#/responses/Response'
 produces:
-    - application/json
+- application/json
 responses:
-    CreateExternalDownloadResponse:
-        description: ""
-        schema:
-            $ref: '#/definitions/ExternalDownload'
-    DownloadDatabaseResponse:
-        description: ""
-    Error:
-        description: ""
-    Response:
-        description: ""
-        schema:
-            $ref: '#/definitions/Response'
+  CreateExternalDownloadResponse:
+    description: ""
+    schema:
+      $ref: '#/definitions/ExternalDownload'
+  DownloadDatabaseResponse:
+    description: ""
+  Error:
+    description: ""
+  Response:
+    description: ""
+    schema:
+      $ref: '#/definitions/Response'
 securityDefinitions:
-    oauth2:
-        flow: password
-        tokenUrl: /not-valid--endpoint-is-served-from-the-im-user-service
-        type: oauth2
+  oauth2:
+    flow: password
+    tokenUrl: /not-valid--endpoint-is-served-from-the-im-user-service
+    type: oauth2
 swagger: "2.0"

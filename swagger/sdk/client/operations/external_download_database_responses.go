@@ -60,48 +60,15 @@ func NewExternalDownloadDatabaseOK() *ExternalDownloadDatabaseOK {
 	return &ExternalDownloadDatabaseOK{}
 }
 
-/* ExternalDownloadDatabaseOK describes a response with status code 200, with default header values.
+/*
+ExternalDownloadDatabaseOK describes a response with status code 200, with default header values.
 
 ExternalDownloadDatabaseOK external download database o k
 */
 type ExternalDownloadDatabaseOK struct {
 }
 
-// IsSuccess returns true when this external download database o k response has a 2xx status code
-func (o *ExternalDownloadDatabaseOK) IsSuccess() bool {
-	return true
-}
-
-// IsRedirect returns true when this external download database o k response has a 3xx status code
-func (o *ExternalDownloadDatabaseOK) IsRedirect() bool {
-	return false
-}
-
-// IsClientError returns true when this external download database o k response has a 4xx status code
-func (o *ExternalDownloadDatabaseOK) IsClientError() bool {
-	return false
-}
-
-// IsServerError returns true when this external download database o k response has a 5xx status code
-func (o *ExternalDownloadDatabaseOK) IsServerError() bool {
-	return false
-}
-
-// IsCode returns true when this external download database o k response a status code equal to that given
-func (o *ExternalDownloadDatabaseOK) IsCode(code int) bool {
-	return code == 200
-}
-
-// Code gets the status code for the external download database o k response
-func (o *ExternalDownloadDatabaseOK) Code() int {
-	return 200
-}
-
 func (o *ExternalDownloadDatabaseOK) Error() string {
-	return fmt.Sprintf("[GET /databases/external/{uuid}][%d] externalDownloadDatabaseOK ", 200)
-}
-
-func (o *ExternalDownloadDatabaseOK) String() string {
 	return fmt.Sprintf("[GET /databases/external/{uuid}][%d] externalDownloadDatabaseOK ", 200)
 }
 
@@ -115,48 +82,15 @@ func NewExternalDownloadDatabaseUnauthorized() *ExternalDownloadDatabaseUnauthor
 	return &ExternalDownloadDatabaseUnauthorized{}
 }
 
-/* ExternalDownloadDatabaseUnauthorized describes a response with status code 401, with default header values.
+/*
+ExternalDownloadDatabaseUnauthorized describes a response with status code 401, with default header values.
 
 ExternalDownloadDatabaseUnauthorized external download database unauthorized
 */
 type ExternalDownloadDatabaseUnauthorized struct {
 }
 
-// IsSuccess returns true when this external download database unauthorized response has a 2xx status code
-func (o *ExternalDownloadDatabaseUnauthorized) IsSuccess() bool {
-	return false
-}
-
-// IsRedirect returns true when this external download database unauthorized response has a 3xx status code
-func (o *ExternalDownloadDatabaseUnauthorized) IsRedirect() bool {
-	return false
-}
-
-// IsClientError returns true when this external download database unauthorized response has a 4xx status code
-func (o *ExternalDownloadDatabaseUnauthorized) IsClientError() bool {
-	return true
-}
-
-// IsServerError returns true when this external download database unauthorized response has a 5xx status code
-func (o *ExternalDownloadDatabaseUnauthorized) IsServerError() bool {
-	return false
-}
-
-// IsCode returns true when this external download database unauthorized response a status code equal to that given
-func (o *ExternalDownloadDatabaseUnauthorized) IsCode(code int) bool {
-	return code == 401
-}
-
-// Code gets the status code for the external download database unauthorized response
-func (o *ExternalDownloadDatabaseUnauthorized) Code() int {
-	return 401
-}
-
 func (o *ExternalDownloadDatabaseUnauthorized) Error() string {
-	return fmt.Sprintf("[GET /databases/external/{uuid}][%d] externalDownloadDatabaseUnauthorized ", 401)
-}
-
-func (o *ExternalDownloadDatabaseUnauthorized) String() string {
 	return fmt.Sprintf("[GET /databases/external/{uuid}][%d] externalDownloadDatabaseUnauthorized ", 401)
 }
 
@@ -170,48 +104,15 @@ func NewExternalDownloadDatabaseForbidden() *ExternalDownloadDatabaseForbidden {
 	return &ExternalDownloadDatabaseForbidden{}
 }
 
-/* ExternalDownloadDatabaseForbidden describes a response with status code 403, with default header values.
+/*
+ExternalDownloadDatabaseForbidden describes a response with status code 403, with default header values.
 
 ExternalDownloadDatabaseForbidden external download database forbidden
 */
 type ExternalDownloadDatabaseForbidden struct {
 }
 
-// IsSuccess returns true when this external download database forbidden response has a 2xx status code
-func (o *ExternalDownloadDatabaseForbidden) IsSuccess() bool {
-	return false
-}
-
-// IsRedirect returns true when this external download database forbidden response has a 3xx status code
-func (o *ExternalDownloadDatabaseForbidden) IsRedirect() bool {
-	return false
-}
-
-// IsClientError returns true when this external download database forbidden response has a 4xx status code
-func (o *ExternalDownloadDatabaseForbidden) IsClientError() bool {
-	return true
-}
-
-// IsServerError returns true when this external download database forbidden response has a 5xx status code
-func (o *ExternalDownloadDatabaseForbidden) IsServerError() bool {
-	return false
-}
-
-// IsCode returns true when this external download database forbidden response a status code equal to that given
-func (o *ExternalDownloadDatabaseForbidden) IsCode(code int) bool {
-	return code == 403
-}
-
-// Code gets the status code for the external download database forbidden response
-func (o *ExternalDownloadDatabaseForbidden) Code() int {
-	return 403
-}
-
 func (o *ExternalDownloadDatabaseForbidden) Error() string {
-	return fmt.Sprintf("[GET /databases/external/{uuid}][%d] externalDownloadDatabaseForbidden ", 403)
-}
-
-func (o *ExternalDownloadDatabaseForbidden) String() string {
 	return fmt.Sprintf("[GET /databases/external/{uuid}][%d] externalDownloadDatabaseForbidden ", 403)
 }
 
@@ -225,48 +126,15 @@ func NewExternalDownloadDatabaseNotFound() *ExternalDownloadDatabaseNotFound {
 	return &ExternalDownloadDatabaseNotFound{}
 }
 
-/* ExternalDownloadDatabaseNotFound describes a response with status code 404, with default header values.
+/*
+ExternalDownloadDatabaseNotFound describes a response with status code 404, with default header values.
 
 ExternalDownloadDatabaseNotFound external download database not found
 */
 type ExternalDownloadDatabaseNotFound struct {
 }
 
-// IsSuccess returns true when this external download database not found response has a 2xx status code
-func (o *ExternalDownloadDatabaseNotFound) IsSuccess() bool {
-	return false
-}
-
-// IsRedirect returns true when this external download database not found response has a 3xx status code
-func (o *ExternalDownloadDatabaseNotFound) IsRedirect() bool {
-	return false
-}
-
-// IsClientError returns true when this external download database not found response has a 4xx status code
-func (o *ExternalDownloadDatabaseNotFound) IsClientError() bool {
-	return true
-}
-
-// IsServerError returns true when this external download database not found response has a 5xx status code
-func (o *ExternalDownloadDatabaseNotFound) IsServerError() bool {
-	return false
-}
-
-// IsCode returns true when this external download database not found response a status code equal to that given
-func (o *ExternalDownloadDatabaseNotFound) IsCode(code int) bool {
-	return code == 404
-}
-
-// Code gets the status code for the external download database not found response
-func (o *ExternalDownloadDatabaseNotFound) Code() int {
-	return 404
-}
-
 func (o *ExternalDownloadDatabaseNotFound) Error() string {
-	return fmt.Sprintf("[GET /databases/external/{uuid}][%d] externalDownloadDatabaseNotFound ", 404)
-}
-
-func (o *ExternalDownloadDatabaseNotFound) String() string {
 	return fmt.Sprintf("[GET /databases/external/{uuid}][%d] externalDownloadDatabaseNotFound ", 404)
 }
 
@@ -280,48 +148,15 @@ func NewExternalDownloadDatabaseUnsupportedMediaType() *ExternalDownloadDatabase
 	return &ExternalDownloadDatabaseUnsupportedMediaType{}
 }
 
-/* ExternalDownloadDatabaseUnsupportedMediaType describes a response with status code 415, with default header values.
+/*
+ExternalDownloadDatabaseUnsupportedMediaType describes a response with status code 415, with default header values.
 
 ExternalDownloadDatabaseUnsupportedMediaType external download database unsupported media type
 */
 type ExternalDownloadDatabaseUnsupportedMediaType struct {
 }
 
-// IsSuccess returns true when this external download database unsupported media type response has a 2xx status code
-func (o *ExternalDownloadDatabaseUnsupportedMediaType) IsSuccess() bool {
-	return false
-}
-
-// IsRedirect returns true when this external download database unsupported media type response has a 3xx status code
-func (o *ExternalDownloadDatabaseUnsupportedMediaType) IsRedirect() bool {
-	return false
-}
-
-// IsClientError returns true when this external download database unsupported media type response has a 4xx status code
-func (o *ExternalDownloadDatabaseUnsupportedMediaType) IsClientError() bool {
-	return true
-}
-
-// IsServerError returns true when this external download database unsupported media type response has a 5xx status code
-func (o *ExternalDownloadDatabaseUnsupportedMediaType) IsServerError() bool {
-	return false
-}
-
-// IsCode returns true when this external download database unsupported media type response a status code equal to that given
-func (o *ExternalDownloadDatabaseUnsupportedMediaType) IsCode(code int) bool {
-	return code == 415
-}
-
-// Code gets the status code for the external download database unsupported media type response
-func (o *ExternalDownloadDatabaseUnsupportedMediaType) Code() int {
-	return 415
-}
-
 func (o *ExternalDownloadDatabaseUnsupportedMediaType) Error() string {
-	return fmt.Sprintf("[GET /databases/external/{uuid}][%d] externalDownloadDatabaseUnsupportedMediaType ", 415)
-}
-
-func (o *ExternalDownloadDatabaseUnsupportedMediaType) String() string {
 	return fmt.Sprintf("[GET /databases/external/{uuid}][%d] externalDownloadDatabaseUnsupportedMediaType ", 415)
 }
 

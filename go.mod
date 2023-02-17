@@ -1,6 +1,6 @@
 module github.com/dhis2-sre/im-database-manager
 
-go 1.18
+go 1.20
 
 require (
 	github.com/anthhub/forwarder v1.1.0

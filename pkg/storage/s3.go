@@ -103,6 +103,10 @@ type ReadAtSeeker interface {
 	io.ReadSeeker
 }
 
+func newProgressReader(fp ReadAtSeeker, size int64, progress func(read int64, size int64)) (*progressReader, error) {
+	return &progressReader{fp, size, 0, progress, sync.Mutex{}}, nil
+}
+
 type progressReader struct {
 	fp       ReadAtSeeker
 	size     int64
@@ -132,8 +136,4 @@ func (r *progressReader) ReadAt(p []byte, off int64) (int, error) {
 
 func (r *progressReader) Seek(offset int64, whence int) (int64, error) {
 	return r.fp.Seek(offset, whence)
-}
-
-func newProgressReader(fp ReadAtSeeker, size int64, progress func(read int64, size int64)) (*progressReader, error) {
-	return &progressReader{fp, size, 0, progress, sync.Mutex{}}, nil
 }

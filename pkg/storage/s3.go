@@ -3,15 +3,13 @@ package storage
 import (
 	"context"
 	"fmt"
-	"io"
-	"log"
-	"path"
-	"sync"
-
 	"github.com/aws/aws-sdk-go-v2/aws"
 	"github.com/aws/aws-sdk-go-v2/feature/s3/manager"
 	"github.com/aws/aws-sdk-go-v2/service/s3"
 	"github.com/aws/aws-sdk-go-v2/service/s3/types"
+	"io"
+	"log"
+	"path"
 )
 
 func NewS3Client(client AWSS3Client, uploader AWSS3Uploader) *S3Client {
@@ -104,16 +102,15 @@ type ReadAtSeeker interface {
 }
 
 func newProgressReader(fp ReadAtSeeker, size int64, progress func(read int64, size int64)) (*progressReader, error) {
-	return &progressReader{fp, size, 0, progress, sync.Mutex{}}, nil
+	return &progressReader{fp, size, 0, progress}, nil
 }
 
+// be aware that this reader is not safe for concurrent use
 type progressReader struct {
 	fp       ReadAtSeeker
 	size     int64
 	read     int64
 	progress func(read int64, size int64)
-	// TODO: We don't need the mutex, right? https://github.com/aws/aws-sdk-go/blob/5707eba1610d563b9c563dbc862587649bcb9811/service/s3/s3manager/upload.go#L463
-	mux sync.Mutex
 }
 
 func (r *progressReader) Read(p []byte) (int, error) {
@@ -126,10 +123,8 @@ func (r *progressReader) ReadAt(p []byte, off int64) (int, error) {
 		return n, err
 	}
 
-	r.mux.Lock()
 	r.read += int64(n)
 	r.progress(r.read, r.size)
-	r.mux.Unlock()
 
 	return n, err
 }

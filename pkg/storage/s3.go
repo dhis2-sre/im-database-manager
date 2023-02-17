@@ -4,10 +4,11 @@ import (
 	"context"
 	"fmt"
 	"io"
-
-	"github.com/aws/aws-sdk-go-v2/feature/s3/manager"
+	"log"
+	"path"
 
 	"github.com/aws/aws-sdk-go-v2/aws"
+	"github.com/aws/aws-sdk-go-v2/feature/s3/manager"
 	"github.com/aws/aws-sdk-go-v2/service/s3"
 	"github.com/aws/aws-sdk-go-v2/service/s3/types"
 )
@@ -45,11 +46,20 @@ func (s S3Client) Copy(bucket string, source string, destination string) error {
 	return nil
 }
 
-func (s S3Client) Upload(bucket string, key string, body io.Reader) error {
-	_, err := s.uploader.Upload(context.TODO(), &s3.PutObjectInput{
+func (s S3Client) Upload(bucket string, key string, body ReadAtSeeker, size int64) error {
+	target := path.Join(bucket, key)
+	log.Printf("Uploading: " + target)
+	reader, err := newProgressReader(body, size, func(read int64, size int64) {
+		log.Printf("%s - total read:%d\tprogress:%d%%", target, read, int(float32(read*100)/float32(size)))
+	})
+	if err != nil {
+		return err
+	}
+
+	_, err = s.uploader.Upload(context.TODO(), &s3.PutObjectInput{
 		Bucket: aws.String(bucket),
 		Key:    aws.String(key),
-		Body:   body,
+		Body:   reader,
 		ACL:    types.ObjectCannedACLPrivate,
 	})
 
@@ -85,4 +95,41 @@ func (s S3Client) Download(bucket string, key string, dst io.Writer, cb func(con
 	_, err = io.Copy(dst, object.Body)
 
 	return err
+}
+
+type ReadAtSeeker interface {
+	io.ReaderAt
+	io.ReadSeeker
+}
+
+func newProgressReader(fp ReadAtSeeker, size int64, progress func(read int64, size int64)) (*progressReader, error) {
+	return &progressReader{fp, size, 0, progress}, nil
+}
+
+// be aware that this reader is not safe for concurrent use
+type progressReader struct {
+	fp       ReadAtSeeker
+	size     int64
+	read     int64
+	progress func(read int64, size int64)
+}
+
+func (r *progressReader) Read(p []byte) (int, error) {
+	return r.fp.Read(p)
+}
+
+func (r *progressReader) ReadAt(p []byte, off int64) (int, error) {
+	n, err := r.fp.ReadAt(p, off)
+	if err != nil {
+		return n, err
+	}
+
+	r.read += int64(n)
+	r.progress(r.read, r.size)
+
+	return n, err
+}
+
+func (r *progressReader) Seek(offset int64, whence int) (int64, error) {
+	return r.fp.Seek(offset, whence)
 }

@@ -3,13 +3,14 @@ package storage
 import (
 	"context"
 	"fmt"
+	"io"
+	"log"
+	"path"
+
 	"github.com/aws/aws-sdk-go-v2/aws"
 	"github.com/aws/aws-sdk-go-v2/feature/s3/manager"
 	"github.com/aws/aws-sdk-go-v2/service/s3"
 	"github.com/aws/aws-sdk-go-v2/service/s3/types"
-	"io"
-	"log"
-	"path"
 )
 
 func NewS3Client(client AWSS3Client, uploader AWSS3Uploader) *S3Client {

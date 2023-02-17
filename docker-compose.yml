@@ -20,11 +20,11 @@ services:
 
   test:
     <<: *common-dev-test
-    command: /bin/sh -c 'go test ./...'
+    command: /bin/sh -c 'go test -race ./...'
 
   test-coverage:
     <<: *common-dev-test
-    command: /bin/sh -c 'go test -coverprofile=./coverage.out ./... && go tool cover -html=./coverage.out -o ./coverage.html'
+    command: /bin/sh -c 'go test -race -coverprofile=./coverage.out ./... && go tool cover -html=./coverage.out -o ./coverage.html'
 
   dev:
     <<: *common-dev-test

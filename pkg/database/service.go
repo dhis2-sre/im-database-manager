@@ -1,7 +1,6 @@
 package database
 
 import (
-	"bytes"
 	"compress/gzip"
 	"context"
 	"errors"
@@ -13,6 +12,8 @@ import (
 	"strconv"
 	"strings"
 	"time"
+
+	"github.com/dhis2-sre/im-database-manager/pkg/storage"
 
 	"github.com/anthhub/forwarder"
 
@@ -43,7 +44,7 @@ type service struct {
 
 type S3Client interface {
 	Copy(bucket string, source string, destination string) error
-	Upload(bucket string, key string, body *bytes.Buffer) error
+	Upload(bucket string, key string, body storage.ReadAtSeeker, size int64) error
 	Delete(bucket string, key string) error
 	Download(bucket string, key string, dst io.Writer, cb func(contentLength int64)) error
 }
@@ -118,16 +119,15 @@ func (s service) Unlock(id uint) error {
 	return err
 }
 
-func (s service) Upload(d *model.Database, group *models.Group, file io.Reader) (*model.Database, error) {
-	buffer := new(bytes.Buffer)
-	_, err := buffer.ReadFrom(file)
-	if err != nil {
-		return nil, err
-	}
+type ReadAtSeeker interface {
+	io.ReaderAt
+	io.ReadSeeker
+}
 
+func (s service) Upload(d *model.Database, group *models.Group, reader ReadAtSeeker, size int64) (*model.Database, error) {
 	key := fmt.Sprintf("%s/%s", group.Name, d.Name)
+	err := s.s3Client.Upload(s.c.Bucket, key, reader, size)
 
-	err = s.s3Client.Upload(s.c.Bucket, key, buffer)
 	if err != nil {
 		return nil, err
 	}
@@ -318,7 +318,13 @@ func (s service) SaveAs(token string, database *model.Database, instance *instan
 			defer removeTempFile(file)
 		}
 
-		_, err = s.Upload(newDatabase, group, file)
+		stat, err := file.Stat()
+		if err != nil {
+			logError(err)
+			return
+		}
+
+		_, err = s.Upload(newDatabase, group, file, stat.Size())
 		if err != nil {
 			logError(err)
 			return
@@ -398,6 +404,9 @@ func newPgDumpConfig(instance *instanceModels.Instance, stack *instanceModels.St
 	if err != nil {
 		return nil, err
 	}
+
+	// TODO: This is very DHIS2 specific... More stack meta data?
+	dump.IgnoreTableData = []string{"analytics*", "_*"}
 
 	return dump, nil
 }

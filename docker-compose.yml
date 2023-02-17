@@ -20,22 +20,17 @@ services:
 
   test:
     <<: *common-dev-test
-    command: /bin/sh -c 'go test ./...'
+    command: /bin/sh -c 'go test -race ./...'
 
   test-coverage:
     <<: *common-dev-test
-    command: /bin/sh -c 'go test -coverprofile=./coverage.out ./... && go tool cover -html=./coverage.out -o ./coverage.html'
-
-  dev-test:
-    <<: *common-dev-test
-    command: reflex -r "Dockerfile|\.go|\.yml$$" -s -- sh -c "go test -v ./..."
+    command: /bin/sh -c 'go test -race -coverprofile=./coverage.out ./... && go tool cover -html=./coverage.out -o ./coverage.html'
 
   dev:
     <<: *common-dev-test
     ports:
       - "8080:8080"
     command: reflex -r "Dockerfile|\.go|\.yml$$" -s -- sh -c "go run ./cmd/serve"
-  #    hostname: im-database-manager
 
   database:
     image: postgres:13-alpine
@@ -50,7 +45,3 @@ services:
     image: nginx:alpine
     volumes:
       - ./jwks.json:/usr/share/nginx/html/jwks.json
-
-#networks:
-#  default:
-#    name: im-network

@@ -38,7 +38,7 @@ clean:
 	go clean
 
 swagger-check-install:
-	which swagger || go install github.com/go-swagger/go-swagger/cmd/swagger@v0.29.0
+	which swagger || go install github.com/go-swagger/go-swagger/cmd/swagger@latest
 	swagger version
 
 swagger-clean:

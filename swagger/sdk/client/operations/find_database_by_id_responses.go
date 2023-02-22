@@ -72,7 +72,7 @@ func NewFindDatabaseByIDOK() *FindDatabaseByIDOK {
 /*
 FindDatabaseByIDOK describes a response with status code 200, with default header values.
 
-Database
+FindDatabaseByIDOK find database by Id o k
 */
 type FindDatabaseByIDOK struct {
 	Payload *models.Database

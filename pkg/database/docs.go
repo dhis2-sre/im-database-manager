@@ -83,11 +83,23 @@ type _ struct {
 // swagger:response DownloadDatabaseResponse
 type _ struct {
 	//in: body
-	_ string
+	_ []byte
 }
 
 // swagger:response CreateExternalDownloadResponse
 type _ struct {
 	//in: body
 	_ model.ExternalDownload
+}
+
+// swagger:response Database
+type _ struct {
+	//in: body
+	_ model.Database
+}
+
+// swagger:response Lock
+type _ struct {
+	//in: body
+	_ model.Lock
 }

@@ -66,7 +66,7 @@ func NewUploadDatabaseCreated() *UploadDatabaseCreated {
 /*
 UploadDatabaseCreated describes a response with status code 201, with default header values.
 
-Database
+UploadDatabaseCreated upload database created
 */
 type UploadDatabaseCreated struct {
 	Payload *models.Database

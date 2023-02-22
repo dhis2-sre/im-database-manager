@@ -60,7 +60,7 @@ func NewCopyDatabaseAccepted() *CopyDatabaseAccepted {
 /*
 CopyDatabaseAccepted describes a response with status code 202, with default header values.
 
-Database
+CopyDatabaseAccepted copy database accepted
 */
 type CopyDatabaseAccepted struct {
 	Payload *models.Database

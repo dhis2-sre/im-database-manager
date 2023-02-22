@@ -66,7 +66,7 @@ func NewSaveAsDatabaseCreated() *SaveAsDatabaseCreated {
 /*
 SaveAsDatabaseCreated describes a response with status code 201, with default header values.
 
-Database
+SaveAsDatabaseCreated save as database created
 */
 type SaveAsDatabaseCreated struct {
 	Payload *models.Database

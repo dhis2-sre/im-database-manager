@@ -72,7 +72,7 @@ func NewLockDatabaseByIDOK() *LockDatabaseByIDOK {
 /*
 LockDatabaseByIDOK describes a response with status code 200, with default header values.
 
-Lock
+LockDatabaseByIDOK lock database by Id o k
 */
 type LockDatabaseByIDOK struct {
 	Payload *models.Lock

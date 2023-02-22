@@ -7,6 +7,7 @@ package operations
 
 import (
 	"fmt"
+	"io"
 
 	"github.com/go-openapi/runtime"
 	"github.com/go-openapi/strfmt"
@@ -60,19 +61,62 @@ func NewDownloadDatabaseOK() *DownloadDatabaseOK {
 	return &DownloadDatabaseOK{}
 }
 
-/*
-DownloadDatabaseOK describes a response with status code 200, with default header values.
+/* DownloadDatabaseOK describes a response with status code 200, with default header values.
 
 DownloadDatabaseOK download database o k
 */
 type DownloadDatabaseOK struct {
+	Payload []uint8
+}
+
+// IsSuccess returns true when this download database o k response has a 2xx status code
+func (o *DownloadDatabaseOK) IsSuccess() bool {
+	return true
+}
+
+// IsRedirect returns true when this download database o k response has a 3xx status code
+func (o *DownloadDatabaseOK) IsRedirect() bool {
+	return false
+}
+
+// IsClientError returns true when this download database o k response has a 4xx status code
+func (o *DownloadDatabaseOK) IsClientError() bool {
+	return false
+}
+
+// IsServerError returns true when this download database o k response has a 5xx status code
+func (o *DownloadDatabaseOK) IsServerError() bool {
+	return false
+}
+
+// IsCode returns true when this download database o k response a status code equal to that given
+func (o *DownloadDatabaseOK) IsCode(code int) bool {
+	return code == 200
+}
+
+// Code gets the status code for the download database o k response
+func (o *DownloadDatabaseOK) Code() int {
+	return 200
 }
 
 func (o *DownloadDatabaseOK) Error() string {
-	return fmt.Sprintf("[GET /databases/{id}/download][%d] downloadDatabaseOK ", 200)
+	return fmt.Sprintf("[GET /databases/{id}/download][%d] downloadDatabaseOK  %+v", 200, o.Payload)
+}
+
+func (o *DownloadDatabaseOK) String() string {
+	return fmt.Sprintf("[GET /databases/{id}/download][%d] downloadDatabaseOK  %+v", 200, o.Payload)
+}
+
+func (o *DownloadDatabaseOK) GetPayload() []uint8 {
+	return o.Payload
 }
 
 func (o *DownloadDatabaseOK) readResponse(response runtime.ClientResponse, consumer runtime.Consumer, formats strfmt.Registry) error {
+
+	// response payload
+	if err := consumer.Consume(response.Body(), &o.Payload); err != nil && err != io.EOF {
+		return err
+	}
 
 	return nil
 }
@@ -82,15 +126,48 @@ func NewDownloadDatabaseUnauthorized() *DownloadDatabaseUnauthorized {
 	return &DownloadDatabaseUnauthorized{}
 }
 
-/*
-DownloadDatabaseUnauthorized describes a response with status code 401, with default header values.
+/* DownloadDatabaseUnauthorized describes a response with status code 401, with default header values.
 
 DownloadDatabaseUnauthorized download database unauthorized
 */
 type DownloadDatabaseUnauthorized struct {
 }
 
+// IsSuccess returns true when this download database unauthorized response has a 2xx status code
+func (o *DownloadDatabaseUnauthorized) IsSuccess() bool {
+	return false
+}
+
+// IsRedirect returns true when this download database unauthorized response has a 3xx status code
+func (o *DownloadDatabaseUnauthorized) IsRedirect() bool {
+	return false
+}
+
+// IsClientError returns true when this download database unauthorized response has a 4xx status code
+func (o *DownloadDatabaseUnauthorized) IsClientError() bool {
+	return true
+}
+
+// IsServerError returns true when this download database unauthorized response has a 5xx status code
+func (o *DownloadDatabaseUnauthorized) IsServerError() bool {
+	return false
+}
+
+// IsCode returns true when this download database unauthorized response a status code equal to that given
+func (o *DownloadDatabaseUnauthorized) IsCode(code int) bool {
+	return code == 401
+}
+
+// Code gets the status code for the download database unauthorized response
+func (o *DownloadDatabaseUnauthorized) Code() int {
+	return 401
+}
+
 func (o *DownloadDatabaseUnauthorized) Error() string {
+	return fmt.Sprintf("[GET /databases/{id}/download][%d] downloadDatabaseUnauthorized ", 401)
+}
+
+func (o *DownloadDatabaseUnauthorized) String() string {
 	return fmt.Sprintf("[GET /databases/{id}/download][%d] downloadDatabaseUnauthorized ", 401)
 }
 
@@ -104,15 +181,48 @@ func NewDownloadDatabaseForbidden() *DownloadDatabaseForbidden {
 	return &DownloadDatabaseForbidden{}
 }
 
-/*
-DownloadDatabaseForbidden describes a response with status code 403, with default header values.
+/* DownloadDatabaseForbidden describes a response with status code 403, with default header values.
 
 DownloadDatabaseForbidden download database forbidden
 */
 type DownloadDatabaseForbidden struct {
 }
 
+// IsSuccess returns true when this download database forbidden response has a 2xx status code
+func (o *DownloadDatabaseForbidden) IsSuccess() bool {
+	return false
+}
+
+// IsRedirect returns true when this download database forbidden response has a 3xx status code
+func (o *DownloadDatabaseForbidden) IsRedirect() bool {
+	return false
+}
+
+// IsClientError returns true when this download database forbidden response has a 4xx status code
+func (o *DownloadDatabaseForbidden) IsClientError() bool {
+	return true
+}
+
+// IsServerError returns true when this download database forbidden response has a 5xx status code
+func (o *DownloadDatabaseForbidden) IsServerError() bool {
+	return false
+}
+
+// IsCode returns true when this download database forbidden response a status code equal to that given
+func (o *DownloadDatabaseForbidden) IsCode(code int) bool {
+	return code == 403
+}
+
+// Code gets the status code for the download database forbidden response
+func (o *DownloadDatabaseForbidden) Code() int {
+	return 403
+}
+
 func (o *DownloadDatabaseForbidden) Error() string {
+	return fmt.Sprintf("[GET /databases/{id}/download][%d] downloadDatabaseForbidden ", 403)
+}
+
+func (o *DownloadDatabaseForbidden) String() string {
 	return fmt.Sprintf("[GET /databases/{id}/download][%d] downloadDatabaseForbidden ", 403)
 }
 
@@ -126,15 +236,48 @@ func NewDownloadDatabaseNotFound() *DownloadDatabaseNotFound {
 	return &DownloadDatabaseNotFound{}
 }
 
-/*
-DownloadDatabaseNotFound describes a response with status code 404, with default header values.
+/* DownloadDatabaseNotFound describes a response with status code 404, with default header values.
 
 DownloadDatabaseNotFound download database not found
 */
 type DownloadDatabaseNotFound struct {
 }
 
+// IsSuccess returns true when this download database not found response has a 2xx status code
+func (o *DownloadDatabaseNotFound) IsSuccess() bool {
+	return false
+}
+
+// IsRedirect returns true when this download database not found response has a 3xx status code
+func (o *DownloadDatabaseNotFound) IsRedirect() bool {
+	return false
+}
+
+// IsClientError returns true when this download database not found response has a 4xx status code
+func (o *DownloadDatabaseNotFound) IsClientError() bool {
+	return true
+}
+
+// IsServerError returns true when this download database not found response has a 5xx status code
+func (o *DownloadDatabaseNotFound) IsServerError() bool {
+	return false
+}
+
+// IsCode returns true when this download database not found response a status code equal to that given
+func (o *DownloadDatabaseNotFound) IsCode(code int) bool {
+	return code == 404
+}
+
+// Code gets the status code for the download database not found response
+func (o *DownloadDatabaseNotFound) Code() int {
+	return 404
+}
+
 func (o *DownloadDatabaseNotFound) Error() string {
+	return fmt.Sprintf("[GET /databases/{id}/download][%d] downloadDatabaseNotFound ", 404)
+}
+
+func (o *DownloadDatabaseNotFound) String() string {
 	return fmt.Sprintf("[GET /databases/{id}/download][%d] downloadDatabaseNotFound ", 404)
 }
 
@@ -148,15 +291,48 @@ func NewDownloadDatabaseUnsupportedMediaType() *DownloadDatabaseUnsupportedMedia
 	return &DownloadDatabaseUnsupportedMediaType{}
 }
 
-/*
-DownloadDatabaseUnsupportedMediaType describes a response with status code 415, with default header values.
+/* DownloadDatabaseUnsupportedMediaType describes a response with status code 415, with default header values.
 
 DownloadDatabaseUnsupportedMediaType download database unsupported media type
 */
 type DownloadDatabaseUnsupportedMediaType struct {
 }
 
+// IsSuccess returns true when this download database unsupported media type response has a 2xx status code
+func (o *DownloadDatabaseUnsupportedMediaType) IsSuccess() bool {
+	return false
+}
+
+// IsRedirect returns true when this download database unsupported media type response has a 3xx status code
+func (o *DownloadDatabaseUnsupportedMediaType) IsRedirect() bool {
+	return false
+}
+
+// IsClientError returns true when this download database unsupported media type response has a 4xx status code
+func (o *DownloadDatabaseUnsupportedMediaType) IsClientError() bool {
+	return true
+}
+
+// IsServerError returns true when this download database unsupported media type response has a 5xx status code
+func (o *DownloadDatabaseUnsupportedMediaType) IsServerError() bool {
+	return false
+}
+
+// IsCode returns true when this download database unsupported media type response a status code equal to that given
+func (o *DownloadDatabaseUnsupportedMediaType) IsCode(code int) bool {
+	return code == 415
+}
+
+// Code gets the status code for the download database unsupported media type response
+func (o *DownloadDatabaseUnsupportedMediaType) Code() int {
+	return 415
+}
+
 func (o *DownloadDatabaseUnsupportedMediaType) Error() string {
+	return fmt.Sprintf("[GET /databases/{id}/download][%d] downloadDatabaseUnsupportedMediaType ", 415)
+}
+
+func (o *DownloadDatabaseUnsupportedMediaType) String() string {
 	return fmt.Sprintf("[GET /databases/{id}/download][%d] downloadDatabaseUnsupportedMediaType ", 415)
 }
 

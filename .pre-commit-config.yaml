@@ -2,6 +2,11 @@ default_install_hook_types:
   - pre-commit
   - commit-msg
 repos:
+  - repo: https://github.com/dhis2-sre/im-tooling
+    rev: v0.0.2
+    hooks:
+      - id: swagger-validation
+
   - repo: https://github.com/tekwizely/pre-commit-golang
     rev: v1.0.0-rc.1
     hooks:
@@ -23,8 +28,3 @@ repos:
     hooks:
       - id: commitizen
         stages: [commit-msg]
-
-  - repo: https://github.com/dhis2-sre/im-tooling
-    rev: v0.0.2
-    hooks:
-      - id: swagger-validation

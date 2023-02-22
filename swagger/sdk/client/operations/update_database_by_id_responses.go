@@ -57,7 +57,8 @@ func NewUpdateDatabaseByIDOK() *UpdateDatabaseByIDOK {
 	return &UpdateDatabaseByIDOK{}
 }
 
-/* UpdateDatabaseByIDOK describes a response with status code 200, with default header values.
+/*
+	UpdateDatabaseByIDOK describes a response with status code 200, with default header values.
 
 UpdateDatabaseByIDOK update database by Id o k
 */
@@ -124,7 +125,8 @@ func NewUpdateDatabaseByIDUnauthorized() *UpdateDatabaseByIDUnauthorized {
 	return &UpdateDatabaseByIDUnauthorized{}
 }
 
-/* UpdateDatabaseByIDUnauthorized describes a response with status code 401, with default header values.
+/*
+	UpdateDatabaseByIDUnauthorized describes a response with status code 401, with default header values.
 
 UpdateDatabaseByIDUnauthorized update database by Id unauthorized
 */
@@ -179,7 +181,8 @@ func NewUpdateDatabaseByIDForbidden() *UpdateDatabaseByIDForbidden {
 	return &UpdateDatabaseByIDForbidden{}
 }
 
-/* UpdateDatabaseByIDForbidden describes a response with status code 403, with default header values.
+/*
+	UpdateDatabaseByIDForbidden describes a response with status code 403, with default header values.
 
 UpdateDatabaseByIDForbidden update database by Id forbidden
 */
@@ -234,7 +237,8 @@ func NewUpdateDatabaseByIDUnsupportedMediaType() *UpdateDatabaseByIDUnsupportedM
 	return &UpdateDatabaseByIDUnsupportedMediaType{}
 }
 
-/* UpdateDatabaseByIDUnsupportedMediaType describes a response with status code 415, with default header values.
+/*
+	UpdateDatabaseByIDUnsupportedMediaType describes a response with status code 415, with default header values.
 
 UpdateDatabaseByIDUnsupportedMediaType update database by Id unsupported media type
 */

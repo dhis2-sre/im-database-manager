@@ -3,7 +3,7 @@ default_install_hook_types:
   - commit-msg
 repos:
   - repo: https://github.com/tekwizely/pre-commit-golang
-    rev: 645165368711be670d1945c15060e746f5ed15c6
+    rev: v1.0.0-rc.1
     hooks:
       - id: go-imports
       - id: go-mod-tidy

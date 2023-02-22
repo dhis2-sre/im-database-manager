@@ -1,4 +1,4 @@
-FROM golang:1.18-alpine3.17 AS build
+FROM golang:1.20.1-alpine3.17 AS build
 ARG REFLEX_VERSION=v0.3.1
 RUN apk add gcc musl-dev git
 WORKDIR /src

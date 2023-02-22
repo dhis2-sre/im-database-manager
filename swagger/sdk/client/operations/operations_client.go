@@ -60,9 +60,9 @@ type ClientService interface {
 }
 
 /*
-  CopyDatabase copies database
+CopyDatabase copies database
 
-  Copy database...
+Copy database...
 */
 func (a *Client) CopyDatabase(params *CopyDatabaseParams, authInfo runtime.ClientAuthInfoWriter, opts ...ClientOption) (*CopyDatabaseAccepted, error) {
 	// TODO: Validate the params before sending
@@ -101,9 +101,9 @@ func (a *Client) CopyDatabase(params *CopyDatabaseParams, authInfo runtime.Clien
 }
 
 /*
-  CreateExternalDownloadDatabase externals download link
+CreateExternalDownloadDatabase externals download link
 
-  Create link so the database can be downloaded without log in
+Create link so the database can be downloaded without log in
 */
 func (a *Client) CreateExternalDownloadDatabase(params *CreateExternalDownloadDatabaseParams, authInfo runtime.ClientAuthInfoWriter, opts ...ClientOption) (*CreateExternalDownloadDatabaseOK, error) {
 	// TODO: Validate the params before sending
@@ -142,9 +142,9 @@ func (a *Client) CreateExternalDownloadDatabase(params *CreateExternalDownloadDa
 }
 
 /*
-  DeleteDatabaseByID deletes database
+DeleteDatabaseByID deletes database
 
-  Delete database by id...
+Delete database by id...
 */
 func (a *Client) DeleteDatabaseByID(params *DeleteDatabaseByIDParams, authInfo runtime.ClientAuthInfoWriter, opts ...ClientOption) (*DeleteDatabaseByIDAccepted, error) {
 	// TODO: Validate the params before sending
@@ -183,9 +183,9 @@ func (a *Client) DeleteDatabaseByID(params *DeleteDatabaseByIDParams, authInfo r
 }
 
 /*
-  DownloadDatabase downloads database
+DownloadDatabase downloads database
 
-  Download database...
+Download database...
 */
 func (a *Client) DownloadDatabase(params *DownloadDatabaseParams, authInfo runtime.ClientAuthInfoWriter, opts ...ClientOption) (*DownloadDatabaseOK, error) {
 	// TODO: Validate the params before sending
@@ -224,9 +224,9 @@ func (a *Client) DownloadDatabase(params *DownloadDatabaseParams, authInfo runti
 }
 
 /*
-  ExternalDownloadDatabase downloads database
+ExternalDownloadDatabase downloads database
 
-  Download database...
+Download database...
 */
 func (a *Client) ExternalDownloadDatabase(params *ExternalDownloadDatabaseParams, authInfo runtime.ClientAuthInfoWriter, opts ...ClientOption) (*ExternalDownloadDatabaseOK, error) {
 	// TODO: Validate the params before sending
@@ -265,9 +265,9 @@ func (a *Client) ExternalDownloadDatabase(params *ExternalDownloadDatabaseParams
 }
 
 /*
-  FindDatabaseByID finds database
+FindDatabaseByID finds database
 
-  Find database by id...
+Find database by id...
 */
 func (a *Client) FindDatabaseByID(params *FindDatabaseByIDParams, authInfo runtime.ClientAuthInfoWriter, opts ...ClientOption) (*FindDatabaseByIDOK, error) {
 	// TODO: Validate the params before sending
@@ -306,9 +306,9 @@ func (a *Client) FindDatabaseByID(params *FindDatabaseByIDParams, authInfo runti
 }
 
 /*
-  Health healths status
+Health healths status
 
-  Show service health status
+Show service health status
 */
 func (a *Client) Health(params *HealthParams, opts ...ClientOption) (*HealthOK, error) {
 	// TODO: Validate the params before sending
@@ -346,9 +346,9 @@ func (a *Client) Health(params *HealthParams, opts ...ClientOption) (*HealthOK, 
 }
 
 /*
-  ListDatabases lists databases
+ListDatabases lists databases
 
-  List databases...
+List databases...
 */
 func (a *Client) ListDatabases(params *ListDatabasesParams, authInfo runtime.ClientAuthInfoWriter, opts ...ClientOption) (*ListDatabasesOK, error) {
 	// TODO: Validate the params before sending
@@ -387,9 +387,9 @@ func (a *Client) ListDatabases(params *ListDatabasesParams, authInfo runtime.Cli
 }
 
 /*
-  LockDatabaseByID locks database
+LockDatabaseByID locks database
 
-  Lock database by id...
+Lock database by id...
 */
 func (a *Client) LockDatabaseByID(params *LockDatabaseByIDParams, authInfo runtime.ClientAuthInfoWriter, opts ...ClientOption) (*LockDatabaseByIDOK, error) {
 	// TODO: Validate the params before sending
@@ -428,9 +428,9 @@ func (a *Client) LockDatabaseByID(params *LockDatabaseByIDParams, authInfo runti
 }
 
 /*
-  SaveAsDatabase saves as database
+SaveAsDatabase saves as database
 
-  Save database under a new name. If you want to simple save, you currently have to delete the old one and rename the new one
+Save database under a new name. If you want to simple save, you currently have to delete the old one and rename the new one
 */
 func (a *Client) SaveAsDatabase(params *SaveAsDatabaseParams, authInfo runtime.ClientAuthInfoWriter, opts ...ClientOption) (*SaveAsDatabaseCreated, error) {
 	// TODO: Validate the params before sending
@@ -469,9 +469,9 @@ func (a *Client) SaveAsDatabase(params *SaveAsDatabaseParams, authInfo runtime.C
 }
 
 /*
-  UnlockDatabaseByID unlocks database
+UnlockDatabaseByID unlocks database
 
-  Unlock database by id
+Unlock database by id
 */
 func (a *Client) UnlockDatabaseByID(params *UnlockDatabaseByIDParams, authInfo runtime.ClientAuthInfoWriter, opts ...ClientOption) (*UnlockDatabaseByIDAccepted, error) {
 	// TODO: Validate the params before sending
@@ -510,9 +510,10 @@ func (a *Client) UnlockDatabaseByID(params *UnlockDatabaseByIDParams, authInfo r
 }
 
 /*
-  UpdateDatabaseByID updates database
+	UpdateDatabaseByID updates database
 
-  Update database by id
+	Update database by id
+
 TODO: Race condition? If two clients request at the same time... Do we need a transaction between find and update
 */
 func (a *Client) UpdateDatabaseByID(params *UpdateDatabaseByIDParams, authInfo runtime.ClientAuthInfoWriter, opts ...ClientOption) (*UpdateDatabaseByIDOK, error) {
@@ -552,9 +553,9 @@ func (a *Client) UpdateDatabaseByID(params *UpdateDatabaseByIDParams, authInfo r
 }
 
 /*
-  UploadDatabase uploads database
+UploadDatabase uploads database
 
-  Upload database...
+Upload database...
 */
 func (a *Client) UploadDatabase(params *UploadDatabaseParams, authInfo runtime.ClientAuthInfoWriter, opts ...ClientOption) (*UploadDatabaseCreated, error) {
 	// TODO: Validate the params before sending

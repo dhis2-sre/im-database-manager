@@ -51,6 +51,7 @@ swagger-docs: swagger-check-install
 
 swagger-client: swagger-check-install
 	swagger generate client -f swagger/swagger.yaml -t swagger/sdk
+	goimports -v -w swagger/sdk/
 
 swagger: swagger-clean swagger-docs swagger-client
 

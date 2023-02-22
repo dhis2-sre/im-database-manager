@@ -61,7 +61,8 @@ func NewDownloadDatabaseOK() *DownloadDatabaseOK {
 	return &DownloadDatabaseOK{}
 }
 
-/* DownloadDatabaseOK describes a response with status code 200, with default header values.
+/*
+	DownloadDatabaseOK describes a response with status code 200, with default header values.
 
 DownloadDatabaseOK download database o k
 */
@@ -126,7 +127,8 @@ func NewDownloadDatabaseUnauthorized() *DownloadDatabaseUnauthorized {
 	return &DownloadDatabaseUnauthorized{}
 }
 
-/* DownloadDatabaseUnauthorized describes a response with status code 401, with default header values.
+/*
+	DownloadDatabaseUnauthorized describes a response with status code 401, with default header values.
 
 DownloadDatabaseUnauthorized download database unauthorized
 */
@@ -181,7 +183,8 @@ func NewDownloadDatabaseForbidden() *DownloadDatabaseForbidden {
 	return &DownloadDatabaseForbidden{}
 }
 
-/* DownloadDatabaseForbidden describes a response with status code 403, with default header values.
+/*
+	DownloadDatabaseForbidden describes a response with status code 403, with default header values.
 
 DownloadDatabaseForbidden download database forbidden
 */
@@ -236,7 +239,8 @@ func NewDownloadDatabaseNotFound() *DownloadDatabaseNotFound {
 	return &DownloadDatabaseNotFound{}
 }
 
-/* DownloadDatabaseNotFound describes a response with status code 404, with default header values.
+/*
+	DownloadDatabaseNotFound describes a response with status code 404, with default header values.
 
 DownloadDatabaseNotFound download database not found
 */
@@ -291,7 +295,8 @@ func NewDownloadDatabaseUnsupportedMediaType() *DownloadDatabaseUnsupportedMedia
 	return &DownloadDatabaseUnsupportedMediaType{}
 }
 
-/* DownloadDatabaseUnsupportedMediaType describes a response with status code 415, with default header values.
+/*
+	DownloadDatabaseUnsupportedMediaType describes a response with status code 415, with default header values.
 
 DownloadDatabaseUnsupportedMediaType download database unsupported media type
 */

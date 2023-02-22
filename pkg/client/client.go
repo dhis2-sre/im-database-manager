@@ -24,7 +24,6 @@ type cli struct {
 func New(host string, basePath string) *cli {
 	transport := httptransport.New(host, basePath, nil)
 	userService := operations.New(transport, strfmt.Default)
-
 	return &cli{userService}
 }
 

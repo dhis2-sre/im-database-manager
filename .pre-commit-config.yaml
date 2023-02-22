@@ -2,8 +2,8 @@ default_install_hook_types:
   - pre-commit
   - commit-msg
 repos:
-  - repo: https://github.com/dnephin/pre-commit-golang
-    rev: 754b74671bbdd30059a778d480342a037aff9cd7
+  - repo: https://github.com/tekwizely/pre-commit-golang
+    rev: 645165368711be670d1945c15060e746f5ed15c6
     hooks:
       - id: go-imports
       - id: go-mod-tidy

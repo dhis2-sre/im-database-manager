@@ -1,7 +1,9 @@
 package server
 
 import (
+	"context"
 	"net/http/pprof"
+	rpprof "runtime/pprof"
 
 	"github.com/dhis2-sre/im-database-manager/internal/handler"
 	"github.com/dhis2-sre/im-database-manager/internal/middleware"
@@ -12,8 +14,22 @@ import (
 	redocMiddleware "github.com/go-openapi/runtime/middleware"
 )
 
+func profile(c *gin.Context) {
+	if c.FullPath() == "" { // not found
+		c.Next()
+		return
+	}
+
+	labels := rpprof.Labels("http_method", c.Request.Method, "http_endpoint", c.FullPath())
+	rpprof.Do(c.Request.Context(), labels, func(_ context.Context) {
+		c.Next()
+	})
+}
+
 func GetEngine(basePath string, dbHandler database.Handler, authMiddleware handler.AuthenticationMiddleware) *gin.Engine {
 	r := gin.Default()
+
+	r.Use(profile)
 
 	corsConfig := cors.DefaultConfig()
 	corsConfig.AllowAllOrigins = true
@@ -53,11 +69,14 @@ func GetEngine(basePath string, dbHandler database.Handler, authMiddleware handl
 	// TODO add POST /symbol ?
 	pfRouter.GET("/symbol", gin.WrapF(pprof.Symbol))
 	pfRouter.GET("/trace", gin.WrapF(pprof.Trace))
+	// TODO are allocs and heap complementary or just a different view on the same thing
 	pfRouter.GET("/allocs", gin.WrapH(pprof.Handler("allocs")))
 	pfRouter.GET("/heap", gin.WrapH(pprof.Handler("heap")))
 	pfRouter.GET("/block", gin.WrapH(pprof.Handler("block")))
-	pfRouter.GET("/goroutine", gin.WrapH(pprof.Handler("goroutine")))
 	pfRouter.GET("/mutex", gin.WrapH(pprof.Handler("mutex")))
+	// https://github.com/DataDog/go-profiler-notes/blob/main/guide/README.md
+	// safe rate: 1000 goroutines
+	pfRouter.GET("/goroutine", gin.WrapH(pprof.Handler("goroutine")))
 
 	return r
 }

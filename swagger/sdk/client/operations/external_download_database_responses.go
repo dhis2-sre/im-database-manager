@@ -7,6 +7,7 @@ package operations
 
 import (
 	"fmt"
+	"io"
 
 	"github.com/go-openapi/runtime"
 	"github.com/go-openapi/strfmt"
@@ -60,11 +61,13 @@ func NewExternalDownloadDatabaseOK() *ExternalDownloadDatabaseOK {
 	return &ExternalDownloadDatabaseOK{}
 }
 
-/* ExternalDownloadDatabaseOK describes a response with status code 200, with default header values.
+/*
+ExternalDownloadDatabaseOK describes a response with status code 200, with default header values.
 
 ExternalDownloadDatabaseOK external download database o k
 */
 type ExternalDownloadDatabaseOK struct {
+	Payload []uint8
 }
 
 // IsSuccess returns true when this external download database o k response has a 2xx status code
@@ -98,14 +101,23 @@ func (o *ExternalDownloadDatabaseOK) Code() int {
 }
 
 func (o *ExternalDownloadDatabaseOK) Error() string {
-	return fmt.Sprintf("[GET /databases/external/{uuid}][%d] externalDownloadDatabaseOK ", 200)
+	return fmt.Sprintf("[GET /databases/external/{uuid}][%d] externalDownloadDatabaseOK  %+v", 200, o.Payload)
 }
 
 func (o *ExternalDownloadDatabaseOK) String() string {
-	return fmt.Sprintf("[GET /databases/external/{uuid}][%d] externalDownloadDatabaseOK ", 200)
+	return fmt.Sprintf("[GET /databases/external/{uuid}][%d] externalDownloadDatabaseOK  %+v", 200, o.Payload)
+}
+
+func (o *ExternalDownloadDatabaseOK) GetPayload() []uint8 {
+	return o.Payload
 }
 
 func (o *ExternalDownloadDatabaseOK) readResponse(response runtime.ClientResponse, consumer runtime.Consumer, formats strfmt.Registry) error {
+
+	// response payload
+	if err := consumer.Consume(response.Body(), &o.Payload); err != nil && err != io.EOF {
+		return err
+	}
 
 	return nil
 }
@@ -115,7 +127,8 @@ func NewExternalDownloadDatabaseUnauthorized() *ExternalDownloadDatabaseUnauthor
 	return &ExternalDownloadDatabaseUnauthorized{}
 }
 
-/* ExternalDownloadDatabaseUnauthorized describes a response with status code 401, with default header values.
+/*
+ExternalDownloadDatabaseUnauthorized describes a response with status code 401, with default header values.
 
 ExternalDownloadDatabaseUnauthorized external download database unauthorized
 */
@@ -170,7 +183,8 @@ func NewExternalDownloadDatabaseForbidden() *ExternalDownloadDatabaseForbidden {
 	return &ExternalDownloadDatabaseForbidden{}
 }
 
-/* ExternalDownloadDatabaseForbidden describes a response with status code 403, with default header values.
+/*
+ExternalDownloadDatabaseForbidden describes a response with status code 403, with default header values.
 
 ExternalDownloadDatabaseForbidden external download database forbidden
 */
@@ -225,7 +239,8 @@ func NewExternalDownloadDatabaseNotFound() *ExternalDownloadDatabaseNotFound {
 	return &ExternalDownloadDatabaseNotFound{}
 }
 
-/* ExternalDownloadDatabaseNotFound describes a response with status code 404, with default header values.
+/*
+ExternalDownloadDatabaseNotFound describes a response with status code 404, with default header values.
 
 ExternalDownloadDatabaseNotFound external download database not found
 */
@@ -280,7 +295,8 @@ func NewExternalDownloadDatabaseUnsupportedMediaType() *ExternalDownloadDatabase
 	return &ExternalDownloadDatabaseUnsupportedMediaType{}
 }
 
-/* ExternalDownloadDatabaseUnsupportedMediaType describes a response with status code 415, with default header values.
+/*
+ExternalDownloadDatabaseUnsupportedMediaType describes a response with status code 415, with default header values.
 
 ExternalDownloadDatabaseUnsupportedMediaType external download database unsupported media type
 */

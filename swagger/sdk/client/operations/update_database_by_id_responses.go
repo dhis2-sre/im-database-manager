@@ -7,9 +7,12 @@ package operations
 
 import (
 	"fmt"
+	"io"
 
 	"github.com/go-openapi/runtime"
 	"github.com/go-openapi/strfmt"
+
+	"github.com/dhis2-sre/im-database-manager/swagger/sdk/models"
 )
 
 // UpdateDatabaseByIDReader is a Reader for the UpdateDatabaseByID structure.
@@ -54,11 +57,13 @@ func NewUpdateDatabaseByIDOK() *UpdateDatabaseByIDOK {
 	return &UpdateDatabaseByIDOK{}
 }
 
-/* UpdateDatabaseByIDOK describes a response with status code 200, with default header values.
+/*
+UpdateDatabaseByIDOK describes a response with status code 200, with default header values.
 
 UpdateDatabaseByIDOK update database by Id o k
 */
 type UpdateDatabaseByIDOK struct {
+	Payload *models.Database
 }
 
 // IsSuccess returns true when this update database by Id o k response has a 2xx status code
@@ -92,14 +97,25 @@ func (o *UpdateDatabaseByIDOK) Code() int {
 }
 
 func (o *UpdateDatabaseByIDOK) Error() string {
-	return fmt.Sprintf("[PUT /databases/{id}][%d] updateDatabaseByIdOK ", 200)
+	return fmt.Sprintf("[PUT /databases/{id}][%d] updateDatabaseByIdOK  %+v", 200, o.Payload)
 }
 
 func (o *UpdateDatabaseByIDOK) String() string {
-	return fmt.Sprintf("[PUT /databases/{id}][%d] updateDatabaseByIdOK ", 200)
+	return fmt.Sprintf("[PUT /databases/{id}][%d] updateDatabaseByIdOK  %+v", 200, o.Payload)
+}
+
+func (o *UpdateDatabaseByIDOK) GetPayload() *models.Database {
+	return o.Payload
 }
 
 func (o *UpdateDatabaseByIDOK) readResponse(response runtime.ClientResponse, consumer runtime.Consumer, formats strfmt.Registry) error {
+
+	o.Payload = new(models.Database)
+
+	// response payload
+	if err := consumer.Consume(response.Body(), o.Payload); err != nil && err != io.EOF {
+		return err
+	}
 
 	return nil
 }
@@ -109,7 +125,8 @@ func NewUpdateDatabaseByIDUnauthorized() *UpdateDatabaseByIDUnauthorized {
 	return &UpdateDatabaseByIDUnauthorized{}
 }
 
-/* UpdateDatabaseByIDUnauthorized describes a response with status code 401, with default header values.
+/*
+UpdateDatabaseByIDUnauthorized describes a response with status code 401, with default header values.
 
 UpdateDatabaseByIDUnauthorized update database by Id unauthorized
 */
@@ -164,7 +181,8 @@ func NewUpdateDatabaseByIDForbidden() *UpdateDatabaseByIDForbidden {
 	return &UpdateDatabaseByIDForbidden{}
 }
 
-/* UpdateDatabaseByIDForbidden describes a response with status code 403, with default header values.
+/*
+UpdateDatabaseByIDForbidden describes a response with status code 403, with default header values.
 
 UpdateDatabaseByIDForbidden update database by Id forbidden
 */
@@ -219,7 +237,8 @@ func NewUpdateDatabaseByIDUnsupportedMediaType() *UpdateDatabaseByIDUnsupportedM
 	return &UpdateDatabaseByIDUnsupportedMediaType{}
 }
 
-/* UpdateDatabaseByIDUnsupportedMediaType describes a response with status code 415, with default header values.
+/*
+UpdateDatabaseByIDUnsupportedMediaType describes a response with status code 415, with default header values.
 
 UpdateDatabaseByIDUnsupportedMediaType update database by Id unsupported media type
 */

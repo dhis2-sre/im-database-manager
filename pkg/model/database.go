@@ -7,6 +7,7 @@ import (
 	"gorm.io/gorm"
 )
 
+// swagger:model
 type Database struct {
 	gorm.Model
 	Name              string `gorm:"index:idx_name_and_group,unique"`
@@ -16,12 +17,14 @@ type Database struct {
 	Lock              *Lock
 }
 
+// swagger:model
 type Lock struct {
 	DatabaseID uint `gorm:"primaryKey"`
 	InstanceID uint
 	UserID     uint
 }
 
+// swagger:model
 type ExternalDownload struct {
 	UUID       uuid.UUID `gorm:"primaryKey;type:uuid"`
 	Expiration time.Time

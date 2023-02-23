@@ -153,16 +153,15 @@ info:
     contact:
         email: info@dhis2.org
         url: https://github.com/dhis2-sre/im-database-manager
-    description: Database Manager Service as part of the Instance Manager environment
+    description: Database Manager Service is part of the Instance Manager environment
     license:
         name: TODO
-    termsOfService: There are no TOS at this moment, use at your own risk we take no responsibility
     title: Instance Database Manager Service.
     version: 0.1.0
 paths:
     /databases:
         get:
-            description: List databases
+            description: List databases...
             operationId: listDatabases
             responses:
                 "200":
@@ -179,8 +178,9 @@ paths:
                     $ref: '#/responses/Error'
             security:
                 - oauth2: []
+            summary: List databases
         post:
-            description: Upload database
+            description: Upload database...
             operationId: uploadDatabase
             parameters:
                 - description: Upload database request body parameter
@@ -195,9 +195,7 @@ paths:
                   type: file
             responses:
                 "201":
-                    description: Database
-                    schema:
-                        $ref: '#/definitions/Database'
+                    $ref: '#/responses/Database'
                 "401":
                     $ref: '#/responses/Error'
                 "403":
@@ -208,9 +206,10 @@ paths:
                     $ref: '#/responses/Error'
             security:
                 - oauth2: []
+            summary: Upload database
     /databases/{id}:
         delete:
-            description: Delete database by id
+            description: Delete database by id...
             operationId: deleteDatabaseById
             parameters:
                 - format: uint64
@@ -232,8 +231,9 @@ paths:
                     $ref: '#/responses/Error'
             security:
                 - oauth2: []
+            summary: Delete database
         get:
-            description: Find database by id
+            description: Find database by id...
             operationId: findDatabaseById
             parameters:
                 - format: uint64
@@ -244,9 +244,7 @@ paths:
                   x-go-name: ID
             responses:
                 "200":
-                    description: Database
-                    schema:
-                        $ref: '#/definitions/Database'
+                    $ref: '#/responses/Database'
                 "400":
                     $ref: '#/responses/Error'
                 "401":
@@ -259,8 +257,11 @@ paths:
                     $ref: '#/responses/Error'
             security:
                 - oauth2: []
+            summary: Find database
         put:
-            description: 'TODO: Race condition? If two clients request at the same time... Do we need a transaction between find and update'
+            description: |-
+                Update database by id
+                TODO: Race condition? If two clients request at the same time... Do we need a transaction between find and update
             operationId: updateDatabaseById
             parameters:
                 - format: uint64
@@ -277,7 +278,7 @@ paths:
                     $ref: '#/definitions/UpdateDatabaseRequest'
             responses:
                 "200":
-                    description: ""
+                    $ref: '#/responses/Database'
                 "401":
                     $ref: '#/responses/Error'
                 "403":
@@ -286,12 +287,10 @@ paths:
                     $ref: '#/responses/Error'
             security:
                 - oauth2: []
-                - TODO:
-                    - document
-            summary: Update database by id
+            summary: Update database
     /databases/{id}/copy:
         post:
-            description: Copy database
+            description: Copy database...
             operationId: copyDatabase
             parameters:
                 - format: uint64
@@ -308,9 +307,7 @@ paths:
                     $ref: '#/definitions/CopyDatabaseRequest'
             responses:
                 "202":
-                    description: Database
-                    schema:
-                        $ref: '#/definitions/Database'
+                    $ref: '#/responses/Database'
                 "401":
                     $ref: '#/responses/Error'
                 "403":
@@ -319,9 +316,10 @@ paths:
                     $ref: '#/responses/Error'
             security:
                 - oauth2: []
+            summary: Copy database
     /databases/{id}/download:
         get:
-            description: Download database
+            description: Download database...
             operationId: downloadDatabase
             parameters:
                 - format: uint64
@@ -343,9 +341,10 @@ paths:
                     $ref: '#/responses/Error'
             security:
                 - oauth2: []
+            summary: Download database
     /databases/{id}/external:
         post:
-            description: Create external database download
+            description: Create link so the database can be downloaded without log in
             operationId: createExternalDownloadDatabase
             parameters:
                 - format: uint64
@@ -367,6 +366,7 @@ paths:
                     $ref: '#/responses/Error'
             security:
                 - oauth2: []
+            summary: External download link
     /databases/{id}/lock:
         delete:
             description: Unlock database by id
@@ -397,8 +397,9 @@ paths:
                     $ref: '#/responses/Error'
             security:
                 - oauth2: []
+            summary: Unlock database
         post:
-            description: Lock database by id
+            description: Lock database by id...
             operationId: lockDatabaseById
             parameters:
                 - format: uint64
@@ -415,9 +416,7 @@ paths:
                     $ref: '#/definitions/LockDatabaseRequest'
             responses:
                 "200":
-                    description: Lock
-                    schema:
-                        $ref: '#/definitions/Lock'
+                    $ref: '#/responses/Lock'
                 "401":
                     $ref: '#/responses/Error'
                 "403":
@@ -430,9 +429,10 @@ paths:
                     $ref: '#/responses/Error'
             security:
                 - oauth2: []
+            summary: Lock database
     /databases/external/{uuid}:
         get:
-            description: Download database
+            description: Download database...
             operationId: externalDownloadDatabase
             parameters:
                 - format: uint64
@@ -454,9 +454,10 @@ paths:
                     $ref: '#/responses/Error'
             security:
                 - oauth2: []
+            summary: Download database
     /databases/save-as/{instanceId}:
         post:
-            description: SaveAs database
+            description: Save database under a new name. If you want to simple save, you currently have to delete the old one and rename the new one
             operationId: saveAsDatabase
             parameters:
                 - format: uint64
@@ -473,9 +474,7 @@ paths:
                     $ref: '#/definitions/saveAsRequest'
             responses:
                 "201":
-                    description: Database
-                    schema:
-                        $ref: '#/definitions/Database'
+                    $ref: '#/responses/Database'
                 "401":
                     $ref: '#/responses/Error'
                 "403":
@@ -486,13 +485,15 @@ paths:
                     $ref: '#/responses/Error'
             security:
                 - oauth2: []
+            summary: '"Save as" database'
     /health:
         get:
-            description: Service health status
+            description: Show service health status
             operationId: health
             responses:
                 "200":
                     $ref: '#/responses/Response'
+            summary: Health status
 produces:
     - application/json
 responses:
@@ -500,10 +501,23 @@ responses:
         description: ""
         schema:
             $ref: '#/definitions/ExternalDownload'
+    Database:
+        description: ""
+        schema:
+            $ref: '#/definitions/Database'
     DownloadDatabaseResponse:
         description: ""
+        schema:
+            items:
+                format: uint8
+                type: integer
+            type: array
     Error:
         description: ""
+    Lock:
+        description: ""
+        schema:
+            $ref: '#/definitions/Lock'
     Response:
         description: ""
         schema:

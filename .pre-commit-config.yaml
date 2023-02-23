@@ -22,8 +22,7 @@ repos:
       - id: golangci-lint
         args:
           - "--timeout=3m"
-# TODO: Enable once the GHA is working
-#          - "--enable=gocritic"
+          - "--enable=gocritic"
 
   - repo: https://github.com/commitizen-tools/commitizen
     rev: v2.24.0

@@ -60,7 +60,8 @@ func NewDeleteDatabaseByIDAccepted() *DeleteDatabaseByIDAccepted {
 	return &DeleteDatabaseByIDAccepted{}
 }
 
-/* DeleteDatabaseByIDAccepted describes a response with status code 202, with default header values.
+/*
+DeleteDatabaseByIDAccepted describes a response with status code 202, with default header values.
 
 DeleteDatabaseByIDAccepted delete database by Id accepted
 */
@@ -115,7 +116,8 @@ func NewDeleteDatabaseByIDUnauthorized() *DeleteDatabaseByIDUnauthorized {
 	return &DeleteDatabaseByIDUnauthorized{}
 }
 
-/* DeleteDatabaseByIDUnauthorized describes a response with status code 401, with default header values.
+/*
+DeleteDatabaseByIDUnauthorized describes a response with status code 401, with default header values.
 
 DeleteDatabaseByIDUnauthorized delete database by Id unauthorized
 */
@@ -170,7 +172,8 @@ func NewDeleteDatabaseByIDForbidden() *DeleteDatabaseByIDForbidden {
 	return &DeleteDatabaseByIDForbidden{}
 }
 
-/* DeleteDatabaseByIDForbidden describes a response with status code 403, with default header values.
+/*
+DeleteDatabaseByIDForbidden describes a response with status code 403, with default header values.
 
 DeleteDatabaseByIDForbidden delete database by Id forbidden
 */
@@ -225,7 +228,8 @@ func NewDeleteDatabaseByIDNotFound() *DeleteDatabaseByIDNotFound {
 	return &DeleteDatabaseByIDNotFound{}
 }
 
-/* DeleteDatabaseByIDNotFound describes a response with status code 404, with default header values.
+/*
+DeleteDatabaseByIDNotFound describes a response with status code 404, with default header values.
 
 DeleteDatabaseByIDNotFound delete database by Id not found
 */
@@ -280,7 +284,8 @@ func NewDeleteDatabaseByIDUnsupportedMediaType() *DeleteDatabaseByIDUnsupportedM
 	return &DeleteDatabaseByIDUnsupportedMediaType{}
 }
 
-/* DeleteDatabaseByIDUnsupportedMediaType describes a response with status code 415, with default header values.
+/*
+DeleteDatabaseByIDUnsupportedMediaType describes a response with status code 415, with default header values.
 
 DeleteDatabaseByIDUnsupportedMediaType delete database by Id unsupported media type
 */

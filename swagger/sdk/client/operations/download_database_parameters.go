@@ -53,10 +53,12 @@ func NewDownloadDatabaseParamsWithHTTPClient(client *http.Client) *DownloadDatab
 	}
 }
 
-/* DownloadDatabaseParams contains all the parameters to send to the API endpoint
-   for the download database operation.
+/*
+DownloadDatabaseParams contains all the parameters to send to the API endpoint
 
-   Typically these are written to a http.Request.
+	for the download database operation.
+
+	Typically these are written to a http.Request.
 */
 type DownloadDatabaseParams struct {
 

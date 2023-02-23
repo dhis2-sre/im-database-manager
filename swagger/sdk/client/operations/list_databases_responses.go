@@ -57,7 +57,8 @@ func NewListDatabasesOK() *ListDatabasesOK {
 	return &ListDatabasesOK{}
 }
 
-/* ListDatabasesOK describes a response with status code 200, with default header values.
+/*
+ListDatabasesOK describes a response with status code 200, with default header values.
 
 GroupsWithDatabases
 */
@@ -122,7 +123,8 @@ func NewListDatabasesUnauthorized() *ListDatabasesUnauthorized {
 	return &ListDatabasesUnauthorized{}
 }
 
-/* ListDatabasesUnauthorized describes a response with status code 401, with default header values.
+/*
+ListDatabasesUnauthorized describes a response with status code 401, with default header values.
 
 ListDatabasesUnauthorized list databases unauthorized
 */
@@ -177,7 +179,8 @@ func NewListDatabasesForbidden() *ListDatabasesForbidden {
 	return &ListDatabasesForbidden{}
 }
 
-/* ListDatabasesForbidden describes a response with status code 403, with default header values.
+/*
+ListDatabasesForbidden describes a response with status code 403, with default header values.
 
 ListDatabasesForbidden list databases forbidden
 */
@@ -232,7 +235,8 @@ func NewListDatabasesUnsupportedMediaType() *ListDatabasesUnsupportedMediaType {
 	return &ListDatabasesUnsupportedMediaType{}
 }
 
-/* ListDatabasesUnsupportedMediaType describes a response with status code 415, with default header values.
+/*
+ListDatabasesUnsupportedMediaType describes a response with status code 415, with default header values.
 
 ListDatabasesUnsupportedMediaType list databases unsupported media type
 */

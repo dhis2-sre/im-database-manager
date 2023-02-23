@@ -14,7 +14,7 @@ on:
 
 jobs:
   call-workflow:
-    uses: dhis2-sre/gha-workflows/.github/workflows/instance-manager.yaml@feature/update-docs
+    uses: dhis2-sre/gha-workflows/.github/workflows/instance-manager.yaml@feature/install-prerequisites-using-make
     with:
       PROCESS_NAME: im-database-manager
       POD_NAME: im-database-manager

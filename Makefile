@@ -7,8 +7,11 @@ init:
 	pip install pre-commit
 	pre-commit install --install-hooks --overwrite
 
-check:
+	go install golang.org/x/tools/cmd/goimports@latest
 	go install github.com/securego/gosec/v2/cmd/gosec@latest
+	go install github.com/go-swagger/go-swagger/cmd/swagger@latest
+
+check:
 	pre-commit run --all-files --show-diff-on-failure
 
 docker-image:

@@ -1,6 +1,6 @@
 // Package classification Instance Database Manager Service.
 //
-// Database Manager Service as part of the Instance Manager environment
+// Database Manager Service is part of the Instance Manager environment
 //
 //	Version: 0.1.0
 //	License: TODO

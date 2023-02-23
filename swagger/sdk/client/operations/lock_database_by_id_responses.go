@@ -70,7 +70,7 @@ func NewLockDatabaseByIDOK() *LockDatabaseByIDOK {
 }
 
 /*
-	LockDatabaseByIDOK describes a response with status code 200, with default header values.
+LockDatabaseByIDOK describes a response with status code 200, with default header values.
 
 LockDatabaseByIDOK lock database by Id o k
 */
@@ -138,7 +138,7 @@ func NewLockDatabaseByIDUnauthorized() *LockDatabaseByIDUnauthorized {
 }
 
 /*
-	LockDatabaseByIDUnauthorized describes a response with status code 401, with default header values.
+LockDatabaseByIDUnauthorized describes a response with status code 401, with default header values.
 
 LockDatabaseByIDUnauthorized lock database by Id unauthorized
 */
@@ -194,7 +194,7 @@ func NewLockDatabaseByIDForbidden() *LockDatabaseByIDForbidden {
 }
 
 /*
-	LockDatabaseByIDForbidden describes a response with status code 403, with default header values.
+LockDatabaseByIDForbidden describes a response with status code 403, with default header values.
 
 LockDatabaseByIDForbidden lock database by Id forbidden
 */
@@ -250,7 +250,7 @@ func NewLockDatabaseByIDNotFound() *LockDatabaseByIDNotFound {
 }
 
 /*
-	LockDatabaseByIDNotFound describes a response with status code 404, with default header values.
+LockDatabaseByIDNotFound describes a response with status code 404, with default header values.
 
 LockDatabaseByIDNotFound lock database by Id not found
 */
@@ -306,7 +306,7 @@ func NewLockDatabaseByIDConflict() *LockDatabaseByIDConflict {
 }
 
 /*
-	LockDatabaseByIDConflict describes a response with status code 409, with default header values.
+LockDatabaseByIDConflict describes a response with status code 409, with default header values.
 
 LockDatabaseByIDConflict lock database by Id conflict
 */
@@ -362,7 +362,7 @@ func NewLockDatabaseByIDUnsupportedMediaType() *LockDatabaseByIDUnsupportedMedia
 }
 
 /*
-	LockDatabaseByIDUnsupportedMediaType describes a response with status code 415, with default header values.
+LockDatabaseByIDUnsupportedMediaType describes a response with status code 415, with default header values.
 
 LockDatabaseByIDUnsupportedMediaType lock database by Id unsupported media type
 */

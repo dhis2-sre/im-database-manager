@@ -58,7 +58,7 @@ func NewCopyDatabaseAccepted() *CopyDatabaseAccepted {
 }
 
 /*
-	CopyDatabaseAccepted describes a response with status code 202, with default header values.
+CopyDatabaseAccepted describes a response with status code 202, with default header values.
 
 CopyDatabaseAccepted copy database accepted
 */
@@ -126,7 +126,7 @@ func NewCopyDatabaseUnauthorized() *CopyDatabaseUnauthorized {
 }
 
 /*
-	CopyDatabaseUnauthorized describes a response with status code 401, with default header values.
+CopyDatabaseUnauthorized describes a response with status code 401, with default header values.
 
 CopyDatabaseUnauthorized copy database unauthorized
 */
@@ -182,7 +182,7 @@ func NewCopyDatabaseForbidden() *CopyDatabaseForbidden {
 }
 
 /*
-	CopyDatabaseForbidden describes a response with status code 403, with default header values.
+CopyDatabaseForbidden describes a response with status code 403, with default header values.
 
 CopyDatabaseForbidden copy database forbidden
 */
@@ -238,7 +238,7 @@ func NewCopyDatabaseUnsupportedMediaType() *CopyDatabaseUnsupportedMediaType {
 }
 
 /*
-	CopyDatabaseUnsupportedMediaType describes a response with status code 415, with default header values.
+CopyDatabaseUnsupportedMediaType describes a response with status code 415, with default header values.
 
 CopyDatabaseUnsupportedMediaType copy database unsupported media type
 */

@@ -64,7 +64,7 @@ func NewSaveAsDatabaseCreated() *SaveAsDatabaseCreated {
 }
 
 /*
-	SaveAsDatabaseCreated describes a response with status code 201, with default header values.
+SaveAsDatabaseCreated describes a response with status code 201, with default header values.
 
 SaveAsDatabaseCreated save as database created
 */
@@ -132,7 +132,7 @@ func NewSaveAsDatabaseUnauthorized() *SaveAsDatabaseUnauthorized {
 }
 
 /*
-	SaveAsDatabaseUnauthorized describes a response with status code 401, with default header values.
+SaveAsDatabaseUnauthorized describes a response with status code 401, with default header values.
 
 SaveAsDatabaseUnauthorized save as database unauthorized
 */
@@ -188,7 +188,7 @@ func NewSaveAsDatabaseForbidden() *SaveAsDatabaseForbidden {
 }
 
 /*
-	SaveAsDatabaseForbidden describes a response with status code 403, with default header values.
+SaveAsDatabaseForbidden describes a response with status code 403, with default header values.
 
 SaveAsDatabaseForbidden save as database forbidden
 */
@@ -244,7 +244,7 @@ func NewSaveAsDatabaseNotFound() *SaveAsDatabaseNotFound {
 }
 
 /*
-	SaveAsDatabaseNotFound describes a response with status code 404, with default header values.
+SaveAsDatabaseNotFound describes a response with status code 404, with default header values.
 
 SaveAsDatabaseNotFound save as database not found
 */
@@ -300,7 +300,7 @@ func NewSaveAsDatabaseUnsupportedMediaType() *SaveAsDatabaseUnsupportedMediaType
 }
 
 /*
-	SaveAsDatabaseUnsupportedMediaType describes a response with status code 415, with default header values.
+SaveAsDatabaseUnsupportedMediaType describes a response with status code 415, with default header values.
 
 SaveAsDatabaseUnsupportedMediaType save as database unsupported media type
 */

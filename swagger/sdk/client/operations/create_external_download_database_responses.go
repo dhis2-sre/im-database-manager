@@ -64,7 +64,7 @@ func NewCreateExternalDownloadDatabaseOK() *CreateExternalDownloadDatabaseOK {
 }
 
 /*
-	CreateExternalDownloadDatabaseOK describes a response with status code 200, with default header values.
+CreateExternalDownloadDatabaseOK describes a response with status code 200, with default header values.
 
 CreateExternalDownloadDatabaseOK create external download database o k
 */
@@ -132,7 +132,7 @@ func NewCreateExternalDownloadDatabaseUnauthorized() *CreateExternalDownloadData
 }
 
 /*
-	CreateExternalDownloadDatabaseUnauthorized describes a response with status code 401, with default header values.
+CreateExternalDownloadDatabaseUnauthorized describes a response with status code 401, with default header values.
 
 CreateExternalDownloadDatabaseUnauthorized create external download database unauthorized
 */
@@ -188,7 +188,7 @@ func NewCreateExternalDownloadDatabaseForbidden() *CreateExternalDownloadDatabas
 }
 
 /*
-	CreateExternalDownloadDatabaseForbidden describes a response with status code 403, with default header values.
+CreateExternalDownloadDatabaseForbidden describes a response with status code 403, with default header values.
 
 CreateExternalDownloadDatabaseForbidden create external download database forbidden
 */
@@ -244,7 +244,7 @@ func NewCreateExternalDownloadDatabaseNotFound() *CreateExternalDownloadDatabase
 }
 
 /*
-	CreateExternalDownloadDatabaseNotFound describes a response with status code 404, with default header values.
+CreateExternalDownloadDatabaseNotFound describes a response with status code 404, with default header values.
 
 CreateExternalDownloadDatabaseNotFound create external download database not found
 */
@@ -300,7 +300,7 @@ func NewCreateExternalDownloadDatabaseUnsupportedMediaType() *CreateExternalDown
 }
 
 /*
-	CreateExternalDownloadDatabaseUnsupportedMediaType describes a response with status code 415, with default header values.
+CreateExternalDownloadDatabaseUnsupportedMediaType describes a response with status code 415, with default header values.
 
 CreateExternalDownloadDatabaseUnsupportedMediaType create external download database unsupported media type
 */

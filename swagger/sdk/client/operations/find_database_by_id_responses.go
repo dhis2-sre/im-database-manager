@@ -70,7 +70,7 @@ func NewFindDatabaseByIDOK() *FindDatabaseByIDOK {
 }
 
 /*
-	FindDatabaseByIDOK describes a response with status code 200, with default header values.
+FindDatabaseByIDOK describes a response with status code 200, with default header values.
 
 FindDatabaseByIDOK find database by Id o k
 */
@@ -138,7 +138,7 @@ func NewFindDatabaseByIDBadRequest() *FindDatabaseByIDBadRequest {
 }
 
 /*
-	FindDatabaseByIDBadRequest describes a response with status code 400, with default header values.
+FindDatabaseByIDBadRequest describes a response with status code 400, with default header values.
 
 FindDatabaseByIDBadRequest find database by Id bad request
 */
@@ -194,7 +194,7 @@ func NewFindDatabaseByIDUnauthorized() *FindDatabaseByIDUnauthorized {
 }
 
 /*
-	FindDatabaseByIDUnauthorized describes a response with status code 401, with default header values.
+FindDatabaseByIDUnauthorized describes a response with status code 401, with default header values.
 
 FindDatabaseByIDUnauthorized find database by Id unauthorized
 */
@@ -250,7 +250,7 @@ func NewFindDatabaseByIDForbidden() *FindDatabaseByIDForbidden {
 }
 
 /*
-	FindDatabaseByIDForbidden describes a response with status code 403, with default header values.
+FindDatabaseByIDForbidden describes a response with status code 403, with default header values.
 
 FindDatabaseByIDForbidden find database by Id forbidden
 */
@@ -306,7 +306,7 @@ func NewFindDatabaseByIDNotFound() *FindDatabaseByIDNotFound {
 }
 
 /*
-	FindDatabaseByIDNotFound describes a response with status code 404, with default header values.
+FindDatabaseByIDNotFound describes a response with status code 404, with default header values.
 
 FindDatabaseByIDNotFound find database by Id not found
 */
@@ -362,7 +362,7 @@ func NewFindDatabaseByIDUnsupportedMediaType() *FindDatabaseByIDUnsupportedMedia
 }
 
 /*
-	FindDatabaseByIDUnsupportedMediaType describes a response with status code 415, with default header values.
+FindDatabaseByIDUnsupportedMediaType describes a response with status code 415, with default header values.
 
 FindDatabaseByIDUnsupportedMediaType find database by Id unsupported media type
 */

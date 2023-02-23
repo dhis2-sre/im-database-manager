@@ -62,7 +62,7 @@ func NewExternalDownloadDatabaseOK() *ExternalDownloadDatabaseOK {
 }
 
 /*
-	ExternalDownloadDatabaseOK describes a response with status code 200, with default header values.
+ExternalDownloadDatabaseOK describes a response with status code 200, with default header values.
 
 ExternalDownloadDatabaseOK external download database o k
 */
@@ -128,7 +128,7 @@ func NewExternalDownloadDatabaseUnauthorized() *ExternalDownloadDatabaseUnauthor
 }
 
 /*
-	ExternalDownloadDatabaseUnauthorized describes a response with status code 401, with default header values.
+ExternalDownloadDatabaseUnauthorized describes a response with status code 401, with default header values.
 
 ExternalDownloadDatabaseUnauthorized external download database unauthorized
 */
@@ -184,7 +184,7 @@ func NewExternalDownloadDatabaseForbidden() *ExternalDownloadDatabaseForbidden {
 }
 
 /*
-	ExternalDownloadDatabaseForbidden describes a response with status code 403, with default header values.
+ExternalDownloadDatabaseForbidden describes a response with status code 403, with default header values.
 
 ExternalDownloadDatabaseForbidden external download database forbidden
 */
@@ -240,7 +240,7 @@ func NewExternalDownloadDatabaseNotFound() *ExternalDownloadDatabaseNotFound {
 }
 
 /*
-	ExternalDownloadDatabaseNotFound describes a response with status code 404, with default header values.
+ExternalDownloadDatabaseNotFound describes a response with status code 404, with default header values.
 
 ExternalDownloadDatabaseNotFound external download database not found
 */
@@ -296,7 +296,7 @@ func NewExternalDownloadDatabaseUnsupportedMediaType() *ExternalDownloadDatabase
 }
 
 /*
-	ExternalDownloadDatabaseUnsupportedMediaType describes a response with status code 415, with default header values.
+ExternalDownloadDatabaseUnsupportedMediaType describes a response with status code 415, with default header values.
 
 ExternalDownloadDatabaseUnsupportedMediaType external download database unsupported media type
 */

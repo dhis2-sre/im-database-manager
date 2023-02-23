@@ -58,20 +58,22 @@ type instanceClientHandler interface {
 }
 
 // Upload database
-// swagger:route POST /databases uploadDatabase
-//
-// Upload database
-//
-// Security:
-//   oauth2:
-//
-// responses:
-//   201: Database
-//   401: Error
-//   403: Error
-//   404: Error
-//   415: Error
 func (h Handler) Upload(c *gin.Context) {
+	// swagger:route POST /databases uploadDatabase
+	//
+	// Upload database
+	//
+	// Upload database...
+	//
+	// Security:
+	//	oauth2:
+	//
+	// Responses:
+	//	201: Database
+	//	401: Error
+	//	403: Error
+	//	404: Error
+	//	415: Error
 	file, err := c.FormFile("database")
 	if err != nil {
 		_ = c.Error(err)
@@ -149,20 +151,22 @@ type saveAsRequest struct {
 }
 
 // SaveAs database
-// swagger:route POST /databases/save-as/{instanceId} saveAsDatabase
-//
-// SaveAs database
-//
-// Security:
-//   oauth2:
-//
-// responses:
-//   201: Database
-//   401: Error
-//   403: Error
-//   404: Error
-//   415: Error
 func (h Handler) SaveAs(c *gin.Context) {
+	// swagger:route POST /databases/save-as/{instanceId} saveAsDatabase
+	//
+	// "Save as" database
+	//
+	// Save database under a new name. If you want to simple save, you currently have to delete the old one and rename the new one
+	//
+	// Security:
+	//	oauth2:
+	//
+	// Responses:
+	//	201: Database
+	//	401: Error
+	//	403: Error
+	//	404: Error
+	//	415: Error
 	var request saveAsRequest
 	if err := handler.DataBinder(c, &request); err != nil {
 		_ = c.Error(err)
@@ -235,19 +239,21 @@ type CopyDatabaseRequest struct {
 }
 
 // Copy database
-// swagger:route POST /databases/{id}/copy copyDatabase
-//
-// Copy database
-//
-// Security:
-//   oauth2:
-//
-// responses:
-//   202: Database
-//   401: Error
-//   403: Error
-//   415: Error
 func (h Handler) Copy(c *gin.Context) {
+	// swagger:route POST /databases/{id}/copy copyDatabase
+	//
+	// Copy database
+	//
+	// Copy database...
+	//
+	// Security:
+	//	oauth2:
+	//
+	// Responses:
+	//	202: Database
+	//	401: Error
+	//	403: Error
+	//	415: Error
 	idParam := c.Param("id")
 	id, err := strconv.ParseUint(idParam, 10, 64)
 	if err != nil {
@@ -294,21 +300,23 @@ func (h Handler) Copy(c *gin.Context) {
 }
 
 // FindById database
-// swagger:route GET /databases/{id} findDatabaseById
-//
-// Find database by id
-//
-// Security:
-//   oauth2:
-//
-// responses:
-//   200: Database
-//   400: Error
-//   401: Error
-//   403: Error
-//   404: Error
-//   415: Error
 func (h Handler) FindById(c *gin.Context) {
+	// swagger:route GET /databases/{id} findDatabaseById
+	//
+	// Find database
+	//
+	// Find database by id...
+	//
+	// Security:
+	//	oauth2:
+	//
+	// Responses:
+	//	200: Database
+	//	400: Error
+	//	401: Error
+	//	403: Error
+	//	404: Error
+	//	415: Error
 	idParam := c.Param("id")
 	id, err := strconv.ParseUint(idParam, 10, 64)
 	if err != nil {
@@ -337,21 +345,23 @@ type LockDatabaseRequest struct {
 }
 
 // Lock database
-// swagger:route POST /databases/{id}/lock lockDatabaseById
-//
-// Lock database by id
-//
-// Security:
-//   oauth2:
-//
-// responses:
-//   200: Lock
-//   401: Error
-//   403: Error
-//   404: Error
-//   409: Error
-//   415: Error
 func (h Handler) Lock(c *gin.Context) {
+	// swagger:route POST /databases/{id}/lock lockDatabaseById
+	//
+	// Lock database
+	//
+	// Lock database by id...
+	//
+	// Security:
+	//	oauth2:
+	//
+	// Responses:
+	//	200: Lock
+	//	401: Error
+	//	403: Error
+	//	404: Error
+	//	409: Error
+	//	415: Error
 	idParam := c.Param("id")
 	id, err := strconv.ParseUint(idParam, 10, 64)
 	if err != nil {
@@ -394,20 +404,22 @@ func (h Handler) Lock(c *gin.Context) {
 }
 
 // Unlock database
-// swagger:route DELETE /databases/{id}/lock unlockDatabaseById
-//
-// Unlock database by id
-//
-// Security:
-//   oauth2:
-//
-// responses:
-//   202:
-//   401: Error
-//   403: Error
-//   404: Error
-//   415: Error
 func (h Handler) Unlock(c *gin.Context) {
+	// swagger:route DELETE /databases/{id}/lock unlockDatabaseById
+	//
+	// Unlock database
+	//
+	// Unlock database by id
+	//
+	// Security:
+	//	oauth2:
+	//
+	// Responses:
+	//	202:
+	//	401: Error
+	//	403: Error
+	//	404: Error
+	//	415: Error
 	idParam := c.Param("id")
 	id, err := strconv.ParseUint(idParam, 10, 64)
 	if err != nil {
@@ -450,20 +462,22 @@ func (h Handler) Unlock(c *gin.Context) {
 }
 
 // Download database
-// swagger:route GET /databases/{id}/download downloadDatabase
-//
-// Download database
-//
-// Security:
-//   oauth2:
-//
-// responses:
-//   200: DownloadDatabaseResponse
-//   401: Error
-//   403: Error
-//   404: Error
-//   415: Error
 func (h Handler) Download(c *gin.Context) {
+	// swagger:route GET /databases/{id}/download downloadDatabase
+	//
+	// Download database
+	//
+	// Download database...
+	//
+	// Security:
+	//	oauth2:
+	//
+	// Responses:
+	//	200: DownloadDatabaseResponse
+	//	401: Error
+	//	403: Error
+	//	404: Error
+	//	415: Error
 	idParam := c.Param("id")
 	id, err := strconv.ParseUint(idParam, 10, 64)
 	if err != nil {
@@ -500,20 +514,22 @@ func (h Handler) Download(c *gin.Context) {
 }
 
 // Delete database
-// swagger:route DELETE /databases/{id} deleteDatabaseById
-//
-// Delete database by id
-//
-// Security:
-//   oauth2:
-//
-// responses:
-//   202:
-//   401: Error
-//   403: Error
-//   404: Error
-//   415: Error
 func (h Handler) Delete(c *gin.Context) {
+	// swagger:route DELETE /databases/{id} deleteDatabaseById
+	//
+	// Delete database
+	//
+	// Delete database by id...
+	//
+	// Security:
+	//	oauth2:
+	//
+	// Responses:
+	//	202:
+	//	401: Error
+	//	403: Error
+	//	404: Error
+	//	415: Error
 	idParam := c.Param("id")
 	id, err := strconv.ParseUint(idParam, 10, 64)
 	if err != nil {
@@ -552,19 +568,21 @@ type GroupsWithDatabases struct {
 }
 
 // List databases
-// swagger:route GET /databases listDatabases
-//
-// List databases
-//
-// Security:
-//   oauth2:
-//
-// responses:
-//   200: []GroupsWithDatabases
-//   401: Error
-//   403: Error
-//   415: Error
 func (h Handler) List(c *gin.Context) {
+	// swagger:route GET /databases listDatabases
+	//
+	// List databases
+	//
+	// List databases...
+	//
+	// Security:
+	//	oauth2:
+	//
+	// Responses:
+	//	200: []GroupsWithDatabases
+	//	401: Error
+	//	403: Error
+	//	415: Error
 	user, err := handler.GetUserFromContext(c)
 	if err != nil {
 		_ = c.Error(err)
@@ -606,22 +624,22 @@ type UpdateDatabaseRequest struct {
 }
 
 // Update database
-// swagger:route PUT /databases/{id} updateDatabaseById
-//
-// Update database by id
-//
-// TODO: Race condition? If two clients request at the same time... Do we need a transaction between find and update
-//
-// Security:
-//   oauth2:
-//
-// TODO: document return type
-// responses:
-//   200:
-//   401: Error
-//   403: Error
-//   415: Error
 func (h Handler) Update(c *gin.Context) {
+	// swagger:route PUT /databases/{id} updateDatabaseById
+	//
+	// Update database
+	//
+	// Update database by id
+	// TODO: Race condition? If two clients request at the same time... Do we need a transaction between find and update
+	//
+	// Security:
+	//   oauth2:
+	//
+	// Responses:
+	//	200: Database
+	//	401: Error
+	//	403: Error
+	//	415: Error
 	idParam := c.Param("id")
 	id, err := strconv.ParseUint(idParam, 10, 64)
 	if err != nil {
@@ -677,21 +695,23 @@ type CreateExternalDatabaseRequest struct {
 	Expiration time.Time `json:"expiration" binding:"required"`
 }
 
-// CreateExternalDownload
-// swagger:route POST /databases/{id}/external createExternalDownloadDatabase
-//
-// Create external database download
-//
-// Security:
-//   oauth2:
-//
-// responses:
-//   200: CreateExternalDownloadResponse
-//   401: Error
-//   403: Error
-//   404: Error
-//   415: Error
+// CreateExternalDownload database
 func (h Handler) CreateExternalDownload(c *gin.Context) {
+	// swagger:route POST /databases/{id}/external createExternalDownloadDatabase
+	//
+	// External download link
+	//
+	// Create link so the database can be downloaded without log in
+	//
+	// Security:
+	//	oauth2:
+	//
+	// Responses:
+	//	200: CreateExternalDownloadResponse
+	//	401: Error
+	//	403: Error
+	//	404: Error
+	//	415: Error
 	idParam := c.Param("id")
 	id, err := strconv.ParseUint(idParam, 10, 64)
 	if err != nil {
@@ -728,20 +748,22 @@ func (h Handler) CreateExternalDownload(c *gin.Context) {
 }
 
 // ExternalDownload database
-// swagger:route GET /databases/external/{uuid} externalDownloadDatabase
-//
-// Download database
-//
-// Security:
-//   oauth2:
-//
-// responses:
-//   200: DownloadDatabaseResponse
-//   401: Error
-//   403: Error
-//   404: Error
-//   415: Error
 func (h Handler) ExternalDownload(c *gin.Context) {
+	// swagger:route GET /databases/external/{uuid} externalDownloadDatabase
+	//
+	// Download database
+	//
+	// Download database...
+	//
+	// Security:
+	//	oauth2:
+	//
+	// Responses:
+	//	200: DownloadDatabaseResponse
+	//	401: Error
+	//	403: Error
+	//	404: Error
+	//	415: Error
 	uuidParam := c.Param("uuid")
 	if uuidParam == "" {
 		badRequest := apperror.NewBadRequest("error missing uuid")

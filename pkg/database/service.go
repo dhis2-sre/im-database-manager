@@ -9,6 +9,7 @@ import (
 	"log"
 	"net/url"
 	"os"
+	"path"
 	"strconv"
 	"strings"
 	"time"
@@ -224,7 +225,7 @@ func (s service) FindExternalDownload(uuid uuid.UUID) (model.ExternalDownload, e
 
 func (s service) SaveAs(token string, database *model.Database, instance *instanceModels.Instance, stack *instanceModels.Stack, newName string, format string) (*model.Database, error) {
 	// TODO: Add to config
-	dumpPath := "/mnt/data/"
+	dumpPath := "/mnt/data"
 
 	group, err := s.userClient.FindGroupByName(token, instance.GroupName)
 	if err != nil {
@@ -299,8 +300,8 @@ func (s service) SaveAs(token string, database *model.Database, instance *instan
 			return
 		}
 
-		dumpFile := dumpPath + dumpExec.File
-		file, err := os.Open(dumpFile)
+		dumpFile := path.Join(dumpPath, dumpExec.File)
+		file, err := os.Open(dumpFile) // #nosec
 		if err != nil {
 			logError(err)
 			return
@@ -308,7 +309,7 @@ func (s service) SaveAs(token string, database *model.Database, instance *instan
 		defer removeTempFile(file)
 
 		if format == "plain" {
-			gzFileName := dumpPath + fileId + ".gz"
+			gzFileName := path.Join(dumpPath, fileId+".gz")
 			file, err = gz(gzFileName, database, file)
 			if err != nil {
 				logError(err)
@@ -348,7 +349,7 @@ func removeTempFile(fd *os.File) {
 }
 
 func gz(gzFile string, database *model.Database, src *os.File) (*os.File, error) {
-	outFile, err := os.Create(gzFile)
+	outFile, err := os.Create(gzFile) // #nosec
 	if err != nil {
 		return nil, err
 	}

@@ -7,6 +7,7 @@ package operations
 
 import (
 	"fmt"
+	"io"
 
 	"github.com/go-openapi/runtime"
 	"github.com/go-openapi/strfmt"
@@ -60,11 +61,13 @@ func NewDownloadDatabaseOK() *DownloadDatabaseOK {
 	return &DownloadDatabaseOK{}
 }
 
-/* DownloadDatabaseOK describes a response with status code 200, with default header values.
+/*
+DownloadDatabaseOK describes a response with status code 200, with default header values.
 
 DownloadDatabaseOK download database o k
 */
 type DownloadDatabaseOK struct {
+	Payload []uint8
 }
 
 // IsSuccess returns true when this download database o k response has a 2xx status code
@@ -98,14 +101,23 @@ func (o *DownloadDatabaseOK) Code() int {
 }
 
 func (o *DownloadDatabaseOK) Error() string {
-	return fmt.Sprintf("[GET /databases/{id}/download][%d] downloadDatabaseOK ", 200)
+	return fmt.Sprintf("[GET /databases/{id}/download][%d] downloadDatabaseOK  %+v", 200, o.Payload)
 }
 
 func (o *DownloadDatabaseOK) String() string {
-	return fmt.Sprintf("[GET /databases/{id}/download][%d] downloadDatabaseOK ", 200)
+	return fmt.Sprintf("[GET /databases/{id}/download][%d] downloadDatabaseOK  %+v", 200, o.Payload)
+}
+
+func (o *DownloadDatabaseOK) GetPayload() []uint8 {
+	return o.Payload
 }
 
 func (o *DownloadDatabaseOK) readResponse(response runtime.ClientResponse, consumer runtime.Consumer, formats strfmt.Registry) error {
+
+	// response payload
+	if err := consumer.Consume(response.Body(), &o.Payload); err != nil && err != io.EOF {
+		return err
+	}
 
 	return nil
 }
@@ -115,7 +127,8 @@ func NewDownloadDatabaseUnauthorized() *DownloadDatabaseUnauthorized {
 	return &DownloadDatabaseUnauthorized{}
 }
 
-/* DownloadDatabaseUnauthorized describes a response with status code 401, with default header values.
+/*
+DownloadDatabaseUnauthorized describes a response with status code 401, with default header values.
 
 DownloadDatabaseUnauthorized download database unauthorized
 */
@@ -170,7 +183,8 @@ func NewDownloadDatabaseForbidden() *DownloadDatabaseForbidden {
 	return &DownloadDatabaseForbidden{}
 }
 
-/* DownloadDatabaseForbidden describes a response with status code 403, with default header values.
+/*
+DownloadDatabaseForbidden describes a response with status code 403, with default header values.
 
 DownloadDatabaseForbidden download database forbidden
 */
@@ -225,7 +239,8 @@ func NewDownloadDatabaseNotFound() *DownloadDatabaseNotFound {
 	return &DownloadDatabaseNotFound{}
 }
 
-/* DownloadDatabaseNotFound describes a response with status code 404, with default header values.
+/*
+DownloadDatabaseNotFound describes a response with status code 404, with default header values.
 
 DownloadDatabaseNotFound download database not found
 */
@@ -280,7 +295,8 @@ func NewDownloadDatabaseUnsupportedMediaType() *DownloadDatabaseUnsupportedMedia
 	return &DownloadDatabaseUnsupportedMediaType{}
 }
 
-/* DownloadDatabaseUnsupportedMediaType describes a response with status code 415, with default header values.
+/*
+DownloadDatabaseUnsupportedMediaType describes a response with status code 415, with default header values.
 
 DownloadDatabaseUnsupportedMediaType download database unsupported media type
 */

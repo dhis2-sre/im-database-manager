@@ -53,10 +53,12 @@ func NewCreateExternalDownloadDatabaseParamsWithHTTPClient(client *http.Client) 
 	}
 }
 
-/* CreateExternalDownloadDatabaseParams contains all the parameters to send to the API endpoint
-   for the create external download database operation.
+/*
+CreateExternalDownloadDatabaseParams contains all the parameters to send to the API endpoint
 
-   Typically these are written to a http.Request.
+	for the create external download database operation.
+
+	Typically these are written to a http.Request.
 */
 type CreateExternalDownloadDatabaseParams struct {
 

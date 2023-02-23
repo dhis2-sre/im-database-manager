@@ -52,10 +52,12 @@ func NewListDatabasesParamsWithHTTPClient(client *http.Client) *ListDatabasesPar
 	}
 }
 
-/* ListDatabasesParams contains all the parameters to send to the API endpoint
-   for the list databases operation.
+/*
+ListDatabasesParams contains all the parameters to send to the API endpoint
 
-   Typically these are written to a http.Request.
+	for the list databases operation.
+
+	Typically these are written to a http.Request.
 */
 type ListDatabasesParams struct {
 	timeout    time.Duration

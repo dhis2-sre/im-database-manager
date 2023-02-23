@@ -63,9 +63,10 @@ func NewUploadDatabaseCreated() *UploadDatabaseCreated {
 	return &UploadDatabaseCreated{}
 }
 
-/* UploadDatabaseCreated describes a response with status code 201, with default header values.
+/*
+UploadDatabaseCreated describes a response with status code 201, with default header values.
 
-Database
+UploadDatabaseCreated upload database created
 */
 type UploadDatabaseCreated struct {
 	Payload *models.Database
@@ -130,7 +131,8 @@ func NewUploadDatabaseUnauthorized() *UploadDatabaseUnauthorized {
 	return &UploadDatabaseUnauthorized{}
 }
 
-/* UploadDatabaseUnauthorized describes a response with status code 401, with default header values.
+/*
+UploadDatabaseUnauthorized describes a response with status code 401, with default header values.
 
 UploadDatabaseUnauthorized upload database unauthorized
 */
@@ -185,7 +187,8 @@ func NewUploadDatabaseForbidden() *UploadDatabaseForbidden {
 	return &UploadDatabaseForbidden{}
 }
 
-/* UploadDatabaseForbidden describes a response with status code 403, with default header values.
+/*
+UploadDatabaseForbidden describes a response with status code 403, with default header values.
 
 UploadDatabaseForbidden upload database forbidden
 */
@@ -240,7 +243,8 @@ func NewUploadDatabaseNotFound() *UploadDatabaseNotFound {
 	return &UploadDatabaseNotFound{}
 }
 
-/* UploadDatabaseNotFound describes a response with status code 404, with default header values.
+/*
+UploadDatabaseNotFound describes a response with status code 404, with default header values.
 
 UploadDatabaseNotFound upload database not found
 */
@@ -295,7 +299,8 @@ func NewUploadDatabaseUnsupportedMediaType() *UploadDatabaseUnsupportedMediaType
 	return &UploadDatabaseUnsupportedMediaType{}
 }
 
-/* UploadDatabaseUnsupportedMediaType describes a response with status code 415, with default header values.
+/*
+UploadDatabaseUnsupportedMediaType describes a response with status code 415, with default header values.
 
 UploadDatabaseUnsupportedMediaType upload database unsupported media type
 */

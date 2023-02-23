@@ -52,10 +52,12 @@ func NewUploadDatabaseParamsWithHTTPClient(client *http.Client) *UploadDatabaseP
 	}
 }
 
-/* UploadDatabaseParams contains all the parameters to send to the API endpoint
-   for the upload database operation.
+/*
+UploadDatabaseParams contains all the parameters to send to the API endpoint
 
-   Typically these are written to a http.Request.
+	for the upload database operation.
+
+	Typically these are written to a http.Request.
 */
 type UploadDatabaseParams struct {
 

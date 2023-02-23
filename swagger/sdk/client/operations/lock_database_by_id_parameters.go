@@ -55,10 +55,12 @@ func NewLockDatabaseByIDParamsWithHTTPClient(client *http.Client) *LockDatabaseB
 	}
 }
 
-/* LockDatabaseByIDParams contains all the parameters to send to the API endpoint
-   for the lock database by Id operation.
+/*
+LockDatabaseByIDParams contains all the parameters to send to the API endpoint
 
-   Typically these are written to a http.Request.
+	for the lock database by Id operation.
+
+	Typically these are written to a http.Request.
 */
 type LockDatabaseByIDParams struct {
 

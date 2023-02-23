@@ -60,7 +60,8 @@ func NewUnlockDatabaseByIDAccepted() *UnlockDatabaseByIDAccepted {
 	return &UnlockDatabaseByIDAccepted{}
 }
 
-/* UnlockDatabaseByIDAccepted describes a response with status code 202, with default header values.
+/*
+UnlockDatabaseByIDAccepted describes a response with status code 202, with default header values.
 
 UnlockDatabaseByIDAccepted unlock database by Id accepted
 */
@@ -115,7 +116,8 @@ func NewUnlockDatabaseByIDUnauthorized() *UnlockDatabaseByIDUnauthorized {
 	return &UnlockDatabaseByIDUnauthorized{}
 }
 
-/* UnlockDatabaseByIDUnauthorized describes a response with status code 401, with default header values.
+/*
+UnlockDatabaseByIDUnauthorized describes a response with status code 401, with default header values.
 
 UnlockDatabaseByIDUnauthorized unlock database by Id unauthorized
 */
@@ -170,7 +172,8 @@ func NewUnlockDatabaseByIDForbidden() *UnlockDatabaseByIDForbidden {
 	return &UnlockDatabaseByIDForbidden{}
 }
 
-/* UnlockDatabaseByIDForbidden describes a response with status code 403, with default header values.
+/*
+UnlockDatabaseByIDForbidden describes a response with status code 403, with default header values.
 
 UnlockDatabaseByIDForbidden unlock database by Id forbidden
 */
@@ -225,7 +228,8 @@ func NewUnlockDatabaseByIDNotFound() *UnlockDatabaseByIDNotFound {
 	return &UnlockDatabaseByIDNotFound{}
 }
 
-/* UnlockDatabaseByIDNotFound describes a response with status code 404, with default header values.
+/*
+UnlockDatabaseByIDNotFound describes a response with status code 404, with default header values.
 
 UnlockDatabaseByIDNotFound unlock database by Id not found
 */
@@ -280,7 +284,8 @@ func NewUnlockDatabaseByIDUnsupportedMediaType() *UnlockDatabaseByIDUnsupportedM
 	return &UnlockDatabaseByIDUnsupportedMediaType{}
 }
 
-/* UnlockDatabaseByIDUnsupportedMediaType describes a response with status code 415, with default header values.
+/*
+UnlockDatabaseByIDUnsupportedMediaType describes a response with status code 415, with default header values.
 
 UnlockDatabaseByIDUnsupportedMediaType unlock database by Id unsupported media type
 */

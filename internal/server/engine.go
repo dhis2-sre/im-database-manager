@@ -2,8 +2,12 @@ package server
 
 import (
 	"context"
+	"fmt"
+	"io"
+	"net/http"
 	"net/http/pprof"
 	rpprof "runtime/pprof"
+	"strings"
 
 	"github.com/dhis2-sre/im-database-manager/internal/handler"
 	"github.com/dhis2-sre/im-database-manager/internal/middleware"
@@ -15,21 +19,38 @@ import (
 )
 
 func profile(c *gin.Context) {
+	fmt.Println("profile middleware with path", c.FullPath())
 	if c.FullPath() == "" { // not found
 		c.Next()
 		return
 	}
 
 	labels := rpprof.Labels("http_method", c.Request.Method, "http_endpoint", c.FullPath())
-	rpprof.Do(c.Request.Context(), labels, func(_ context.Context) {
+	rpprof.Do(c.Request.Context(), labels, func(ctx context.Context) {
+		fmt.Println("calling next middleware", c.FullPath())
+		fmt.Printf("context: %v\n", ctx)
+		c.Request = c.Request.Clone(ctx)
 		c.Next()
 	})
+}
+
+func work(w http.ResponseWriter, _ *http.Request) {
+	var sum int
+	for i := 0; i < 1_000_000_000; i++ {
+		sum++
+	}
+	io.Copy(w, strings.NewReader("lots of work to calculate\n"))
+}
+
+func workGin(c *gin.Context) {
+	work(c.Writer, c.Request)
 }
 
 func GetEngine(basePath string, dbHandler database.Handler, authMiddleware handler.AuthenticationMiddleware) *gin.Engine {
 	r := gin.Default()
 
 	r.Use(profile)
+	r.GET("/testpprof", workGin)
 
 	corsConfig := cors.DefaultConfig()
 	corsConfig.AllowAllOrigins = true

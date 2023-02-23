@@ -42,6 +42,22 @@ func GetEngine(basePath string, dbHandler database.Handler, authMiddleware handl
 
 	router := r.Group(basePath)
 
+	pfRouter := r.Group("/debug/pprof")
+	pfRouter.GET("/", gin.WrapF(pprof.Index))
+	pfRouter.GET("/cmdline", gin.WrapF(pprof.Cmdline))
+	pfRouter.GET("/profile", gin.WrapF(pprof.Profile))
+	// TODO add POST /symbol ?
+	pfRouter.GET("/symbol", gin.WrapF(pprof.Symbol))
+	pfRouter.GET("/trace", gin.WrapF(pprof.Trace))
+	// TODO are allocs and heap complementary or just a different view on the same thing
+	pfRouter.GET("/allocs", gin.WrapH(pprof.Handler("allocs")))
+	pfRouter.GET("/heap", gin.WrapH(pprof.Handler("heap")))
+	pfRouter.GET("/block", gin.WrapH(pprof.Handler("block")))
+	pfRouter.GET("/mutex", gin.WrapH(pprof.Handler("mutex")))
+	// https://github.com/DataDog/go-profiler-notes/blob/main/guide/README.md
+	// safe rate: 1000 goroutines
+	pfRouter.GET("/goroutine", gin.WrapH(pprof.Handler("goroutine")))
+
 	redoc(router, basePath)
 
 	router.GET("/health", health.Health)
@@ -61,22 +77,6 @@ func GetEngine(basePath string, dbHandler database.Handler, authMiddleware handl
 	tokenAuthenticationRouter.DELETE("/databases/:id/unlock", dbHandler.Unlock)
 	tokenAuthenticationRouter.POST("/databases/save-as/:instanceId", dbHandler.SaveAs)
 	tokenAuthenticationRouter.POST("/databases/:id/external", dbHandler.CreateExternalDownload)
-
-	pfRouter := router.Group("/debug/pprof")
-	pfRouter.GET("/", gin.WrapF(pprof.Index))
-	pfRouter.GET("/cmdline", gin.WrapF(pprof.Cmdline))
-	pfRouter.GET("/profile", gin.WrapF(pprof.Profile))
-	// TODO add POST /symbol ?
-	pfRouter.GET("/symbol", gin.WrapF(pprof.Symbol))
-	pfRouter.GET("/trace", gin.WrapF(pprof.Trace))
-	// TODO are allocs and heap complementary or just a different view on the same thing
-	pfRouter.GET("/allocs", gin.WrapH(pprof.Handler("allocs")))
-	pfRouter.GET("/heap", gin.WrapH(pprof.Handler("heap")))
-	pfRouter.GET("/block", gin.WrapH(pprof.Handler("block")))
-	pfRouter.GET("/mutex", gin.WrapH(pprof.Handler("mutex")))
-	// https://github.com/DataDog/go-profiler-notes/blob/main/guide/README.md
-	// safe rate: 1000 goroutines
-	pfRouter.GET("/goroutine", gin.WrapH(pprof.Handler("goroutine")))
 
 	return r
 }

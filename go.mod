@@ -23,7 +23,7 @@ require (
 	github.com/google/uuid v1.3.0
 	github.com/habx/pg-commands v0.5.0
 	github.com/lestrrat-go/jwx v1.2.25
-	github.com/stretchr/testify v1.8.1
+	github.com/stretchr/testify v1.8.2
 	go.mozilla.org/sops/v3 v3.7.3
 	gorm.io/driver/postgres v1.4.8
 	gorm.io/gorm v1.24.5

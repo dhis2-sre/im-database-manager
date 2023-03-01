@@ -225,7 +225,7 @@ func (s service) FindExternalDownload(uuid uuid.UUID) (model.ExternalDownload, e
 
 func (s service) SaveAs(token string, database *model.Database, instance *instanceModels.Instance, stack *instanceModels.Stack, newName string, format string) (*model.Database, error) {
 	// TODO: Add to config
-	dumpPath := "/mnt/data"
+	dumpPath := "/mnt/data/"
 
 	group, err := s.userClient.FindGroupByName(token, instance.GroupName)
 	if err != nil {

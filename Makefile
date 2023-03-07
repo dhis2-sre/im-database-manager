@@ -17,6 +17,9 @@ init:
 	go install github.com/go-swagger/go-swagger/cmd/swagger@latest
 	swagger version
 
+	go install go.mozilla.org/sops/v3/cmd/sops@latest
+	sops --version
+
 check:
 	pre-commit run --all-files --show-diff-on-failure
 

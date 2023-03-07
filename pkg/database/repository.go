@@ -4,32 +4,20 @@ import (
 	"fmt"
 	"time"
 
+	"github.com/gosimple/slug"
+
 	"github.com/google/uuid"
 
 	"github.com/dhis2-sre/im-database-manager/pkg/model"
 	"gorm.io/gorm"
 )
 
-type Repository interface {
-	Create(d *model.Database) error
-	Save(d *model.Database) error
-	FindById(id uint) (*model.Database, error)
-	Lock(id, instanceId, userId uint) (*model.Lock, error)
-	Unlock(id uint) error
-	Delete(id uint) error
-	FindByGroupNames(names []string) ([]*model.Database, error)
-	Update(d *model.Database) error
-	CreateExternalDownload(databaseID uint, expiration time.Time) (model.ExternalDownload, error)
-	FindExternalDownload(uuid uuid.UUID) (model.ExternalDownload, error)
-	PurgeExternalDownload() error
+func NewRepository(db *gorm.DB) *repository {
+	return &repository{db}
 }
 
 type repository struct {
 	db *gorm.DB
-}
-
-func NewRepository(db *gorm.DB) *repository {
-	return &repository{db}
 }
 
 func (r repository) Create(d *model.Database) error {
@@ -37,6 +25,8 @@ func (r repository) Create(d *model.Database) error {
 }
 
 func (r repository) Save(d *model.Database) error {
+	s := fmt.Sprintf("%s/%s", d.GroupName, d.Name)
+	d.Slug = slug.Make(s)
 	return r.db.Save(&d).Error
 }
 
@@ -45,6 +35,15 @@ func (r repository) FindById(id uint) (*model.Database, error) {
 	err := r.db.
 		Preload("Lock").
 		First(&d, id).Error
+	return d, err
+}
+
+func (r repository) FindBySlug(slug string) (*model.Database, error) {
+	var d *model.Database
+	err := r.db.
+		Preload("Lock").
+		Where("slug = ?", slug).
+		First(&d).Error
 	return d, err
 }
 

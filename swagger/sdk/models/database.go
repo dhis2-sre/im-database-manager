@@ -42,6 +42,9 @@ type Database struct {
 	// name
 	Name string `json:"Name,omitempty"`
 
+	// slug
+	Slug string `json:"Slug,omitempty"`
+
 	// updated at
 	// Format: date-time
 	UpdatedAt strfmt.DateTime `json:"UpdatedAt,omitempty"`

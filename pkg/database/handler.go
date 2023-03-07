@@ -35,6 +35,7 @@ type Handler struct {
 type Service interface {
 	Copy(id uint, d *model.Database, group *userModels.Group) error
 	FindById(id uint) (*model.Database, error)
+	FindBySlug(slug string) (*model.Database, error)
 	Lock(id uint, instanceId uint, userId uint) (*model.Lock, error)
 	Unlock(id uint) error
 	Upload(d *model.Database, group *userModels.Group, reader ReadAtSeeker, size int64) (*model.Database, error)
@@ -320,9 +321,13 @@ func (h Handler) FindById(c *gin.Context) {
 	idParam := c.Param("id")
 	id, err := strconv.ParseUint(idParam, 10, 64)
 	if err != nil {
-		badRequest := apperror.NewBadRequest("error parsing id")
-		_ = c.Error(badRequest)
-		return
+		database, err := h.databaseService.FindBySlug(idParam)
+		if err != nil {
+			badRequest := apperror.NewBadRequest("error parsing id")
+			_ = c.Error(badRequest)
+			return
+		}
+		id = uint64(database.ID)
 	}
 
 	d, err := h.databaseService.FindById(uint(id))
@@ -481,9 +486,13 @@ func (h Handler) Download(c *gin.Context) {
 	idParam := c.Param("id")
 	id, err := strconv.ParseUint(idParam, 10, 64)
 	if err != nil {
-		badRequest := apperror.NewBadRequest("error parsing id")
-		_ = c.Error(badRequest)
-		return
+		database, err := h.databaseService.FindBySlug(idParam)
+		if err != nil {
+			badRequest := apperror.NewBadRequest("error parsing id")
+			_ = c.Error(badRequest)
+			return
+		}
+		id = uint64(database.ID)
 	}
 
 	d, err := h.databaseService.FindById(uint(id))

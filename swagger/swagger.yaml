@@ -31,6 +31,8 @@ definitions:
                 $ref: '#/definitions/Lock'
             Name:
                 type: string
+            Slug:
+                type: string
             UpdatedAt:
                 format: date-time
                 type: string

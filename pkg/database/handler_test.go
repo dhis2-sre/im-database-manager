@@ -389,6 +389,32 @@ func TestHandler_FindById(t *testing.T) {
 	repository.AssertExpectations(t)
 }
 
+func TestHandler_FindById_Slug(t *testing.T) {
+	repository := &mockRepository{}
+	database := &model.Database{
+		Model:     gorm.Model{ID: 1},
+		GroupName: "group-name",
+	}
+	repository.
+		On("FindBySlug", "slug").
+		Return(database, nil)
+	repository.
+		On("FindById", uint(1)).
+		Return(database, nil)
+	service := NewService(config.Config{}, nil, nil, repository)
+	handler := New(nil, service, nil)
+
+	w := httptest.NewRecorder()
+	c := newContext(w, "group-name")
+	c.AddParam("id", "slug")
+
+	handler.FindById(c)
+
+	assert.Empty(t, c.Errors)
+	assertResponse(t, w, http.StatusOK, database)
+	repository.AssertExpectations(t)
+}
+
 func TestHandler_Copy(t *testing.T) {
 	userClient := &mockUserClient{}
 	userClient.
@@ -519,6 +545,11 @@ func (m *mockRepository) Save(d *model.Database) error {
 
 func (m *mockRepository) FindById(id uint) (*model.Database, error) {
 	called := m.Called(id)
+	return called.Get(0).(*model.Database), nil
+}
+
+func (m *mockRepository) FindBySlug(slug string) (*model.Database, error) {
+	called := m.Called(slug)
 	return called.Get(0).(*model.Database), nil
 }
 

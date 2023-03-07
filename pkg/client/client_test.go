@@ -69,6 +69,10 @@ func (m *mockDatabaseService) FindById(id uint) (*model.Database, error) {
 	}
 }
 
+func (m *mockDatabaseService) FindBySlug(slug string) (*model.Database, error) {
+	panic("implement me")
+}
+
 func (m *mockDatabaseService) Lock(id uint, instanceId uint, userId uint) (*model.Lock, error) {
 	panic("implement me")
 }

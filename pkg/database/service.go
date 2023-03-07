@@ -43,6 +43,21 @@ type service struct {
 	repository Repository
 }
 
+type Repository interface {
+	Create(d *model.Database) error
+	Save(d *model.Database) error
+	FindById(id uint) (*model.Database, error)
+	Lock(id, instanceId, userId uint) (*model.Lock, error)
+	Unlock(id uint) error
+	Delete(id uint) error
+	FindByGroupNames(names []string) ([]*model.Database, error)
+	Update(d *model.Database) error
+	CreateExternalDownload(databaseID uint, expiration time.Time) (model.ExternalDownload, error)
+	FindExternalDownload(uuid uuid.UUID) (model.ExternalDownload, error)
+	PurgeExternalDownload() error
+	FindBySlug(slug string) (*model.Database, error)
+}
+
 type S3Client interface {
 	Copy(bucket string, source string, destination string) error
 	Upload(bucket string, key string, body storage.ReadAtSeeker, size int64) error
@@ -82,7 +97,17 @@ func (s service) FindById(id uint) (*model.Database, error) {
 	if err != nil {
 		if errors.Is(err, gorm.ErrRecordNotFound) {
 			idStr := strconv.FormatUint(uint64(id), 10)
-			err = apperror.NewNotFound("database not found", idStr)
+			err = apperror.NewNotFound("database not found by id", idStr)
+		}
+	}
+	return d, err
+}
+
+func (s service) FindBySlug(slug string) (*model.Database, error) {
+	d, err := s.repository.FindBySlug(slug)
+	if err != nil {
+		if errors.Is(err, gorm.ErrRecordNotFound) {
+			err = apperror.NewNotFound("database not found by slug", slug)
 		}
 	}
 	return d, err

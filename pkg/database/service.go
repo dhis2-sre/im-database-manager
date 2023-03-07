@@ -292,7 +292,7 @@ func (s service) SaveAs(token string, database *model.Database, instance *instan
 		// TODO: Remove... Or at least make configurable
 		dump.EnableVerbose()
 
-		dumpExec := dump.Exec(pg.ExecOptions{StreamPrint: true})
+		dumpExec := dump.Exec(pg.ExecOptions{StreamPrint: true, StreamDestination: os.Stdout})
 		if dumpExec.Error != nil {
 			log.Println(dumpExec.Error.Err)
 			log.Println(dumpExec.Output)

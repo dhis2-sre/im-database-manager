@@ -226,8 +226,8 @@ github.com/decred/dcrd/dcrec/secp256k1/v4 v4.1.0 h1:HbphB4TFFXpv7MNrT52FGrrgVXF1
 github.com/decred/dcrd/dcrec/secp256k1/v4 v4.1.0/go.mod h1:DZGJHZMqrU4JJqFAWUS2UO1+lbSKsdiOoYi9Zzey7Fc=
 github.com/dgrijalva/jwt-go v3.2.0+incompatible/go.mod h1:E3ru+11k8xSBh+hMPgOLZmtrrCbhqsmaPHjLKYnJCaQ=
 github.com/dgryski/go-sip13 v0.0.0-20181026042036-e10d5fee7954/go.mod h1:vAd38F8PWV+bWy6jNmig1y/TA+kYO4g3RSRF0IAv0no=
-github.com/dhis2-sre/im-manager v0.13.0 h1:7PMQQSKjnbCldSZ8GqXheA7g2H5Zg+HzUdLupDhMfTw=
-github.com/dhis2-sre/im-manager v0.13.0/go.mod h1:c8RhC2WGB0kez6xncwhwDPAvzBkeNLI6gFUtld8Nc6I=
+github.com/dhis2-sre/im-manager v0.13.1 h1:e66QmXkt6rwl9P+3XvVTRx3vGH7fODn2fp/AVw6r8Ts=
+github.com/dhis2-sre/im-manager v0.13.1/go.mod h1:c8RhC2WGB0kez6xncwhwDPAvzBkeNLI6gFUtld8Nc6I=
 github.com/dhis2-sre/im-user v0.10.0 h1:p2VmfVv+1Jm37AZK48vi9x13Fu8dVhJoDqw38VdTbE0=
 github.com/dhis2-sre/im-user v0.10.0/go.mod h1:ECvHnm41xyF/n0gLJ2FvgpaJFpyHm59rlXSVLTAtrrE=
 github.com/dimchansky/utfbom v1.1.1 h1:vV6w1AhK4VMnhBno/TPVCoK9U/LP0PkLCS9tbxHdi/U=

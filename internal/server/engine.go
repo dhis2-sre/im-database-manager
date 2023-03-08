@@ -36,7 +36,7 @@ func GetEngine(basePath string, dbHandler database.Handler, authMiddleware handl
 	tokenAuthenticationRouter.POST("/databases/:id/copy", dbHandler.Copy)
 	tokenAuthenticationRouter.GET("/databases/:id/download", dbHandler.Download)
 	tokenAuthenticationRouter.GET("/databases", dbHandler.List)
-	tokenAuthenticationRouter.GET("/databases/:id", dbHandler.FindById)
+	tokenAuthenticationRouter.GET("/databases/:id", dbHandler.FindByIdentifier)
 	tokenAuthenticationRouter.PUT("/databases/:id", dbHandler.Update)
 	tokenAuthenticationRouter.DELETE("/databases/:id", dbHandler.Delete)
 	tokenAuthenticationRouter.POST("/databases/:id/lock", dbHandler.Lock)

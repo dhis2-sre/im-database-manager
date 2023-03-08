@@ -382,7 +382,7 @@ func TestHandler_FindById(t *testing.T) {
 	c := newContext(w, "group-name")
 	c.AddParam("id", "1")
 
-	handler.FindById(c)
+	handler.FindByIdentifier(c)
 
 	assert.Empty(t, c.Errors)
 	assertResponse(t, w, http.StatusOK, database)
@@ -408,7 +408,7 @@ func TestHandler_FindById_Slug(t *testing.T) {
 	c := newContext(w, "group-name")
 	c.AddParam("id", "slug")
 
-	handler.FindById(c)
+	handler.FindByIdentifier(c)
 
 	assert.Empty(t, c.Errors)
 	assertResponse(t, w, http.StatusOK, database)

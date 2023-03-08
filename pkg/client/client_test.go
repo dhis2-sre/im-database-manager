@@ -36,7 +36,7 @@ func TestFindDatabaseById(t *testing.T) {
 	}
 	r.Use(middleware.ErrorHandler(), mockTokenAuthentication(user))
 	h := database.New(nil, databaseService, nil)
-	r.GET("/databases/:id", h.FindById)
+	r.GET("/databases/:id", h.FindByIdentifier)
 	srv := httptest.NewServer(r)
 	defer srv.Close()
 	host := strings.Replace(srv.URL, "http://", "", 1)

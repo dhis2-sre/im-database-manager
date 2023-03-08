@@ -40,7 +40,7 @@ type ClientService interface {
 
 	ExternalDownloadDatabase(params *ExternalDownloadDatabaseParams, authInfo runtime.ClientAuthInfoWriter, opts ...ClientOption) (*ExternalDownloadDatabaseOK, error)
 
-	FindDatabaseByID(params *FindDatabaseByIDParams, authInfo runtime.ClientAuthInfoWriter, opts ...ClientOption) (*FindDatabaseByIDOK, error)
+	FindDatabase(params *FindDatabaseParams, authInfo runtime.ClientAuthInfoWriter, opts ...ClientOption) (*FindDatabaseOK, error)
 
 	Health(params *HealthParams, opts ...ClientOption) (*HealthOK, error)
 
@@ -185,7 +185,7 @@ func (a *Client) DeleteDatabaseByID(params *DeleteDatabaseByIDParams, authInfo r
 /*
 DownloadDatabase downloads database
 
-Download database...
+Download a database by its identifier. The identifier could be either the actual id of the database or the slug associated with it
 */
 func (a *Client) DownloadDatabase(params *DownloadDatabaseParams, authInfo runtime.ClientAuthInfoWriter, opts ...ClientOption) (*DownloadDatabaseOK, error) {
 	// TODO: Validate the params before sending
@@ -265,24 +265,24 @@ func (a *Client) ExternalDownloadDatabase(params *ExternalDownloadDatabaseParams
 }
 
 /*
-FindDatabaseByID finds database
+FindDatabase finds database
 
-Find database by id...
+Find a database by its identifier. The identifier could be either the actual id of the database or the slug associated with it
 */
-func (a *Client) FindDatabaseByID(params *FindDatabaseByIDParams, authInfo runtime.ClientAuthInfoWriter, opts ...ClientOption) (*FindDatabaseByIDOK, error) {
+func (a *Client) FindDatabase(params *FindDatabaseParams, authInfo runtime.ClientAuthInfoWriter, opts ...ClientOption) (*FindDatabaseOK, error) {
 	// TODO: Validate the params before sending
 	if params == nil {
-		params = NewFindDatabaseByIDParams()
+		params = NewFindDatabaseParams()
 	}
 	op := &runtime.ClientOperation{
-		ID:                 "findDatabaseById",
+		ID:                 "findDatabase",
 		Method:             "GET",
 		PathPattern:        "/databases/{id}",
 		ProducesMediaTypes: []string{"application/json"},
 		ConsumesMediaTypes: []string{"application/json"},
 		Schemes:            []string{"http"},
 		Params:             params,
-		Reader:             &FindDatabaseByIDReader{formats: a.formats},
+		Reader:             &FindDatabaseReader{formats: a.formats},
 		AuthInfo:           authInfo,
 		Context:            params.Context,
 		Client:             params.HTTPClient,
@@ -295,13 +295,13 @@ func (a *Client) FindDatabaseByID(params *FindDatabaseByIDParams, authInfo runti
 	if err != nil {
 		return nil, err
 	}
-	success, ok := result.(*FindDatabaseByIDOK)
+	success, ok := result.(*FindDatabaseOK)
 	if ok {
 		return success, nil
 	}
 	// unexpected success response
 	// safeguard: normally, absent a default response, unknown success responses return an error above: so this is a codegen issue
-	msg := fmt.Sprintf("unexpected success response for findDatabaseById: API contract not enforced by server. Client expected to get an error, but got: %T", result)
+	msg := fmt.Sprintf("unexpected success response for findDatabase: API contract not enforced by server. Client expected to get an error, but got: %T", result)
 	panic(msg)
 }
 

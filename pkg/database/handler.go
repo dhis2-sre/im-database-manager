@@ -300,13 +300,13 @@ func (h Handler) Copy(c *gin.Context) {
 	c.JSON(http.StatusCreated, d)
 }
 
-// FindById database
-func (h Handler) FindById(c *gin.Context) {
-	// swagger:route GET /databases/{id} findDatabaseById
+// FindByIdentifier database
+func (h Handler) FindByIdentifier(c *gin.Context) {
+	// swagger:route GET /databases/{id} findDatabase
 	//
 	// Find database
 	//
-	// Find database by id...
+	// Find a database by its identifier. The identifier could be either the actual id of the database or the slug associated with it
 	//
 	// Security:
 	//	oauth2:
@@ -318,13 +318,12 @@ func (h Handler) FindById(c *gin.Context) {
 	//	403: Error
 	//	404: Error
 	//	415: Error
-	idParam := c.Param("id")
-	id, err := strconv.ParseUint(idParam, 10, 64)
+	identifier := c.Param("id")
+	id, err := strconv.ParseUint(identifier, 10, 64)
 	if err != nil {
-		database, err := h.databaseService.FindBySlug(idParam)
+		database, err := h.databaseService.FindBySlug(identifier)
 		if err != nil {
-			badRequest := apperror.NewBadRequest("error parsing id")
-			_ = c.Error(badRequest)
+			_ = c.Error(err)
 			return
 		}
 		id = uint64(database.ID)
@@ -472,7 +471,7 @@ func (h Handler) Download(c *gin.Context) {
 	//
 	// Download database
 	//
-	// Download database...
+	// Download a database by its identifier. The identifier could be either the actual id of the database or the slug associated with it
 	//
 	// Security:
 	//	oauth2:
@@ -483,13 +482,12 @@ func (h Handler) Download(c *gin.Context) {
 	//	403: Error
 	//	404: Error
 	//	415: Error
-	idParam := c.Param("id")
-	id, err := strconv.ParseUint(idParam, 10, 64)
+	identifier := c.Param("id")
+	id, err := strconv.ParseUint(identifier, 10, 64)
 	if err != nil {
-		database, err := h.databaseService.FindBySlug(idParam)
+		database, err := h.databaseService.FindBySlug(identifier)
 		if err != nil {
-			badRequest := apperror.NewBadRequest("error parsing id")
-			_ = c.Error(badRequest)
+			_ = c.Error(err)
 			return
 		}
 		id = uint64(database.ID)

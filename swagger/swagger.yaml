@@ -236,8 +236,8 @@ paths:
                 - oauth2: []
             summary: Delete database
         get:
-            description: Find database by id...
-            operationId: findDatabaseById
+            description: Find a database by its identifier. The identifier could be either the actual id of the database or the slug associated with it
+            operationId: findDatabase
             parameters:
                 - format: uint64
                   in: path
@@ -322,7 +322,7 @@ paths:
             summary: Copy database
     /databases/{id}/download:
         get:
-            description: Download database...
+            description: Download a database by its identifier. The identifier could be either the actual id of the database or the slug associated with it
             operationId: downloadDatabase
             parameters:
                 - format: uint64

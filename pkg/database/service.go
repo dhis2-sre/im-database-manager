@@ -65,6 +65,23 @@ type S3Client interface {
 	Download(bucket string, key string, dst io.Writer, cb func(contentLength int64)) error
 }
 
+func (s service) FindByIdentifier(identifier string) (*model.Database, error) {
+	id, err := strconv.ParseUint(identifier, 10, 64)
+	if err != nil {
+		database, err := s.FindBySlug(identifier)
+		if err != nil {
+			return nil, err
+		}
+		return database, nil
+	}
+
+	database, err := s.FindById(uint(id))
+	if err != nil {
+		return nil, err
+	}
+	return database, nil
+}
+
 func (s service) Copy(id uint, d *model.Database, group *models.Group) error {
 	source, err := s.FindById(id)
 	if err != nil {

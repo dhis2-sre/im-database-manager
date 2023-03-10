@@ -35,7 +35,7 @@ type Handler struct {
 type Service interface {
 	Copy(id uint, d *model.Database, group *userModels.Group) error
 	FindById(id uint) (*model.Database, error)
-	FindBySlug(slug string) (*model.Database, error)
+	FindByIdentifier(identifier string) (*model.Database, error)
 	Lock(id uint, instanceId uint, userId uint) (*model.Lock, error)
 	Unlock(id uint) error
 	Upload(d *model.Database, group *userModels.Group, reader ReadAtSeeker, size int64) (*model.Database, error)
@@ -319,17 +319,7 @@ func (h Handler) FindByIdentifier(c *gin.Context) {
 	//	404: Error
 	//	415: Error
 	identifier := c.Param("id")
-	id, err := strconv.ParseUint(identifier, 10, 64)
-	if err != nil {
-		database, err := h.databaseService.FindBySlug(identifier)
-		if err != nil {
-			_ = c.Error(err)
-			return
-		}
-		id = uint64(database.ID)
-	}
-
-	d, err := h.databaseService.FindById(uint(id))
+	d, err := h.databaseService.FindByIdentifier(identifier)
 	if err != nil {
 		_ = c.Error(err)
 		return
@@ -483,17 +473,7 @@ func (h Handler) Download(c *gin.Context) {
 	//	404: Error
 	//	415: Error
 	identifier := c.Param("id")
-	id, err := strconv.ParseUint(identifier, 10, 64)
-	if err != nil {
-		database, err := h.databaseService.FindBySlug(identifier)
-		if err != nil {
-			_ = c.Error(err)
-			return
-		}
-		id = uint64(database.ID)
-	}
-
-	d, err := h.databaseService.FindById(uint(id))
+	d, err := h.databaseService.FindByIdentifier(identifier)
 	if err != nil {
 		_ = c.Error(err)
 		return
@@ -511,7 +491,7 @@ func (h Handler) Download(c *gin.Context) {
 	c.Header("Content-Transfer-Encoding", "binary")
 	c.Header("Content-Type", "application/octet-stream")
 
-	err = h.databaseService.Download(uint(id), c.Writer, func(contentLength int64) {
+	err = h.databaseService.Download(d.ID, c.Writer, func(contentLength int64) {
 		c.Header("Content-Length", strconv.FormatInt(contentLength, 10))
 	})
 	if err != nil {

@@ -24,7 +24,7 @@ import (
 func TestFindDatabaseById(t *testing.T) {
 	databaseService := &mockDatabaseService{}
 	databaseService.
-		On("FindById", uint(1)).
+		On("FindByIdentifier", "1").
 		Return(&model.Database{
 			Model: gorm.Model{ID: 1},
 		}, nil)
@@ -51,6 +51,11 @@ func TestFindDatabaseById(t *testing.T) {
 
 type mockDatabaseService struct{ mock.Mock }
 
+func (m *mockDatabaseService) FindByIdentifier(identifier string) (*model.Database, error) {
+	called := m.Called(identifier)
+	return called.Get(0).(*model.Database), nil
+}
+
 func (m *mockDatabaseService) Create(d *model.Database) error {
 	panic("implement me")
 }
@@ -67,10 +72,6 @@ func (m *mockDatabaseService) FindById(id uint) (*model.Database, error) {
 	} else {
 		return nil, called.Error(1)
 	}
-}
-
-func (m *mockDatabaseService) FindBySlug(slug string) (*model.Database, error) {
-	panic("implement me")
 }
 
 func (m *mockDatabaseService) Lock(id uint, instanceId uint, userId uint) (*model.Lock, error) {

@@ -194,6 +194,7 @@ func TestHandler_Download(t *testing.T) {
 	repository.
 		On("FindById", uint(1)).
 		Return(&model.Database{
+			Model:     gorm.Model{ID: 1},
 			GroupName: "group-name",
 			Url:       "s3://whatever",
 		}, nil)
@@ -367,7 +368,7 @@ func newContext(w *httptest.ResponseRecorder, group string) *gin.Context {
 	return c
 }
 
-func TestHandler_FindById(t *testing.T) {
+func TestHandler_FindByIdentifier(t *testing.T) {
 	repository := &mockRepository{}
 	database := &model.Database{
 		GroupName: "group-name",
@@ -389,7 +390,7 @@ func TestHandler_FindById(t *testing.T) {
 	repository.AssertExpectations(t)
 }
 
-func TestHandler_FindById_Slug(t *testing.T) {
+func TestHandler_FindByIdentifier_Slug(t *testing.T) {
 	repository := &mockRepository{}
 	database := &model.Database{
 		Model:     gorm.Model{ID: 1},
@@ -397,9 +398,6 @@ func TestHandler_FindById_Slug(t *testing.T) {
 	}
 	repository.
 		On("FindBySlug", "slug").
-		Return(database, nil)
-	repository.
-		On("FindById", uint(1)).
 		Return(database, nil)
 	service := NewService(config.Config{}, nil, nil, repository)
 	handler := New(nil, service, nil)
@@ -545,12 +543,22 @@ func (m *mockRepository) Save(d *model.Database) error {
 
 func (m *mockRepository) FindById(id uint) (*model.Database, error) {
 	called := m.Called(id)
-	return called.Get(0).(*model.Database), nil
+	database, ok := called.Get(0).(*model.Database)
+	if ok {
+		return database, nil
+	} else {
+		return nil, called.Error(1)
+	}
 }
 
 func (m *mockRepository) FindBySlug(slug string) (*model.Database, error) {
 	called := m.Called(slug)
-	return called.Get(0).(*model.Database), nil
+	database, ok := called.Get(0).(*model.Database)
+	if ok {
+		return database, nil
+	} else {
+		return nil, called.Error(1)
+	}
 }
 
 func (m *mockRepository) Lock(id, instanceId, userId uint) (*model.Lock, error) {

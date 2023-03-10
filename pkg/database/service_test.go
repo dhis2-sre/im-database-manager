@@ -34,7 +34,7 @@ func Test_service_FindByIdentifier_Slug_NotFound(t *testing.T) {
 	d, err := service.FindByIdentifier("database-identifier")
 
 	require.Nil(t, d)
-	require.ErrorContains(t, err, "Resource: database not found by slug with value: database-identifier not found")
+	require.ErrorContains(t, err, "database not found by slug with value: database-identifier not found")
 }
 
 func Test_service_FindByIdentifier_Id(t *testing.T) {
@@ -62,5 +62,5 @@ func Test_service_FindByIdentifier_Id_NotFound(t *testing.T) {
 	d, err := service.FindByIdentifier("1")
 
 	require.Nil(t, d)
-	require.ErrorContains(t, err, "Resource: database not found by id with value: 1 not found")
+	require.ErrorContains(t, err, "database not found by id with value: 1 not found")
 }

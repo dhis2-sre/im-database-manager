@@ -24,7 +24,7 @@ import (
 func TestFindDatabaseById(t *testing.T) {
 	databaseService := &mockDatabaseService{}
 	databaseService.
-		On("FindById", uint(1)).
+		On("FindByIdentifier", "1").
 		Return(&model.Database{
 			Model: gorm.Model{ID: 1},
 		}, nil)
@@ -36,7 +36,7 @@ func TestFindDatabaseById(t *testing.T) {
 	}
 	r.Use(middleware.ErrorHandler(), mockTokenAuthentication(user))
 	h := database.New(nil, databaseService, nil)
-	r.GET("/databases/:id", h.FindById)
+	r.GET("/databases/:id", h.FindByIdentifier)
 	srv := httptest.NewServer(r)
 	defer srv.Close()
 	host := strings.Replace(srv.URL, "http://", "", 1)
@@ -50,6 +50,11 @@ func TestFindDatabaseById(t *testing.T) {
 }
 
 type mockDatabaseService struct{ mock.Mock }
+
+func (m *mockDatabaseService) FindByIdentifier(identifier string) (*model.Database, error) {
+	called := m.Called(identifier)
+	return called.Get(0).(*model.Database), nil
+}
 
 func (m *mockDatabaseService) Create(d *model.Database) error {
 	panic("implement me")

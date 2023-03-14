@@ -13,7 +13,7 @@ type Error struct {
 	Message string
 }
 
-//swagger:parameters findDatabaseById lockDatabaseById unlockDatabaseById downloadDatabase deleteDatabaseById updateDatabaseById createExternalDownloadDatabase
+//swagger:parameters findDatabase lockDatabaseById unlockDatabaseById downloadDatabase deleteDatabaseById updateDatabaseById createExternalDownloadDatabase
 type _ struct {
 	// in: path
 	// required: true

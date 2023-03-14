@@ -15,6 +15,7 @@ type Database struct {
 	Url               string // s3... Path?
 	ExternalDownloads []ExternalDownload
 	Lock              *Lock
+	Slug              string `gorm:"uniqueIndex"`
 }
 
 // swagger:model

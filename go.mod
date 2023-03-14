@@ -21,6 +21,7 @@ require (
 	github.com/go-playground/validator/v10 v10.11.2
 	github.com/gofrs/uuid v4.4.0+incompatible
 	github.com/google/uuid v1.3.0
+	github.com/gosimple/slug v1.13.1
 	github.com/habx/pg-commands v0.6.1
 	github.com/lestrrat-go/jwx v1.2.25
 	github.com/stretchr/testify v1.8.2
@@ -97,6 +98,7 @@ require (
 	github.com/google/shlex v0.0.0-20191202100458-e7afc7fbc510 // indirect
 	github.com/googleapis/enterprise-certificate-proxy v0.2.0 // indirect
 	github.com/googleapis/gax-go/v2 v2.5.1 // indirect
+	github.com/gosimple/unidecode v1.0.1 // indirect
 	github.com/goware/prefixer v0.0.0-20160118172347-395022866408 // indirect
 	github.com/gregjones/httpcache v0.0.0-20190611155906-901d90724c79 // indirect
 	github.com/hashicorp/errwrap v1.1.0 // indirect

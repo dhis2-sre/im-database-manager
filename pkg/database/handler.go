@@ -35,6 +35,7 @@ type Handler struct {
 type Service interface {
 	Copy(id uint, d *model.Database, group *userModels.Group) error
 	FindById(id uint) (*model.Database, error)
+	FindByIdentifier(identifier string) (*model.Database, error)
 	Lock(id uint, instanceId uint, userId uint) (*model.Lock, error)
 	Unlock(id uint) error
 	Upload(d *model.Database, group *userModels.Group, reader ReadAtSeeker, size int64) (*model.Database, error)
@@ -299,13 +300,13 @@ func (h Handler) Copy(c *gin.Context) {
 	c.JSON(http.StatusCreated, d)
 }
 
-// FindById database
-func (h Handler) FindById(c *gin.Context) {
-	// swagger:route GET /databases/{id} findDatabaseById
+// FindByIdentifier database
+func (h Handler) FindByIdentifier(c *gin.Context) {
+	// swagger:route GET /databases/{id} findDatabase
 	//
 	// Find database
 	//
-	// Find database by id...
+	// Find a database by its identifier. The identifier could be either the actual id of the database or the slug associated with it
 	//
 	// Security:
 	//	oauth2:
@@ -317,15 +318,8 @@ func (h Handler) FindById(c *gin.Context) {
 	//	403: Error
 	//	404: Error
 	//	415: Error
-	idParam := c.Param("id")
-	id, err := strconv.ParseUint(idParam, 10, 64)
-	if err != nil {
-		badRequest := apperror.NewBadRequest("error parsing id")
-		_ = c.Error(badRequest)
-		return
-	}
-
-	d, err := h.databaseService.FindById(uint(id))
+	identifier := c.Param("id")
+	d, err := h.databaseService.FindByIdentifier(identifier)
 	if err != nil {
 		_ = c.Error(err)
 		return
@@ -467,7 +461,7 @@ func (h Handler) Download(c *gin.Context) {
 	//
 	// Download database
 	//
-	// Download database...
+	// Download a database by its identifier. The identifier could be either the actual id of the database or the slug associated with it
 	//
 	// Security:
 	//	oauth2:
@@ -478,15 +472,8 @@ func (h Handler) Download(c *gin.Context) {
 	//	403: Error
 	//	404: Error
 	//	415: Error
-	idParam := c.Param("id")
-	id, err := strconv.ParseUint(idParam, 10, 64)
-	if err != nil {
-		badRequest := apperror.NewBadRequest("error parsing id")
-		_ = c.Error(badRequest)
-		return
-	}
-
-	d, err := h.databaseService.FindById(uint(id))
+	identifier := c.Param("id")
+	d, err := h.databaseService.FindByIdentifier(identifier)
 	if err != nil {
 		_ = c.Error(err)
 		return
@@ -504,7 +491,7 @@ func (h Handler) Download(c *gin.Context) {
 	c.Header("Content-Transfer-Encoding", "binary")
 	c.Header("Content-Type", "application/octet-stream")
 
-	err = h.databaseService.Download(uint(id), c.Writer, func(contentLength int64) {
+	err = h.databaseService.Download(d.ID, c.Writer, func(contentLength int64) {
 		c.Header("Content-Length", strconv.FormatInt(contentLength, 10))
 	})
 	if err != nil {

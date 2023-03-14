@@ -28,11 +28,11 @@ func New(host string, basePath string) *cli {
 }
 
 func (c cli) FindById(token string, id uint) (*models.Database, error) {
-	params := &operations.FindDatabaseByIDParams{ID: uint64(id), Context: context.Background()}
+	params := &operations.FindDatabaseParams{ID: uint64(id), Context: context.Background()}
 	authInfo := httptransport.BearerToken(token)
-	db, err := c.clientService.FindDatabaseByID(params, authInfo)
+	db, err := c.clientService.FindDatabase(params, authInfo)
 	if err != nil {
-		var e *operations.FindDatabaseByIDNotFound
+		var e *operations.FindDatabaseNotFound
 		if errors.As(err, &e) {
 			return nil, apperror.NewNotFound("database", strconv.FormatUint(uint64(id), 10))
 		}

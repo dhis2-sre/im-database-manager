@@ -1,3 +1,6 @@
+> **Note**
+> This project has been merged into the instance manager which can be found [here](https://github.com/dhis2-sre/im-manager)
+
 # Instance Database Manager
 
 ## Quick start
